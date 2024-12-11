@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+  m_Name: GoldScrapLog2Node
+  m_EditorClassIdentifier: 
+  displayText: '
+
+    Captain''s Log, this is your captain speaking. Star Date, fifteen
+    o'' five. Position of the Sun, blasting out over the horizon.
+
+    I always wanted
+    to say that. Anyways, this is the log of /\\/\//\/\/. Here I''ll log the gold
+    we find, as the voice on the phone yelled at us to do.
+
+
+    2 quotas, Assurance
+    through March: 2 items, $176. We suspect later moons hold more valuable gold,
+    given the mining activities and developed civilizations found there.
+
+
+    2
+    quotas, Rend and Dine: 5 items, $494. Seems like our hunch was right. We''re
+    going to Titan and Artifice next, seeing as those moons were rich with mining
+    activities.
+
+
+    Get ready... After 2 quotas on the above planets... We found
+    22 gold items worth $2797! Now that''s more like it! Then again, it''s not that
+    difficult to find the stuff if it reeks like that, whoowee!!
+
+
+    /\/\\/\//\/\/\/
+
+
+    Today
+    we discovered something about that device we have to test. If you tap a cave
+    wall with the flat part, it will create a metal-detector-esque sound that leads
+    you straight to gold, which, eh... is incredible!
+
+    I heard a talented young
+    lady at Embrion is responsible for its creation, and I''m sure she put that in
+    there to help us all survive these quotas.
+
+    Makes an old guy proud... seeing
+    these youngsters come up with such ingenious solutions...
+
+
+    /\/\//\/\/\///\/\/\/\/\/\/\/\/\\/\/\\/
+
+    /\/\/\\/\/\\\/\/\/\\\\//\/
+
+
+    This
+    new team I''ve been working with for a while has been ehh... acting strange.
+    The... The rumors about my ability to find gold have been spreading, but, ever
+    since they heard the company microphone say something about bringing it... eh...
+    something, it seems like they''ve been watching me.
+
+    They suddenly bought
+    a lot of shovels. And a zap gun too, despite being too afraid to fight any monsters,
+    hehe. And... I''m sometimes awoken by them pacing around the spaceport at night...
+
+    I
+    don''t know what it is they''re planning, but at least I''m almost at the age
+    where I''ll get to leave this bloomin'' business... Ehhh, hopefully forever.
+
+
+'
+  terminalEvent: 
+  clearPreviousText: 1
+  maxCharactersToType: 35
+  buyItemIndex: -1
+  buyVehicleIndex: -1
+  isConfirmationNode: 0
+  buyRerouteToMoon: -1
+  displayPlanetInfo: -1
+  shipUnlockableID: -1
+  buyUnlockable: 0
+  returnFromStorage: 0
+  itemCost: 0
+  creatureFileID: -1
+  creatureName: Overtime
+  storyLogFileID: -1
+  overrideOptions: 0
+  acceptAnything: 0
+  terminalOptions: []
+  playClip: {fileID: 0}
+  playSyncedClip: -1
+  displayTexture: {fileID: 0}
+  displayVideo: {fileID: 0}
+  loadImageSlowly: 0
+  persistentImage: 0

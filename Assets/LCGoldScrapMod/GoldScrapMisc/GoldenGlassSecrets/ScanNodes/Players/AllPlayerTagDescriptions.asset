@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b63d635d69a65940bc420fac13d2c4d, type: 3}
+  m_Name: AllPlayerTagDescriptions
+  m_EditorClassIdentifier: 
+  allStrings:
+  - stinks
+  - plays Minesweeper
+  - hasnt showered yet
+  - friend :)
+  - was cool before it was cool
+  - is secretly new to this game
+  - ridiculable
+  - plays golf ewww
+  - plays minigolf yayyy
+  - beat dark souls wow very cool dude
+  - cutie petootie
+  - famous youtuber
+  - still uses facebook
+  - has lied to you AT LEAST twice
+  - jealous of you
+  - The Laziest Employee for a reason
+  - will kill you next round
+  - severely underpaid
+  - never learned basic math
+  - can do more than they think
+  - always there for you
+  - smells like roses
+  - so handsome wau
+  - says uwu unironically
+  - read more manga than everyone else combined
+  - pretty cool dude/dudette/dutheythem
+  - has a world record
+  - appreciates your company
+  - never gonna give you up
+  - never gonna let you down
+  - needs to pee
+  - spent all your money
+  - has a crush on someone here
+  - speedruns shoe-tying
+  - easy target
+  - oof :|
+  - likes playing games with you
+  - thankful that you invited them
+  - eats pineapple pizza
+  - running out of things to say
+  - wants you to like comment and subscriiiiiibe
+  - doesn't use adblockers
+  - really wants a boombox
+  - scared of coilheads
+  - has a fliphone
+  - don't tell them about that stain on their shirt
+  - who?
+  - a confusing mix of emotions
+  - single and ready to mingle
+  - nice (once you get to know them)
+  - always has way too many tabs open
+  - likes long walks on the beach
+  - neck hurts from headbanging
+  - was hit on once, didn't notice
+  - calls Wii Fit "exercise"
+  - defends the Kinect
+  - IQ of 137
+  - culinary master
+  - king
+  - queen
+  - got poo on their shoe
+  - still delivers newspapers
+  - already planning their next vacation
+  - still says Meta Knight is op
+  - uncapped their framerate
+  - based MySims fan
+  - makes troll levels in mario maker
+  - reads for fun yuck
+  - thinks the number 69 is still a funny joke
+  - '"stop reading my thoughts"'
+  - cried during Wall-E
+  - anime fan
+  - wears shorts in winter
+  - shaves their feet
+  - playing on turbo blurbo mode
+  - could use a hug
+  - been feeling blue lately
+  - a hard worker
+  - always the center of attention
+  - did NOT wash their hands after using the bathroom
+  - only brushes their teeth once a day
+  - woke no cap fr fr
+  - still hasn't seen the ghost girl, pretends to have anyways
+  - 'wearing some real nice deodorant '
+  - thinks video game music is not "real music"
+  - have you SEEN them on the dance floor?!
+  - addicted to candy crush
+  - tired and playing powerwash simulator
+  - says "sorry" to people they subdue in hitman
+  - heart of gold
+  - got a really real certificate in being cool
+  - working on that tan
+  - allergic to nuts, deez nuts lmao gottem
+  - thinks the next quota is doable
+  - disgustingly optimistic
+  - helped an old lady today awww
+  - playing with controller
+  - forgot their skype password
+  - has a smudge on their screen
+  - is actually you in disguise

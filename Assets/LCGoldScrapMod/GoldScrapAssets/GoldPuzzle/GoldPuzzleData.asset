@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: GoldPuzzleData
+  m_EditorClassIdentifier: 
+  itemProperties: {fileID: 11400000, guid: 52a89fd0d2842db4ebc55ba33b4a2296, type: 2}
+  isScrap: 1
+  isStoreItem: 0
+  defaultWeight: 1.16
+  defaultMaxValue: 110
+  defaultMinValue: 60
+  defaultRarity: 3
+  levelsToAddMinus: 
+  levelsToAddDefault: 0300000004000000080000000500000007000000
+  levelsToAddPlus: 060000000a00000009000000
+  customChange: -2
+  levelsToAddCustom: 0100000002000000
+  localMaxValue: 0
+  localMinValue: 0

@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+  m_Name: GoldScrapLog4Node
+  m_EditorClassIdentifier: 
+  displayText: "StartGoldroutine(ScanLog(logNumber4));\n\n===\nOctober 8th\r\nIn
+    compliance with the Company's new mandatory GoldLog policy, I, the captain of
+    a team of 3 people, will hereby keep notes of our findings in regards to the
+    gold found during our expeditions.\r\n\r\nOctober 9th\r\nWe did not find any
+    gold at Experimentation. We suspect that more gold appears on moons that are
+    dangerous, and less on moons that are safer.\r\n\r\nOctober 12th\r\nWe found
+    gold: a gold vat full of chemicals at Vow. As the rumors have stated, the gold
+    is indeed very valuable but also much heavier. The high monetary value compensates
+    for the high weight, but undeniably makes retrieving the item difficult.\r\n\r\nOctober
+    17th\r\nToday we found gold during a thunderstorm. Here we learned the danger
+    of gold's conductivity, as all of it will be targeted by lightning, further increasing
+    the challenge of retrieving it.\n\nOctober 19th\nWe found several golden items
+    during another thunderstorm. However, one of my crewmates had the idea to have
+    the undisclosed device hold onto the gold, so it can quickly be dropped at a
+    safe distance once targeted by lightning.\nThis method has greatly relieved our
+    stresses, and I will use this positive note to take it a little easier myself,
+    as I trust in the expertise and experience of my crewmates.\r\n\r\nthe captiaan
+    got eatne\r\ncouldntt outrun giant the gold was tooo heavy\r\nim sorrry for the
+    handrwiting but my handsa re shaking so much\r\ncant maje quota anymre we needed
+    that money\r\nplaese send help\r\n===\n\nPerformance: Below average\nConsequence:
+    Consider disciplinary process \r\n\n"
+  terminalEvent: 
+  clearPreviousText: 1
+  maxCharactersToType: 35
+  buyItemIndex: -1
+  buyVehicleIndex: -1
+  isConfirmationNode: 0
+  buyRerouteToMoon: -1
+  displayPlanetInfo: -1
+  shipUnlockableID: -1
+  buyUnlockable: 0
+  returnFromStorage: 0
+  itemCost: 0
+  creatureFileID: -1
+  creatureName: Discipline
+  storyLogFileID: -1
+  overrideOptions: 0
+  acceptAnything: 0
+  terminalOptions: []
+  playClip: {fileID: 0}
+  playSyncedClip: -1
+  displayTexture: {fileID: 0}
+  displayVideo: {fileID: 0}
+  loadImageSlowly: 0
+  persistentImage: 0

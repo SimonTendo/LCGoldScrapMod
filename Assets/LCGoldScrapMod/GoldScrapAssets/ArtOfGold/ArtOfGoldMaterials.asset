@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3793c17072cbbbe479768f58775d320c, type: 3}
+  m_Name: ArtOfGoldMaterials
+  m_EditorClassIdentifier: 
+  allArtwork:
+  - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
+  - {fileID: 2100000, guid: 9eeb1d9428cba894da94137d919571d4, type: 2}
+  - {fileID: 2100000, guid: ca4e760863cc2b94385fdaa58026d3e2, type: 2}
+  - {fileID: 2100000, guid: f84f7df558a48a940ab987791e77322f, type: 2}
+  - {fileID: 2100000, guid: 44bbd61cbae9942499a93c8ce9831a39, type: 2}
+  allSillyArtwork:
+  - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
+  - {fileID: 2100000, guid: 0e39137b48c32fb4b85e555cb19e51ce, type: 2}
+  - {fileID: 2100000, guid: 224b374f0fd1ae241a0605a34058979f, type: 2}
+  - {fileID: 2100000, guid: e9b3383ffcff6d042bb54a956c206132, type: 2}
+  - {fileID: 2100000, guid: 6865c1b9eca6cad468619b366333d5c1, type: 2}
+  - {fileID: 2100000, guid: c9f03d289e2aa704e9f739539f4b61c8, type: 2}
+  - {fileID: 2100000, guid: 1672c6ede8342134ab9e6194c1953160, type: 2}
+  - {fileID: 2100000, guid: 84b462d29732f8d44b77a9767a677a01, type: 2}
+  - {fileID: 2100000, guid: 9654b9096e4356e40aec180ddc6b183a, type: 2}
+  - {fileID: 2100000, guid: 43854245ed99a9443bf3a0d0599e514a, type: 2}
+  - {fileID: 2100000, guid: 711fc82398613fc4f9bf7c8dc1f2753f, type: 2}

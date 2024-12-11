@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+  m_Name: GoldScrapHelpModelsNode
+  m_EditorClassIdentifier: 
+  displayText: '"Why do some people see different models for gold scrap than I do?"
+
+
+    First
+    of all, the gold items function the same regardless of how they might look. Gameplay
+    will not change, the difference is only cosmetic.
+
+
+    The difference can be
+    caused by three things:
+
+    1) You or the other person has mods that change
+    models of items in the game. If anyone has any mod that changes a model, only
+    they will see custom placeholder models.
+
+
+    2) Someone is playing with settings
+    that change the models or sounds. These settings can be changed under Edit config
+    in the mod manager.
+
+
+    3) Something broke :(
+
+    But it should fix itself
+    if you restart the game. My apologies.
+
+
+'
+  terminalEvent: 
+  clearPreviousText: 1
+  maxCharactersToType: 20
+  buyItemIndex: -1
+  buyVehicleIndex: -1
+  isConfirmationNode: 0
+  buyRerouteToMoon: -1
+  displayPlanetInfo: -1
+  shipUnlockableID: -1
+  buyUnlockable: 0
+  returnFromStorage: 0
+  itemCost: 0
+  creatureFileID: -1
+  creatureName: 
+  storyLogFileID: -1
+  overrideOptions: 0
+  acceptAnything: 0
+  terminalOptions: []
+  playClip: {fileID: 0}
+  playSyncedClip: -1
+  displayTexture: {fileID: 0}
+  displayVideo: {fileID: 0}
+  loadImageSlowly: 0
+  persistentImage: 0

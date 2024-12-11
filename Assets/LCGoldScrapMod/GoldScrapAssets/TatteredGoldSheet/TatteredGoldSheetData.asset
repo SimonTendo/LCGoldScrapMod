@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: TatteredGoldSheetData
+  m_EditorClassIdentifier: 
+  itemProperties: {fileID: 11400000, guid: 63456d219bb3e27419299a0f67a85c14, type: 2}
+  isScrap: 1
+  defaultWeight: 1.28
+  defaultMaxValue: 55
+  defaultMinValue: 25
+  defaultRarity: 2
+  levelsToAddMinus: 000000000a00000008000000
+  levelsToAddDefault: 030000000400000007000000
+  levelsToAddPlus: 09000000
+  customChange: 1
+  levelsToAddCustom: 0100000002000000
+  localMaxValue: 0
+  localMinValue: 0

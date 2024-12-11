@@ -1,0 +1,213 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b63d635d69a65940bc420fac13d2c4d, type: 3}
+  m_Name: DLOGOutroText
+  m_EditorClassIdentifier: 
+  allStrings:
+  - 'Eh? Still here? Heh, heh, you remind me of one particularly lazy coworker I
+    had to deal with once.
+
+
+    Guy always stayed on camera duty back at the ship.
+    We ended up calling him Square-Eye Steve, because of how he wouldn''t look away
+    from that damned screen for 20 seconds.
+
+
+    Did you know they tried to write
+    that into law? Looking away from your screen? Pfeh heh heh! Ridiculous, am I
+    right? Politicians can''t stop blib-blab-blubbering about each other on their
+    devices yet they wanna take screens away from us poor down-trodden middle-class
+    laymen.
+
+
+    I tell ya, I''ve seen more empathy coming from the dead eyes of
+    a Coil-head than I have from the average politician ''round these parts of space.
+
+
+    Anyways,
+    I''ve probably said enough to get me in trouble already... Now go and make yourself
+    useful using my advice, so that bloomin'' Company doesn''t cut my retirement
+    short.'
+  - "Hmmm, that smell. I must say... *snifffffff* How long has it been since I smelled
+    the strangely sweet scent of that stupendously sparkly scrap? A year? Two? Five?
+    Ten? One hundred? \n\nFeels like it's all just a blur, yet it also feels like
+    I last collected scrap only yesterday... Maybe ehh... maybe my age is just catchin'
+    up to me... Or- well, heh, let's hope not, eh kiddo? I wanna stick around until
+    you finish your time at the company, that's a promise! Heh, heh!"
+  - 'Ermm... are you... still here? Was my advice to go out into the big, wide world
+    not enough reason for you to get up and move? Don''t you fear that dreaded disciplinary
+    process? I''ve heard they send ya into space, you know!
+
+
+    Or do you simply
+    enjoy MY company so much? Eh heh- Ah heh heh heh heh! Get it? My company? As
+    opposed to the big scary corporation-company we''re all workin'' for? Ehhh, you
+    gotta keep morale up on the job, you know.
+
+
+    Ah- you know what keeps morale
+    up? Singing! Really, try it! Go out there and hum-rum-dee-dum yourself a melody
+    to lift the mood! If ya got a real treasure of a team your colleagues will sing
+    right along with ya, aheheheh!
+
+
+    We used to do it on higher quotas, singin''.
+    And let me tell you, we had the grandest time doin'' it. Turkey in the Straw,
+    Bananas, Groovy Gold... We knew ''em all! And I hope those blasted monsters got
+    some of those tunes stuck in their heads too, heh heh! Serves ''em right, eeheeheehee!'
+  - 'Ah, but, by the way... Ehh, I uh... don''t know how things have changed over
+    the course of time, clearly, but ehhh... We didn''t have as much gold back in
+    the day, as there seems to be now.
+
+
+    That''s how I got this nose of mine.
+    Had to reeeaaally practice it to be able to pick up that scent. Helped me stay
+    at the company for so long too, eh heh heh. Nowadays there can be so much of
+    that gold, oh I tell ya, your nose will be slapped silly from all the smells.
+
+
+    So
+    I guess ehh... I guess I mean to say... don''t feel bad. That store might be
+    telin'' ya to pass wisdom from one generation to another, but really, we just
+    hadn''t been outplayed by our own devices yet. Just try to do the best you can,
+    no one''s gonna think less of ya.
+
+
+    And if anything, I believe in you, kiddo.
+    Eh heh!'
+  - '...Hm? Still need something? Ehh, I''m afraid this old shnoz of mine can only
+    really do its "thing", as you kids would say, once every day. Smellin''''s a
+    business, but the demand heavily outweighs the supply, eeheh heh heh heh.
+
+
+    Ehh...
+    Ah, speakin''-a which, did ya know I was top of the class, back in my day? Yeahhh
+    heh heh, this old dog was quite the bag of brains, I tell ya, heh heh heh. Got
+    top grades and all. All the guys were jealous of me, heeheeheehee!
+
+
+    Ahhhhh,
+    but, ya know, it embarrasingly took me way too long to learn that, ehh... Just
+    having smarts wouldn''t make me more likeable, you know? Got too cocky durin''
+    job interviews... Only place that wanted me was a store that just needed boxes
+    lifted, heheh.
+
+
+    What I''m ehh... trying to say is, is... Be a nice person,
+    you hear? Do things people will thank you for. Don''t just do the things you
+    yourself wanna do. You''re in this universe together, and you''re not gonna do
+    yourself a favor by makin'' enemies, eheh heh heh!'
+  - 'Or- oh, ehh, young''in, ehm... I- eggh... I, eh, wanted to ask ya somethin''.
+    I- ehh... I know you wanna go collect scrap already, but ehhh... Can I ask you
+    something a bit more personal?
+
+
+    See, I was wondering... Ehh... You know,
+    back in my day, I worked in retail... Liftin'' boxes. It''s, ehh, hehe- It''s
+    how I met my lovely wife, eeheheh. And, ehh, ya know, it paid well. Nothin''
+    this old fart could complain about, hehehe! Ehm, but, ya know, stubborn young
+    fart sure did complain...
+
+
+    Ehm, wait... I was- Oh! Oh yeah, I was asking
+    you something. See, this is how you young people earn your money. How you spend
+    your time. But, ehhh... see, I didn''t want to lift boxes my whole life. I always
+    wanted to become a teacher of sorts... Help the younger generation grow up.
+
+
+    Ehm...
+    Heh, and- Hehe... I guess the company sort of granted me that wish, by lettin''
+    me teach you kids what I''ve learned during my time collectin'' scrap. It''s
+    just that... Ehhhh... Collecting scrap I did because of the lifting boxes-thing.
+    Not, eh... because of the teaching-thing.
+
+
+    So, ehhh... I guess what I''m
+    trying to say is, eh... Once your season at the company is over, and ya don''t
+    have anyone you still wanna earn bucketloads of salary for... Follow your dreams,
+    kiddo. This old man believes in ya...'
+  - 'Eh? Did ya not hear me? Go, young''in! Time''s a wastin''! Reading the ramblings
+    of this decrepit bag of skin might cost ya your hide, if the monsters reach the
+    facility floor before you do.
+
+
+    And... Ehh... I don''t wanna lose you, kid.
+    Seeing you all running around like headless chickens, it, ehh... Well, ya know...
+    It reminds me of the old days. My- ehh... "Golden days", you could say, hehe...
+
+
+    I,
+    ehhhh... *ehem* I... Eh... Hehhhh... Oh, for bloomin''''s sake I can''t get it
+    out my throat, hehhhh. I- I-... I miss those days! Laughed some of my biggest
+    laughs. Had the biggest of thrills this stale blood can remember. But above all...
+    I met some of the kindest people I knew...
+
+
+    And- and- and... I lost ''em!
+    They''re gone! They- they deceased on the workfloor! By those- those godfors-
+    ehh... by those monsters! So go already! I don''t wanna have to mourn another
+    lost soul. Not at my old age...'
+  - 'Hheehhhhhhh... Or- Ah, you know, kiddo. I, ehhh... I hope this doesn''t sound
+    insultin'' to you, but... I enjoy the peace and quiet while everyone''s in the
+    facilty. The peace and quiet on the ship, I mean.
+
+
+    Ya- hehehe, maybe you
+    young''ins might have a joke too, about the person at "home" on camera duty,
+    just... hehe, just eatin'' outta his nose all day long! Eeheheheh! While- heh,
+    while the rest of ya is sufferin'' those bloomin'' monsters inside the facility.
+    Eeheehee!
+
+
+    Heh, yeahhh... That was a joke already all the way back in my
+    day! Hehehe! Ehhh, so, heh, if ya wanna experience some of that peace and quiet
+    too, just ehh... just pretend you''re reading somethin'' reeeaaal useful on this
+    computer, and just... stay behind for a day! Ehhhheheheheheh! *ehem!*'
+  - 'Hrrmmm, ahhh... Feels good, havin'' helped.........
+
+
+    Hm? Still here? Ah,
+    I was just, ehhh... I wanted to get some shut-eye... I... I''m tired. Ehh, don''t
+    get me wrong. I appreciate helping you kids, but, ehh... I''m just... I''m not
+    as energetic as I used to be...
+
+
+    I ehh... I was already starting to get
+    on in age during my time on the job. My previous experience with liftin'' heavy
+    retail cargo sure helped my old body stay in shape. Or... ehh, at least, in shape
+    enough to carry scrap too, but...
+
+
+    It was clear I wouldn''t have many quotas
+    left in me before I could finally sign off on my contract at the company. And
+    it''s, ehh... I don''t know why I''m back. I just wanted to spend my final days
+    in peace with my lovely wife... So, ehh, please... Allow me to at least have
+    some peace, while I''m here...'
+  - '....
+
+
+    Hmm- mhm, hum dum, tadum hmmm... Mmm, badum mhm hm-hm hm-hmmm...
+    Eh? Ah, you eavesdropping on this old fart now, kiddo? Eheheh, well, good thing
+    I did nothin'' incriminatin'', heh heh heh!
+
+
+    I was ehhh... I was just humming
+    a little tune from back in my day. A little jaunty tune we used to sing to lift
+    the mood with while on the job. Somethin'' I ehh... something that- heh, something
+    that we thought we could teach those scrap-hoarding bugs to sing too, eeheeheeheehee!
+
+
+    We-
+    ehh... we didn''t, of course, hee heeheee! We must have looked like right fools,
+    ehhhhheheheheh- heh- *ehem* *cough**cough* Ehhh, ow... Ehm... Anyway, kiddo,
+    try to keep your spirits up while on the job. By singin'', dancin'', pointin''.
+    Whatever ya like, just enjoy it! Heehee, eh, hehhhh...'

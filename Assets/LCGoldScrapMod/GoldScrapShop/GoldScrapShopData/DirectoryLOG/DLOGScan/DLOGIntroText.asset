@@ -1,0 +1,171 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b63d635d69a65940bc420fac13d2c4d, type: 3}
+  m_Name: DLOGIntroText
+  m_EditorClassIdentifier: 
+  allStrings:
+  - 'Grrmmhhah- huh? Whozzat? Oh, it- it''s you. Sorry, I was just... gettin'' some
+    shut-eye for a moment, that''s all, my apologies.
+
+
+    ...Hm? Wait, what...?
+    What''s that? Ya wanna know about mold? Pfeh! Pfeh heh! Why in the galaxy would
+    you wanna know about that stinkin'' fox-infested shrubbery?
+
+
+    Eh...? Ohh,
+    gold! Sorry, sorry, so sorry, my hearin''''s not what it used to be. Ehhm, so,
+    eh... yes, let''s just get to smellin'' gold then, heh heh...'
+  - 'Oh... it''s you...
+
+
+    You know, I was really hoping you wouldn''t show up,
+    I''m just not, eh... not feeling like it, today.
+
+
+    I keep having this weird
+    hazy feeling, like I can''t feel my limbs. It''s a scary feeling, and... and...
+    I wish I knew what''s wrong. It hurts, yet also doesn''t feel like anything.
+    As if no more blood''s pumpin'' through this old body. And- and... ehhh... I
+    wish they''d... they''d let me see a doctor already...
+
+
+    Uhh- *ehem*, anyways.
+    Let''s... Let''s just see what we have already...'
+  - 'Ah, hi! Hi! Heh, heh. Couldn''t leave this old man collecting dust now, could
+    ya? Hehehe!
+
+
+    Well, good, because you should know, this nose is still the
+    best at this side of space, and I''ll prove just how much it can follow that
+    scent of gold... Just leave it to me, heh heh heh!'
+  - 'Hm? Who- what? Jeanette, am I back? Hehh, oh, wait, just an employee. Eheh,
+    sorry, foggy brain of mine starts imagining things, heh heh...
+
+
+    Ehh anyways,
+    what can I do for ya, young''in? Wait- no, allow me to ehh, guess... You... You
+    came here... To me... To know aboouuut... Gold!
+
+
+    Eh? Eh, am I right? Eh
+    heh heh, see? This old fart does more than just imagine things, I can make myself
+    useful, just you wait and see! Because if it''s gold you''re after, I can sense
+    ''em like no other. I proverbially and literally have a nose for it, ehe heh,
+    heh... Hehhhh...'
+  - 'Clockin'' in for the day, heh? Eh heh, good to see ya so full o'' beans, kiddo,
+    reminds me of my own days at the company.
+
+
+    See, there was this one time...
+    All the bunkbeds on the ship? Full. Every ehh, every single one of ''em. So some
+    of us slept at a little safe spaceport nearby. We''d land the ship there and
+    prep a little company-mandated takeout meal.
+
+
+    Sounds strange, heh? "Mandated
+    takeout"? Eh heh heh, if you ever think making instant noodles is sad, just wait
+    till your boss tells ya to take ''em into the office and work late. Heh heh heh,
+    that''ll instill a new level of depravity into ya, heh heh heh heh heh!
+
+
+    Now,
+    where was I? Ehhh, oh yeah, the bunkbeds. So, we landed the ship and ehh- what''s
+    that? I was talking about gold? I, ehh... don''t... remember? Was I talking about
+    gold? Ahhh eh, I must have gotten side -tracked. I''m so sorry, at my age you
+    tend to forget these things. So, ehh... gold...'
+  - 'Hmmm... Hm? Eh? Sorry, can I help you? Ehhh... "dlog"? Eh... ah, ah! Oh, sorry!
+    I ehhm... Oh my... I- I completely forgot about- about why I''m here... Eheh...
+    Heh, heh, funny, isn''t it? Heheh, that- heh, that at my age, you go forgettin''
+    what your purpose is? Heh heh heh, hehhh... Hmmm...
+
+
+    Eh- ermm- *ehem* A-
+    anyways, ya kiddo''s wanna know about gold. That''s the point of your bein''
+    here. So! Lemme do some of my patented smellin'', so that company doesn''t treat
+    ya like dirt. Now, here goes! Heheh...'
+  - 'Heeheeheeheehee! Another day of smellin'' gold, is it? Ehhheheheheh- I must
+    say, I am likin'' that you rely on me, kiddo! Feels like it de-ages the wrinkles
+    right outta this stinky schnoz!
+
+
+    Ah, eheh- ya know what I just thought of?
+    Those, ehhh, those butler guys. Heheh, know the ones? Heh, if ya do, you might
+    already be wettin'' yourself at the thought of that freak, aren''t ya? Ehhheheheeheeee!
+
+
+    Ehh...
+    heh heh. *ehem* Anyways, what I wanted to say was... Those guys... They, ehh...
+    They got quite a schnoz too, now, heh? Ya think they smell fear? Think they can
+    sense the nerves of any interns that can''t find their co-workers? Eheh, heh...
+    Hehhh...
+
+
+    Oh, oh dear... That, ehm... That''s not a scenario that might,
+    ehhh... End too well, I suppose... If they''re just interns, they don''t deserve
+    havin'' their candle blown out too soon...
+
+
+    Ehhh, so ehm, anyways. Gold!
+    You were askin'' for it, and I can help ya find it! Just, ehh... just watch out
+    for those freaks. Now- *ehem* Let''s smell it...'
+  - '*snuuufffffff...* *snooooof...* *snuuuuuuffffffff...* *snoooooooooff...* Ehhhh,
+    that''s better.
+
+
+    Hm? What I was doing? Heh heh, warmin'' up, of course!
+    What? Ya think this nasty nose can just smell on a whim? Hehe, no no, kiddo!
+    Just like singers, I gotta do some vocal exercises, but for my nostrils.
+
+
+    This
+    smeller''s the best in the galaxy when it comes to sensin'' gold, but I gotta
+    work for it too, heheh! Hehhh... Ahh, it- ehh... It is a bit exhausting, however.
+    Which is why I told ya I can do this smellin'' only once every day.
+
+
+    Egh,
+    I mean- You don''t wanna hear an old man complain. You wanna know about gold.
+    So! Let''s know what this planet''s hidin''...'
+  - 'Eh, hrm- Ahhhh... Good mornin'', kiddo. Ready for another day of salvagin''
+    for garbage? Another day of puttin'' your life on the line for a corporate entity
+    ya''d rather avoid like the plague? Another day where ya might end up cryin''
+    just as much you''ll end up laughin''?
+
+
+    Ehhh... Hm? You are? Pfeh! Pfeh
+    heh heh heh! Kiddo, you''ve got more backbone than I gave ya credit for! Heeheehee,
+    I love it!
+
+
+    Okay then, well- *ehem* I''ll get to work posthaste too then!
+    Can''t have you young''ins beat me, now, can I? Heeehehehehe!'
+  - '*sniff* Eh- heh, heh, I can already faintly smell some scrap out there, hehe.
+    Ya know, young''in, it''s weird... Despite how good my nose for gold was, regular
+    scrap I only barely got good at smellin'', hehehe...
+
+
+    Ehhhh... Eh, maybe
+    it''s the material... Well- eh, you know. Gold''s all made... well, out of gold.
+    That''s all the same. But that normal scrap, ehhhhhh... Metal, wood, plastic,
+    rubber, fabrics... It''s all over the place.
+
+
+    Maybe, ehh... But, maybe that''s
+    just an excuse I''d like to believe. Something I can tell the company, should
+    they ever come knocking down my door, asking me to get a nose for metal too.
+    Or a nose for plastic.
+
+
+    Egh, gross, a "nose for plastic". Not somethin''
+    I wanna imagine... Ehh- *ehem* So! Let''s not start imaginin'' that, shall we?
+    We''ve got gold to have a nose for! Eheheh, hehhhh...'

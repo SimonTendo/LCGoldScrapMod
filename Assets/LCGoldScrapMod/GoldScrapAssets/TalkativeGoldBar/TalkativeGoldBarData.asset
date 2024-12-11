@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: TalkativeGoldBarData
+  m_EditorClassIdentifier: 
+  itemProperties: {fileID: 11400000, guid: 53bac3c63bc6ff145be176ca362b45de, type: 2}
+  isScrap: 1
+  defaultWeight: 1.18
+  defaultMaxValue: 160
+  defaultMinValue: 120
+  defaultRarity: 2
+  levelsToAddMinus: 010000000200000003000000
+  levelsToAddDefault: 0500000006000000070000000a000000
+  levelsToAddPlus: 0800000009000000
+  customChange: 0
+  levelsToAddCustom: 
+  localMaxValue: 0
+  localMinValue: 0

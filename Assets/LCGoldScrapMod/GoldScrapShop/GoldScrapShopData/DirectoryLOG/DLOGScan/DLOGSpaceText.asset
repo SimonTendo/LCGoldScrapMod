@@ -1,0 +1,351 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b63d635d69a65940bc420fac13d2c4d, type: 3}
+  m_Name: DLOGSpaceText
+  m_EditorClassIdentifier: 
+  allStrings:
+  - "Ya know, I used to be quite the stargazer, back in my day. \n\nHad all the interns
+    sittin' around me like small children, gazing up at me as I told my stories about
+    the stars with just as much wonder and curiosity as I did looking up at the stars
+    myself.\n\nOhh, I spun stories of constellations and romance, northern lights
+    and bewonderment, meteors and sadness... Ahh, they were things that made their
+    faces glow with excitement, I tell ya.\n\nWell, if I could see their faces through
+    the helmets, that is. Maybe they were bored out of their wits. Or asleep.\n\nAnd
+    if I could see the stars too, to be honest. Spaceship of ours didn't come with
+    any fancy windows like the new-fangled ones. And we weren't allowed to stay on
+    the planet for too long to \"minimize damage to proprietary hardware\".\n\nYou
+    know how often I've had to hear that auto-pilot computer say that? Four-hundred
+    and fifty-eight times! Yeahh heh heh, this old man not only stuck around while
+    those stinkin' dogs were breathing down my neck, but also for more quotas than
+    anyone could wave a stick at!\n\nCost me a few coworkers, though... Ah, ehm,
+    well... I'm sure they found some magic space door or whatever that everyone's
+    ravin' about lately.\n\nUnless that's just a fairy tale. Poor lads..."
+  - 'I enjoy watching you young''ins bumbling about each day, tryin'' to get enough
+    questionable junk to make the next quota. Reminds me of the folk I used to work
+    with.
+
+
+    Now those were the times. We''d all lay out strategies and divide
+    roles and go to the company building for a day to buy supplies so we wouldn''t
+    have to waste time waitin'' around for that dropship while time was ticking.
+    Truly the times...
+
+
+    I miss those times, you know. And I regret not having
+    said my thanks to those people when I had the chance. Seems young people don''t
+    get that, for some reason. They live a bit too much in the moment.
+
+
+    Don''t
+    think the things you appreciate today are self-evident, you hear? Any one of
+    your friends might be gone tomorrow, whether because life might get too busy
+    for ''em, or through a freak accident or due to things in their brain that keep
+    cookin'' and cookin'' until they... well, you know...
+
+
+    So say thanks every
+    once in a while. Not just to the people you say it to routinely. To all of ''em.
+    And say it like you mean it. Before it''s too late.'
+  - 'Ah, hi. I- I ehh... well, there''s not much you can do, at my age. You start
+    feeling stuck.
+
+
+    ...I, ehh... I read the paper today, said something about
+    moles, I believe. Can''t ehh... remember quite clearly. It was interesting, though.
+    Very interesting, yeah...
+
+
+    How was today? Short, I bet. More scrap than
+    you had time for, heh... Heh heh, yeah, time ehh... time never stops, does it?
+
+
+    ...
+
+
+    ...
+
+
+    Do
+    you ehhh... remember when your grandparents passed away? I do. I ehm... I mourned.
+    Probably a bit too long, to be honest.
+
+
+    I always thought it''d never happen
+    to me, getting old. And yet, here we are... And the worst thing of all is that
+    I can''t even remember how I got here. Like my life all happened in a day and
+    someone won''t let me mourn what I''ve lost along the way.
+
+
+    ...
+
+
+    Time
+    really never stops, does it...?'
+  - "*snifgrk-* Egh, ow! Ow, ow, ow! I got- something in my nose, ehhh... Ahhh, eh,
+    hrmngh, ow... \n\nMust have been a locust or something... Egh... I'm-... Eh...
+    I'm sorry you had to see that. I don't mean to be so helpless at this old age,
+    I just... My body doesn't cooperate anymore...\n\nMy own grandpa, he uhh... he
+    was in a hospital once. His body was just... nearing his end. Had a buzzer to
+    call the nurses to his room, should anything be wrong. But when my uncle once
+    visited him, he said the nurses were on strike. And ehhh... he thought it was
+    just a joke. Just a joke from an old man.\n\nBut the next day, I heard from my
+    father that... That grandfather needed to use the bathroom in the middle of the
+    night. Rang the buzzer, nobody showed. So he ehhh... he struggled his way there,
+    using his walker. And he used the bathroom, all well and good.\n\nThe problem
+    however, was getting up again. He... couldn't. Fell over. Pants still down. Bowels
+    still... active. Rang the buzzer again, nobody showed. Again. Nobody showed.
+    He lay on the floor all night, in his own... Ehm... He, uh... He cried all night.\n\nIt
+    wasn't until my father visited the next morning that he was found. I wasn't there
+    with him, but... I can only imagine the misery my grandpa must have been in.
+    And only then did they consider checking if the buzzer worked..."
+  - 'Ahhhh... Relaxin'', isn''t it? Out here in space there''s no Coil-heads to worry
+    about. No paranoia to get your adrenaline rushin''. Not a worry in the world...
+    Well, ehh... except for what the next day might bring...
+
+
+    I''m... ehhh...
+    Can I ask you something? Are you young''ins, ehhh... are you good with failure?
+    I''m asking because... well... back in my day, I wasn''t... Used to let the stress
+    get to my head... I mean, ehhh... Yeah...
+
+
+    What I mean is... I started getting
+    good at this scrap-collecting thing, after a while... And, ehh... Well, it was
+    fun, at first. And I always had a bit of a strong sense of smell, heh. Which-
+    well, heh heh, unless they were referrin'' to how sweaty I got in those old suits,
+    eehehehehe! Heh, heh, heh. Heh...
+
+
+    But, ehh... yeah. Soon as that "nose
+    for gold"-thing started spreading, I... Ehhh... Well, I ehh... I got scared,
+    I guess. I started thinking people would only see value in me if I kept deliverin''
+    and deliverin'' and deliverin''. I set my standard so high- and managed to meet
+    those standards, mind you... But... My standards were so high I started suffering
+    from it.
+
+
+    Erm... I... I don''t fully know what I''m trying to say here,
+    but... If there''s something you gotta get better at, then... Then get better
+    at it. Try your best to really improve. But, ehh, if you''re pushin'' yourself
+    too hard, the pain will only be greater than the gain.
+
+
+    I don''t wanna see
+    you collapse, kid, so... Take your rest. Please.
+
+    ...Pinky promise?'
+  - 'Ahh, hello there, young''in! How was your day? I, ehhh, I hope it was a good
+    day for ya, heh heh heh. Hope you didn''t lose any colleagues out there in the
+    field... Or managed to get a good harvest of scrap, now. Ehhhh... But it''s nice,
+    right? Bein'' asked how you''re doin'' every once in a while.
+
+
+    Lemme tell
+    ya, I had one co-worker once. Guy was as quiet as a brick. Really good at his
+    job, but always ran ahead without sayin'' much to the rest of us. We managed
+    to get a reaction out of him every once in a while, but even on the ship, he,
+    ehhh... he usually stayed on one side of the ship, while the rest of us would
+    be chatting near the bunkbeds.
+
+
+    Now... there was this one other colleague...
+    He didn''t like the guy. At all, eheh heh. Thought his being quiet was somehow
+    insultin''. Tried to force him to agree with his plans. But... ehh, that only
+    drove him further away from us. We managed to make it through another week together,
+    but the air was tense...
+
+
+    Then, heh... Then that guy who didn''t like the
+    guy, heh heh heh... Guy got picked up by his parents. Didn''t like the job anymore.
+    And you know what the quiet guy then said? He, ehhh... *ehem* He said, "Phew.
+    He was really driving us apart."
+
+
+    Heh, hehehe, turns out quiet guy already
+    saw us as a pretty tight-knit group, hehe! And you know what? He was completely
+    right! Eeheeheeheehee! We worked great together! It, ehhhh... It showed me somethin'',
+    young''in. Ehh... Well, first, it taught me that the guiet guy just wanted some
+    peace and quiet.
+
+
+    But it also taught me that not everybody in a group needs
+    to be a party-popper in order to be part of that group. Ya don''t gotta... "fit
+    in", or- ehh, or "force them into the group". Ya gotta get along! No need to
+    create illusions of grand friendships. Just... appreciate each other''s company,
+    and respect boundaries anyone might set, eheheheh...
+
+
+    So, ehh... who knows.
+    Maybe you''ve been sittin'' on a quiet guy too, who thinks of you as a real friend.
+    Heh! Heh! Heh!'
+  - "Zzzzzzzzmmmmrrrg- hm? Wh- who's there...? Ah, it's just you, kiddo. Apologies,
+    I... ehhh... tend to drift off. And not ehh... not just recently, but... for
+    a longer time. But, ehhhngh-! Ahhhhh... Think I'm startin' to wake up slowly.
+    Time to do some smellin', is it?\n\n\n*sniff* *sniff* Hm? But, wait... Ah, ah
+    heheheh, we're in space. Eheh ehhhh, sorry, sorry... I ehh... didn't notice.
+    Reaction time's slowin' down at my old age, ya know? Eh heh heh!\n\nBut I must
+    say, kiddo's... Your ship's not smellin' half-bad. This nose is more attuned
+    to gold- ehh... because it, ehh, all smells the same, you know? Heheh...\n\nBut
+    I mean ehh, your ship smells ehhhh... positive. I can't very well smell if you
+    got much other scrap collected, or if it's just a general good vibe you young'ins
+    all radiate around each other... But I like it! Ehheheheh!\n\n\nEhhhh... You
+    know, that- erm... It's good to see you gettin' along so well. Makes an old man
+    feel less lonely, hehh... Ehhhh... You know, speakin' of loneliness, ehhh...
+    Eh, I hope this is a fun topic to talk about...\n\nBut ehhrm... My wife. She,
+    ehh... she's the kindest, most beautiful woman I know. And- ahhh, the fun we
+    had... We could talk for hours. She always managed to get the brightest laughs
+    out of the both us, ehehehe. Heh... I think I got my laugh from her, heh heh...\n\nShe,
+    ehh... She was always caring. We met at an old job of mine, at a retail store. 
+    She worked the cash register, I worked in the stockroom in the back, movin' boxes
+    around. We only started talkin' because she came up to me, heh heh... I would've
+    never dared to make the first move...\n\nAnd ehh... I can't... I don't know when
+    I'll get to see her again... I miss her... I've been at this job so long, I...
+    ehhh, I don't know how long... \n\nErm, hey, kiddo... Can you do me a favor and,
+    ehhh... see if ya can get the company to contact her somehow. Tell her, eh...
+    tell her I'm in good hands now... With you kids."
+  - "Ehh.. you know, kiddo... Call me biased because of the whole \"nose for gold\"
+    nickname, but, ehhh... That gold's pretty useful, ya know. Not just for sellin',
+    either. No ehh, heheh- you can actually get a fair use outta some of these items.
+    \n\nFor example, ehhhh... there's that one, ehh... oh, what was it? I believe
+    it was a golden sun? No, erm... gold stun? Ehhh, well- that thing's actually
+    reusable! I think... I believe I remember some rowdy interns tossin' it around
+    like a beach ball. Had to cover my ears threefold in order to block out the ringin',
+    I tell ya...\n\nOr ehh... the gold flashlight! Sure the thing's brighter than
+    the sun in the sky, but inside the facility? Heheh, no corner of the room is
+    invisible with that thing in your hands, heh heh heh!\n\nHehhh... and, well,
+    erm... Of course, all of them bein' made of gold and bein' conductive and all
+    that... Makes them more difficult to retrieve, ya know... And with how heavy
+    they are and ehh, on and on...\n\nBut, young'in, trust me. Put some faith in
+    the gold you find, and the gold will treat ya just as well in return. That's
+    a promise from this old man to you! Eeheheheheh!"
+  - 'Heh, ehehehe.. Eeheeheeheehee! Eh, eheh- Ah! My, ehheheh... My apologies...
+    It''s just... I remembered one time, eh heh heh...
+
+
+    There was ehh... there
+    was one time. See, we ehh... we actually overdelivered. And ehh, heh, I mean,
+    we really overdelivered. The overtime bonus we got was almost humbling, eheh
+    heh! Almost... Eheheheh!
+
+
+    But, ehehehh... *ehem* You see... I notice how
+    it''s easy for you young''ins to get caught in the moment. Swept away by your
+    emotions. Either out of a scare ya got from a monster. Or because ya got in a
+    fight with one of your co-workers. It ehh... it all happens.
+
+
+    But... And,
+    I must say, we got into silly little bouts like that too, mind you, heheh...
+    But... What I mean to say is...
+
+
+    One week... we had some emotional moments
+    like that in the last week before that. And we only barely made quota that week.
+    We all knew that behind those lifeless helmets we were scared out of our wits
+    as to not makin'' the next quota.
+
+
+    So, the next quota... We didn''t fight.
+    We didn''t get along all happy and sappy either, mind you, heh heh. But... we
+    just concentrated, made a plan of attack, went into that blasted facility, didn''t
+    let our fears get the better of us, and got as much scrap as we could.
+
+
+    And,
+    kiddo, lemme tell ya... We were rolling in it! Could barely walk around the ship
+    thanks to all the items we managed to collect! We had to put all the gold in
+    a shadowy corner because the light kept reflectin'' into our blasted eyes, eeheheheheh!
+
+
+    And
+    then we decided to sell it. All of it. We got that major overtime bonus, and
+    we, ehhh... We just laughed! Eeheehee! Laughed about how just one week prior
+    we had a silly argument, while now we were practically employees of the week,
+    eheh heh heh heh heh heh!
+
+
+    So, ehh... You young''ins can do that too, I
+    believe you can! Just try, for one quota, to put your fears, your angers, your
+    whatallyamahaveit''s aside, and try to show that company what you''re worth!
+    You''ll have some nice spending cash after that, I assure you! Ehehe!
+
+
+    Heh
+    heh... Hm? What our fight was about? Ehhh, heh heh. Let''s just say... I was
+    known for smellin'', yeah? But eh... that week, I made my co-workers do some
+    smellin'' too, alright, eeheeheheheh!'
+  - 'Say, ehh... kiddo. Can I ask ya a favor? What''s you''re opinion of me? Old?
+    Decrepit? Talks more than he should? Annoying...? Ehhh, I... I wouldn''t blame
+    you...
+
+
+    You know, I... Hehh... I''m aware of my shortcomings... Or... I
+    suppose you could call them overcomings, in a sense. How I always talk too much,
+    try to help too much, try to deliver more than I can... And, ehh... maybe, because
+    of that... I actually don''t help at all... I talk too much and tell too little...
+    and deliver nothing of value at all...
+
+
+    Ehm... In that case, I- ehh... I''m
+    sorry. I- I really am... I''m trying to help you, but, my head...
+
+
+    Hehhhh,
+    it would all be a poor excuse anyway... I''m- just... I''m sorry, kid...'
+  - 'Ah! *ehem* Hello! Hello... I don''t believe we''ve been properly introduced
+    to each other, eh? Well, as for me, I''m what the company''s come to refer to
+    as the, ehh... the "Directory-LOG", was it? That''s a, ehhh... a bit of a corporate
+    way of referrin'' to a decrepit, retired old man like me, eh? Even my nicknames
+    back in the day were less crude than that! Heh, heh, heh!
+
+
+    Ehh... Maybe
+    that''s not a very fun introduction, now ehh, is it? Eheh heh. But! I promise
+    to you. What the company''s said about my... I believe they use the term "nose
+    for gold"? Eheh, leave it up to them to think of a cute name for somethin'' they
+    just wanna exploit to get as much garbage as possible, eh? Eeheheheheh!
+
+
+    Hehhh...
+    What was I, ehh... Oh yeah! My nose. Erm, sorry about that... I tend to get sidetracked,
+    as you might be able to tell, heh heh... *ehem* What I mean to say is, my nose
+    for gold is as genuine as the company told ya in the sales pitch. You want a
+    pointer to the gold on a planet, you young''ins come bumblin'' to me, ya hear?
+    Ehehehehe!
+
+
+    But, I''m, eh... I''m no psychic, so I can''t tell you, erm...
+    Every, single little detail. But I promise to you. I can smell their amount,
+    their worth, size, and even how far away they are. Heh, it''s- ehh... it''s true!
+    Just type whatever ya just typed into your fancy computer while on a planet,
+    and I can tell ya all ya want to know.
+
+
+    Only thing I can''t do is... Ehhhh,
+    I guess "re-smell", you could call it, heh heh. I can give you kiddo''s advice
+    once per day, and you can read it back all day long. But when we take to space
+    again, I can''t promise I won''t go ramblin'' again, eeheeheheheh! And the next
+    day I''ll do whatever smellin'' ya want of me, you can count on me!
+
+
+    Speakin''
+    of ramblin''... Wanna hear a little story right now? Heh heh, I promise it''s
+    a short one, truly! So, ehm... back when I worked in this job. We actually saw
+    the gold discovery happenin'', hehe, we witnessed it! We were a bit confused,
+    but that company was as laser-focused on gettin'' us in shape as the sharp edge
+    of a pickaxe. Hehe, and... ehhh... I can promise ya that I''ve got plenty of
+    stories like that too.
+
+
+    So! Come to me for help, for stories of the olden
+    days, and for keepin'' this old lost schnoz some company too, eeheheheheh! Heh
+    heh. Hheehhhh...'

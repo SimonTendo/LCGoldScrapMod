@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+  m_Name: GoldScrapLog3Node
+  m_EditorClassIdentifier: 
+  displayText: 'StartGoldroutine(ScanLog(logNumber3));
+
+
+    ===
+
+    Hello. This
+    is my log.
+
+
+    Our "captain" already keeps a log, but that demented bastard
+    probably just writes shopping lists... and then forgets what he wrote on them
+    anyways, pfah! So I''m keeping a log to make up for all of us, including the
+    quiet moron who can''t take a joke. Dude''s probably born stupid.
+
+
+    Today
+    we found a big haul of gold. The "captain" is usually the one to find it first,
+    so he''s probably just full of himself. And they keep saying their success is
+    thanks to that stupid statue of a whatever. A tiger, or something. Worship it
+    like a cult already. I swear, these people.
+
+
+    We found more gold, but we
+    keep going to bloody [REDACTED]. I tried to get quiet guy on my side about going
+    to Offense, I always wanted to go there. But of course the dude''s vocal chords
+    were cut off at birth. So now we keep going to hell incarnate, where the dogs
+    breathe down your neck. "Captain" says he''s fine with it. Psychopath.
+
+
+    I
+    suggested going elsewhere to find gold. We found some today, but I don''t wanna
+    get myself killed dammit. I swear, I''m gonna get my parents to sue these people.
+    Now we''re going to Experimentation. Like I''m a damned baby.
+
+
+    Found out
+    something cool about that stupid """undisclosed device""": it can slam into doors
+    - like waPOW!! I think I can probably jam the two pointy bits into locks to force
+    them open. Maybe these buffoons will finally respect me then. So stupid I can''t
+    just call it a [REDACTED] like it CLEARLY IS!!!
+
+
+    These dumbasses won''t
+    even listen to me. I swear, my parents are gonna make them go through legal hell
+    so hard. I''m like practically made for this job, they just put me up with these
+    damn [REDACTED]. I''m forcing the ship to Offense tomorrow, and then calling
+    my parents once we get back in space. Ugh. Worst summer job ever.
+
+    ===
+
+
+    Performance:
+    Laughable
+
+    Consequence: Sue
+
+
+'
+  terminalEvent: 
+  clearPreviousText: 1
+  maxCharactersToType: 35
+  buyItemIndex: -1
+  buyVehicleIndex: -1
+  isConfirmationNode: 0
+  buyRerouteToMoon: -1
+  displayPlanetInfo: -1
+  shipUnlockableID: -1
+  buyUnlockable: 0
+  returnFromStorage: 0
+  itemCost: 0
+  creatureFileID: -1
+  creatureName: Litigious
+  storyLogFileID: -1
+  overrideOptions: 0
+  acceptAnything: 0
+  terminalOptions: []
+  playClip: {fileID: 0}
+  playSyncedClip: -1
+  displayTexture: {fileID: 0}
+  displayVideo: {fileID: 0}
+  loadImageSlowly: 0
+  persistentImage: 0

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: GoldenHornData
+  m_EditorClassIdentifier: 
+  itemProperties: {fileID: 11400000, guid: ae7d075d9c963b343866d8d0c5323bf8, type: 2}
+  isScrap: 1
+  isStoreItem: 0
+  defaultWeight: 1.18
+  defaultMaxValue: 180
+  defaultMinValue: 120
+  defaultRarity: 2
+  levelsToAddMinus: 00000000010000000200000003000000
+  levelsToAddDefault: 080000000500000006000000070000000a000000
+  levelsToAddPlus: 0400000009000000
+  customChange: 0
+  levelsToAddCustom: 
+  localMaxValue: 0
+  localMinValue: 0

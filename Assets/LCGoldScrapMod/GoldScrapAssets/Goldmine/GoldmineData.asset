@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: GoldmineData
+  m_EditorClassIdentifier: 
+  itemProperties: {fileID: 11400000, guid: a8acbeb778bfb8e4193434dda0d5211e, type: 2}
+  isScrap: 1
+  defaultWeight: 1.18
+  defaultMaxValue: 110
+  defaultMinValue: 50
+  defaultRarity: 2
+  levelsToAddMinus: 02000000
+  levelsToAddDefault: 07000000
+  levelsToAddPlus: 06000000
+  customChange: 3
+  levelsToAddCustom: 09000000
+  localMaxValue: 0
+  localMinValue: 0

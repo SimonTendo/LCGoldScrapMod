@@ -1,0 +1,650 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b63d635d69a65940bc420fac13d2c4d, type: 3}
+  m_Name: DLOGHelpText
+  m_EditorClassIdentifier: 
+  allStrings:
+  - '*sniff* *sniff* Ah, that thing. Who could forget such a classic item? Ya find
+    ''em everywhere, they''re light, still sell for a decent price. Just something
+    to put a little smile on any employee''s face.
+
+
+    You know, when we first
+    found a gold version of that giant screw, we actually didn''t even know there
+    were gold objects to begin with. We were com-plete-ly unaware, heh heh heh!
+
+
+    Heh
+    heh, had to contact HQ and everything. Ask if it was of any significance. Heh,
+    I don''t think the guy on the phone ever got such an earful, heeheeheehee!
+
+
+    Ahhh,
+    that really brings back memories. Now, make sure you bring it back, alright?
+    Best of luck, youngster!'
+  - '*snifff--* Ack! Just smelling that makes my ears hurt.
+
+
+    Hm? How that''s
+    possible? Well, it''s... I don''t know. I guess I just remember the earpiercing
+    sound of that thing, and associate the smell of the object with it.
+
+
+    But
+    this is no time for a biology lesson, there''s scrap to get. Now go! And don''t
+    start blastin'' that thing when you get back to the ship, please. '
+  - '*sniff* *sniff* *snifffffff* Oh! Oh! Oh hoh hoh hoh ho! Gold! Gold! And not
+    just ordinary gold! Something worth oodles upon oodles of coins! Something to
+    fill your coffers with until they''re burstin'' at the seams!
+
+
+    I can smell
+    the weight of something so valuable too, so take care to protect whoever''s tasked
+    with bringing that back with your life, because you''re gonna want to take it
+    back, no questions asked!
+
+
+    And also, heh... This item ehh... Reminds me
+    of my lovely wife, heh heh... But! *ehem* Find it, plan your trip back, prioritize
+    the safety of the carryer, and you''ll be swimmin'' in gold, kiddo! Heeheehee!'
+  - 'AH! -oh? Oh, it''s just a gold version. Thought it was one of those unholy fakes.
+
+
+    I
+    once lost a perfectly good man to a normal version of one of those things. Poor
+    lad had been workin'' himself to the bone. He just wanted a little joke, wear
+    it, and scare the pants off the interns.
+
+
+    Well, he managed to scare us,
+    alright. But... He, ehh... Had to pay for it with his life, I fear...
+
+
+    Ehh-
+    *ehem*, anyways. That gold version should be perfectly safe to wear, don''t you
+    worry, kiddo!'
+  - '*sniff* *snifflesniffsniff* Hm, not a bad find. Alright, young''in, I know you
+    love blarin'' loud sounds. Unless you don''t, and don''t have an accursed ringin''
+    in your ears, in which case... Good going, kiddo! Eheh, heh, heh!
+
+
+    Now,
+    erm... where was I... ehhh... Oh yeah, the item. Listen, kid. That thing''s so
+    bloomin'' loud, you can hear from it anywhere. Kinda like that ehh... that ehmmm...
+    ah, the horn. That horn-thing. On your ship.
+
+
+    Just like that horn, ya can
+    use this scrap to send a sound to your team. Maybe it means "safety". Maybe one
+    person will never drop it, so if ya do hear it go off, that''s a sign something''s
+    up with ''em. Maybe it means ya gotta pee, I dunno.
+
+
+    Ogh, now I need to
+    loo again... Look, you go get that noise-bomb, while I try to get this sorry
+    bum to a bathroom. If I could ever... find one around here...'
+  - '*sniiiIIFF!!* WHA- Whaheeyy, ehh heh heh heh heh heh! That thing! Wowie!
+
+
+    Ah,
+    ehm, that outburst must seem ridiculous, eheheh... But, kid, trust me. That thing''s
+    got some uses to say "sir" to. For one, once you take it back to the ship, turn
+    the lights off, and... well... try to find the switch again. Or make your co-workers
+    try to find it usin'' this thing, eheheh!
+
+
+    But it gets better, ohhh it gets
+    better, you trust me, young''in. If ya got the statue of that oversized guinnea
+    pig, she''ll actually help ya find all the fortunes she keeps ravin'' about.
+
+
+    And
+    lastly, the mines... Ohh hoh hoh hoh, does one yearn for the mines with this
+    thing in hand, ehehe! In short, get this thing, kiddo. And don''t sell it! Lest
+    ya wanna kick yourself for leaving so much money behind, eeheheheh!'
+  - 'Eh...? Ah, this thing. A must-have, really. Managed to save my skin from those
+    nasty Spiders and Thumpers more often than this dusty gray mass can recall.
+
+
+    Listen,
+    ehh... I don''t know exactly where it is, but if you manage to bring it back,
+    you''ll have a really valuable tool on your hands. That thing deals a wallop
+    unlike any other. So chop, chop, unless I "beat" you to it, ehe heh heh!'
+  - '*sniff* Oh? *snifffff* Oh! OH! GOLD! Gold, gold, gold!! Ah, ahaha! Gold! Gold!
+    More valuable gold than the mind can grasp! Gold richer than a million wishes!
+    Gold worth the price of a thousand romances!
+
+
+    Gold more valuable than anything
+    you''ll find ''round these parts of space! Gold more heavy than the toughest
+    space candy! Gold more gold than gold can be!
+
+
+    This, kiddo, is not just
+    gold. This is the opportunity of a lifetime! Its weight might drive down today''s
+    score, but it''s somethin'' that you can carry with one hand, is worth bloomin''
+    much, and is so, SO rare...
+
+
+    You''ll be kickin'' yourself for the rest of
+    your old days I ya don''t bring it back, sonny! Now go. Go! Time''s a wastin''!'
+  - 'D''aww, who doesn''t love that little guy? Even in gold form it''s got the most
+    proud little pose of all those awful monsters.
+
+
+    You know, I''d actually
+    make it a point to keep those oversized insects as friends. Eh- not that I ever
+    lost any men to them before that point, I mean. But I do think my peace mission
+    is how we never got into fights with ''em.
+
+
+    And hey, who knows... Maybe
+    getting a gold version of themselves makes ''em like you too, heh heh! Now, *ehem*...
+    "Bug" off, heeheehee!'
+  - "*sn-* Blegh! That supersized kindergartener never was one for personal space,
+    heh? Its gold version is bloomin' heavy too, so it just seems like all it wants
+    is to get up in your face. \n\nBut hey, it's actually so dense ya can even use
+    it as a makeshift mountain. And just like a mountain, ya can climb it or hide
+    behind it, never darin' to take the first step... Ehhh, but ya gotta collect
+    it first, heh heh heh..."
+  - '*sniff* *sniff* Oh. Oh no...
+
+
+    Listen, kiddo, you know coilheads, right?
+    ...If- if ya don''t, well, gods in the sky bless your innocent intern soul. But
+    if you do, ya know how to deal with this scrap, too.
+
+
+    Your worst enemies
+    will be your co-workers, so try to coordinate, preferably without ''em leavin''
+    ya in the dust, eheheh!'
+  - '*sniff* Ahh-HA! Now here''s somethin'' useful!
+
+
+    Young''in, if my nose is
+    correct. Which- *sniff* *sniff*... well, I sure hope it is. But if you get this
+    scrap, don''t be too afraid to take a hit. It''s called a "guardian" for a reason,
+    eh heh heh!
+
+
+    Now, show me that this old nose is still worth some salt, and
+    scrap away! Eeheeheh!'
+  - '*sniff* Is that...? *sniiiiff* It is!
+
+
+    Ah, just smellin'' that tool again
+    reminds me of the days when I had to work with pranksters who''d pull the apparatus
+    out of its socket and turn the whole bloomin'' facility to darkness before I''d
+    even seen the second hallway...
+
+
+    Those brats would sometimes even go bowling
+    with the darn thing. Can you believe it? Bowling?! With an apparatus? Ridiculous!
+    That thing''s worth a pretty penny and they treat it like a toy!
+
+
+    Ehh, I
+    wish they didn''t have to... Well, I guess this is one job where you can''t goof
+    off, or you won''t have your candle burnin'' long enough to be sorry.
+
+
+    Uhmm,
+    anyways, no more darkness for you if you get that gold, though! Heh, heh...'
+  - '*sniff-* Pfeh! Heh! Heh, heh, heh, heh, heh! What a joke! Eh heh heh...
+
+
+    Ahh,
+    alright, kiddo, this thing is not worth your time. It''s heavy, not worth much,
+    gets smitten by the bloomin'' gods in the sky. Enough reasons for a veteran to
+    tell ya to avoid it. Heh, heh...
+
+
+    It''s still gold, don''t get me wrong.
+    But even the normal version of this plate of junk is considered a waste of time
+    among employees. Get it if ya want, but don''t feel bad for leaving it behind.
+    Now, happy scrappin''!'
+  - 'Hm? What is-? What is that? Is my nose playing tricks on me? I smell something,
+    or... do I? Ehhh, you know, at my age, you start taking for granted that... that
+    things just stop working.
+
+
+    But this... I''ve smelt it before, and it''s
+    such... such a strong scent of gold. So strong even my co-workers could smell
+    it sometimes. But... always seems like only one of ''em could smell it at a time...
+    though...
+
+
+    Eh, ohh, my head... I... I should probably lie down, get some
+    rest. Ehh... Please, leave me be, if I may...'
+  - "What- What's that? Is that... Is that even an object? I think that's just a
+    livin' bein'. Or... used to be, anyway. Whoever decided to turn that thing to
+    gold has a sick sense of humor, I tell ya. \n\nTry to bring it back so we can
+    hopefully bring some peace to its poor innocent little soul, will ya?"
+  - 'Hrmm... Another useful tool, becoming nothing more than a mere prank in the
+    hands of overplayful and underpaidful employfuls. Eheh... those aren''t ehh,
+    real words, heh heh...
+
+
+    *ehem* A- anyways, this little thing is normally
+    a toy for your ship, but you''ll see soon enough why ya shouldn''t treat it like
+    a toy in the facility, kiddo. You''ll be drivin'' your whole team up the wall
+    if ya get too playful with it.
+
+
+    Ehhh... Heh, heh... I just realized that,
+    eh... that might only motivate you more, heh? Hrm... Well ehhh, do with it what
+    ya want. Just don''t say I was complicit in any practical jokes, alright young''in?
+    Heh, heheh, heh...'
+  - '*sni-* Yikes! That smell brings back memories. And unpleasant ones, at that.
+
+
+    Listen
+    up, you''re still young and spry, so what you should- ...what? You think you''re
+    not young anymore? Oh stop blabbering and listen to this stuck old man''s advice.
+    I''m tryin'' to help here...
+
+
+    Now, what you should do, is... Ehh... If you
+    want this gold scrap, you''re going to need to avoid two-handed items. If possible,
+    try to drop it, pick up another item, and then pick it up again.
+
+
+    I''d also
+    advice against use of the jetpack. Anything to keep your hands free. Hm? Why
+    I''m sayin'' all this? Oh, I guess... I guess you''ll find out, once you find
+    it for yourself. But don''t forget my advice out there!'
+  - "*sniff* *sniff* Eh? I don't think I've ever encountered something like this
+    in my time... This gold item must be either really new-fangled, or something
+    so hidden away in the back of space that I never found it.\n\nAfraid I don't
+    have much more to say than that, kiddo. It's too technermalogically new for this
+    wrinkly old nose to smell. \n\nMaybe you've encountered somethin' like it for
+    yourself. In that case, it probably functions similarly too, so use your own
+    knowledge out in the field, ya hear? Don't just rely on this saggy bag of skin,
+    now off with ya!"
+  - '*sni-* Oh, don''t got much time to be explainin'' this one. So, listen up, I''ll
+    keep this brief, kiddo. Bring this scrap back ASAP, understood? It''ll keep losing
+    value until it reaches your ship walls. Now, ready... Go! Eheheh!'
+  - '*sn-* Egh! Bomb!
+
+
+    Ahh, ehhhh... Ohhhh... Okay. Erm... Young''in, there''s
+    some gold out there. But please promise me you treat it with care, alright? I
+    don''t wanna see you blow out your candle too soon.
+
+
+    I, ehh... I heard of
+    a team once... They just barely had enough to make quota. Leader of the group
+    would finally get to see his children again too, but... Ehhhh, the prankster
+    of the group thought it''d be funny to... Well...
+
+
+    Eh- *ehem* So! Don''t
+    you dare play any tricks either, you hear? The fact that it''s a tool might drive
+    up today''s score, but that thing''s toggle is the only button you should press!
+    You can use its detonation in a chase, but remember that ehh... that it''s still
+    a bomb! Please...'
+  - "Aha... Aaahhhaaaaa!! Almost forgot how valuable this thing is, heh heh heh!\n\nListen
+    kid, by the smell of it, this- wait... *sniff* *sniff* Yeah, must be... This
+    thing will save your hide, but ya gotta work for it.\n\nIt's like the original
+    version ya might be used to. You know, ehh... From the, ehh... The store. The
+    computer store. That you're readin' this on, too. That computer.\n\nEhhmmm...
+    oh dear, I ehh... lost my... train of thought... Ehh anyways, it's useful, I
+    can smell that. But only if you take care of it. \n\nThat- ehh, that's good advice
+    in general, kiddo! Take care of your stuff. That way, you can keep using it far,
+    faarrrr into your old days. So, ehhh, yeah... Reuse it... Hehe..."
+  - '*sniff* *sniff?* Ehhh, I''m eh.. I''m not smellin'' anything ''round here. No
+    gold, at least. There''s probably plenty else for you to find, but it won''t
+    be coated in gold, I''m afraid...
+
+
+    But, ehh... go out there and get collectin''!
+    Normal scrap is scrap too, ya hear?'
+  - '*sniff* *sniff?* *snuff!* Pfeh, nothin''! None. Zero. Zilch. Zoopdeewoop.
+
+
+    Listen,
+    kiddo, there''s no gold. Least not that I can smell. So ehhh... I''m sorry. Today
+    will be a completely mundane day at work. I mean... At this job... Heh heh, there''s
+    never a dull moment at this job, eh? Heh heh heh...
+
+
+    Now, ehh... Alright.
+    Off you go. This old man can''t help you anymore, now...'
+  - 'Hm. I don''t smell anythin''. Looks like ya gotta find whatever else ya can,
+    kiddo, hehehe...
+
+
+    Ehh, by the way, have I ever told the story of when we
+    first found one of those gold items? Well, at first, we didn''t even know there
+    was gold, ehhh... And theh eh... then we were made very keenly aware, heeheehee!
+
+
+    Yeah!
+    Hehehe! The company was mad with greed, hehehehe! Ehehe... Heh... Ehm... I, ehh...
+    Don''t tell ''em I said that... I don''t-... I don''t know exactly remember how
+    they got me to come back here... We were never on great terms, so just... Ehh,
+    make sure they don''t get mad at ya... Now go.'
+  - "*sniff*\n\nHm...\n\n*sniiiiiiiff* *sniff* *sniff*\n\nHmmmmmmm...\n\nThere's...
+    definitely something... But is it worth much? ...No, I wouldn't say so. You'll
+    probably find some nice goodies, and I encourage you to bring it back, if you
+    can. \n\nBut I'd also advice you to keep your eyes open and look for your regular
+    paraphernalia as well. Can't have ya returnin' with empty hands just because
+    I led you on with the promise of gold, now, can we?\n\nBut there's still something,
+    so chop chop!"
+  - '*sniff* *sniff* That''s... *sniff* That''s gold, alright. The faintness of it
+    tells me it''s not gonna be much, but, ehh... Collect this, and ya got a nice
+    day''s worth of work on your hands. Heh heh...
+
+
+    Ehm... But... Yeah. It''s
+    gold. Just nothin'' to write home about... But ehh, don''t let that get ya down.
+    You got this! Now show that company who''s boss! Ehehe!'
+  - 'Oooh! Yeahh, that''s the smell of something nice. *sniff* *sniff* Kiddo, this
+    gold is promising. Nothing that will net ya an entire quota, but somethin'' worth
+    a day''s worth of other junk.
+
+
+    It may not be a large amount of money if
+    you were goin'' to expensive planets for this, but remember that this is still
+    rare, ya hear? It won''t be easy to find, so thank the stars whenever you do
+    find somethin''!'
+  - "*sniffff* Hmmmm. Young'in, the smell of today's gold is present. Not ehhhh...
+    faint. Not faint. But also not somethin' to jump for joy for. \n\nUsin' your
+    trusty computer scan you can see a score of whether it'll be worth your time,
+    so see what your priorities are for yourself. But ehh... try to jump for joy
+    anyways, it's still gold after all, eheheh!"
+  - 'Oh. Oh ho ho. Now this seems promising. I''m smelling not just gold. But something
+    worth a pretty penny too.
+
+
+    I''m not quite sure where it all is, but if you
+    manage to find it, expect a decent pay-out.
+
+
+    Here, I''ll make a little note
+    of it in your computer''s scan, that should be roughly how much all that shiny
+    gold is worth. Now, off you go.'
+  - '*sniff* *sniff* *sniff* Hmmmmmmhhm. That''s more like it. Kiddo, what I''m smellin''
+    today is somethin'' worth collectin''. It''s a fair harvest, should ya manage
+    to bring it all back. So go out there and make this old man proud! Ehhhehehehehehe-
+    *ehem*!'
+  - '*sniff* *sniff* Ah- Ah-wee-hee! Now that''s startin'' to look like a decent
+    pay-out!
+
+
+    Kiddo, the amount of gold on this is planet is somewhat on the
+    rare side, so don''t take your chances now. The value of today''s gold is already
+    worth a quota an intern would work days for, so try to get it all! Heehee!'
+  - '*sniffffFFF!!* Ah! Now that''s promisin''! Young''in, it''s time to stop bumblin''
+    about and start treatin'' yourself like a real employee. Or ehhhh... At least
+    a ehh... a part-timer.
+
+
+    Eh... Where was I? Ehm- oh! Yes! Gold! Young''in,
+    today''s gold is worth a real whopper, so I advice- eh... No, I- *ehem*... I
+    implore you to collect it all! Eh heh heh!
+
+
+    But, ehh... jokes aside... It
+    really is lookin'' promisin'', young''in. I know ya love hearing me talk, but
+    ya gotta know when to bumble and when to rumble. And the time to rumble is now!
+    Eeeheeheeheehee!'
+  - '*sni-* *-iiiiifffff* Yippers! Now this is a very respectable sum of cash. Listen
+    up, youngsters, there''s gold on this planet. And something nearing half a thousand,
+    no less!
+
+
+    Get all of today''s gold and you''ll be golden for- oh, *ehem*
+    pun not intended, heh, heh, heh...
+
+
+    Ehhh... where was I, eh... Oh yeah,
+    gold. Lots of it. Valuable, too. Ehm... Ehe heh... Completely lost my train of
+    thought, heh... eh...
+
+
+    ...Uhhh, yeah- Uhm, good luck, kiddo!'
+  - '*sniff* Oh! *sniff* *sniff* *sniff* Now that''s-! *sniff* *sniff* That''s a
+    smell to love! *sniff* *sniff* *sniff* Eeheheheh-! *sniff* *sniff* *sniff* *sniff*
+    *sniff* *sniff* *sniff* *sniff* *sniff* *sniff* *sniff*
+
+
+    Ack! Erm- Sorry!
+    Sorry! I got com-plete-ly carried away there... It''s just... *sniff* Kiddo,
+    today''s gold is lookin'' real, real promisin''! it''s worth a lot, so scan with
+    your terminal, scan with your helmet, scan every nook and cranny, and start smellin''
+    that gold too! Eeheeheeheeheehee- *sniff*'
+  - '...ow- ...ow-- WOWIE!! Cripes! That is a very large amount, easily worth more
+    than half a thousand!
+
+
+    I- I''ll take note of it in your computer''s scan,
+    see the exact value there. It''s okay if you can''t bring ALL of it back, it
+    is a hefty sum of money, after all. But you''ve already gotten this far, I believe
+    ya can get even further now.
+
+
+    Now... best of luck, young''in!'
+  - '*sniff* Ah! *sniff* Ah, ahah! Gold! *sniff* Gold, gold gold gold!
+
+
+    Kiddo,
+    ya... ya gotta listen reeeaaal careful now! There''s gold here. Worth a reeeaaal
+    big amount, too! Ehehehe!
+
+
+    Trust me, you''re gonna want to collect this.
+    There''s-... *sniff* *sniff* There''s so much worth here, it''s what we used
+    to call a "harvest", in my teams. Eheheh, I, ehh... I usually popularized that
+    term, eheeheeheehee!
+
+
+    But really, young''in, this is the kinda harvest you''re
+    gonna want to get back. Even if you only get just part of the total, you''ll
+    still have a few hundred worth for your quota just from gold alone.
+
+
+    So,
+    stop bumblin'' around and go! Go! Go go go go go- *ehem* *cough* *cough!* *cough!*
+    *ehem...*'
+  - '*sniff* *sniff* *sniff*
+
+
+    Myeah, there''s gold here. And it looks like ya
+    can put it all in your pockets too. So I hope ya got deep pockets in those new-fangled
+    suits, kiddo, eh, heh, heh! Now go and fill those coffers!'
+  - 'Hrm? Hmm... Mm! Young''in, lemme tell ya, the gold I''m smellin'' today is not
+    a bad haul at all, eheh, heh, that rhymes! "Haul at all"... Ehee hee heh!
+
+
+    Ehh...
+    *ehem* But, ehh, what I mean is... Today''s gold looks to be small enough to
+    take with ya in your pockets, nothin'' that fills your hands. So, if anything,
+    don''t be afraid to prioritize other items for your two-handed carryin'' work.
+
+
+    I''ve
+    heard youngsters nowadays ehh... Don''t wanna be told what to do in minute detail
+    but ehhhh, listen to an old man''s advice, even just sometimes, yeah? Maybe I
+    really can help ya, heh, heh...'
+  - '*sniff* *sniff* Hmm. Smell''s like it''s just small items today, kiddo. But
+    ehh... that makes me wonder. What''d the downside of that be?
+
+
+    See, the
+    secret to my success was planning... Know what to expect, get in and get scrap,
+    and then leave before the facility gets uninhabitable. It ehh... it worked, heheheh...
+
+
+    But...
+    Ehm... What I wanna say is... One-handed items... You know, "out of sight, out
+    of mind". Make sure to remember their weight and conductivity if things do start
+    gettin'' dangerous, so you know when to get out, and how.
+
+
+    Got that, young''in?
+    Then scrap! Ehehehe!'
+  - '*sniff...* Eh, you know what I just realized... Am I really "lucky" to have
+    such a nose? Ehh don''t get me wrong, it''s nice. And ehh, right now I smell
+    gold that''s gonna fill your hands, I mean.
+
+
+    But it''s just... isn''t that
+    too convenient? I can smell minute details like that, incredible, I know. But...
+    why must the company make me use it like this? Was there no other technology
+    feasible for detecting this?
+
+
+    Ehhh... maybe there is, and the company''s
+    doin'' this to keep me company on you young''ins'' ship. But... eghh... sometimes
+    it feels like they''re using me like some sort of technology too... It scares
+    me...
+
+
+    Ehm- *ehem* well now, that''s enough of that, heh, heh. There''s
+    gold out there, so good luck! Off ya go! Don''t- don''t tell on me! Heh, heh...'
+  - '*sniff* *Sniff* *SNIFF*
+
+
+    Agh! Big, ehh... stuff today! Big items! At least
+    one of these items is gonna give you a literal handful to worry about. So if
+    you wanna get whatever''s so valuable, make sure to keep some space free in your
+    hands.
+
+
+    Today''s score should also be impacted by the size of the items,
+    so get going! Before you''ve got a handful of me on your hands, eheheheh!'
+  - 'Ahh, that''s a hearty aroma... Erm- *ehem*... That must weird, when you consider
+    we''re talkin'' about, ehhh... inedible matter, heh heh...
+
+
+    But take it
+    from this tastebudless troublemaker- Or, ehm... At least I... used to be, a troublemaker,
+    back in my day, heh heh heh.
+
+
+    Oh- but- ehm... What I mean is, I can smell
+    how large these items are, which makes their smell larger too, ya know? ...Ehhhhh,
+    I ehh... probably sound ridiculous... Ehhmm, you just go. Try to not embarass
+    yourself...'
+  - '*sn-* Ah, that was fast, barely had to breathe deep to smell that. Which must
+    mean it can''t be far away either...
+
+
+    So I''m a-guessing you won''t have
+    to search long either. Look near any entrances you can get in and out of, the
+    gold should be close to that. Now, ta-ta! I expect to see you back reeeaaal soon,
+    heh, heh!'
+  - 'Oooh! Yep, that''s gold I smell! And from the smell of it, it''s pretty close
+    too! So ehh... Kiddo, I hope- or, ehhmm, I assume you''re smart enough to know
+    what that means.
+
+
+    Ehhhhhh... You, eh, do, right...? *ehem* Well, it ehh...
+    It means it''s very close to one of the entrances to the facility. The main entrance.
+    The fire exit. Could be either one. I''m, ehh... not sure... Sorry...
+
+
+    Ehh-
+    but! It means that, if ya get going, you''ll have little trouble findin'' it!
+    So, my scrappin'' little employee... I''d wish you luck, but I don''t think ya
+    need it, heh heh heh heh heh!'
+  - '*sni-iff* Hmmmm. That''s a-promisin''. Young''in, I''ll keep this just as brief
+    as the distance between the gold and the entrance to the facility... You won''t
+    have to look far, so collect it and become a star! Ehe heh heh heh heh!'
+  - '*sniff* *sniff*
+
+
+    Hrm... *sniiiiff* *sniffsniff* There''s certainly something,
+    but... smells like it''s a whole pilgrimage away. Not remotely close to any entrance
+    or exit, so it''s not scorin'' any points on that, either...
+
+
+    But, ehhh,
+    hehe... that reminds me of one time I really did travel for days. And for my
+    lovely wife, no less. See, the job that we worked at wanted her to transfer to
+    a whole different country, and this was back when transport wasn''t as hypertechnermalogimecal
+    as they-
+
+
+    Ehmm, wait, story for another time. If the gold''s that far away
+    you''re better off searchin'' for it than listenin'' to me ramble, so get going,
+    young''in!'
+  - '*sniff* Hrm. Ehhh... Give- give me a moment, please...
+
+
+    *sniiiiiiiiiiiiiiiiiiiiiiffffffffffffffffff-*
+    Hrmgk- Blegh! *cough* *cough* *cough* Ah! *ehem* Eh, I''m- I''m- *cough* I''m
+    sorry! I''m sorry this old body is, ehh... is so slow.
+
+
+    I''m... ehhh- *cough*
+    I''m smelling gold, that I can tell you. But... it''s- *ehem* it''s far away.
+    Far from any entrance to that fearful facility. So... Ehhhh... I recommend you
+    get going, ehh...
+
+
+    Again, I am sorry this old body is so... ehh, so worthless.
+    *ehhhem* Yeah, just... Just go. Allow me some rest...'
+  - '*sniff* *sniff* *sniff* Hm. That''s a scent so faint, ya might as well not think
+    it''s there. Young''in, there''s gold, but far, faarrr away. Ya gotta pack your
+    stuff and prep your stuff if ya wanna find it before the end of the day.
+
+
+    Ehhh...
+    Ehm, oh! Ya might be able to use one of them teleporters! Ya know, the eh...
+    the one to go in. All of you young''ins can save yourself some time getting TO
+    it, maybe.
+
+
+    Oh! Oh! And then, once you ehh...  Once you got it. Try to take
+    one of those tickets with ya. The one that lets you then teleport back with that
+    gold still in hand!
+
+
+    Ehh... *ehem* That''s enough out of me, heh heh...
+    Maybe ya don''t appreciate it when someone older than you tells ya what to do,
+    heh heh...
+
+
+    You know, I used to be like that. This was long ago, however...
+    I, ehhh... I don''t know... I was young and stubborn. This was back when my nose
+    was just developin'' too, and... Eh? Leaving? Yeah, that''s... That''s okay...'
+  - 'Hm? Wait... Kiddo! This planet''s not even got any normal scrap. Whaddaya thinkin''
+    asking for my help?! Or, ehhh... did you just want to talk to me? In that case,
+    ehhhhh... I''m sorry...
+
+
+    But, eh, well.........
+
+
+    I ehh... don''t know
+    what to say... Sorry for my outburst just now. I just... Ehhh... This is the
+    only thing I really got. I try to- eh... I really want to help, at my old age.
+    But, you know... Not much I can do...
+
+
+    Ehhh again, I''m sorry. This conversation
+    is dragged through the mud now so, ehhh... Just go. Sorry...'
+  - '*sniff* *sniff* Ah, this the company buildin''? It doesn''t smell of any gold
+    here, but I''d never forget that rot- ehh- *ehem* I''d, ehh... I''d never forget
+    that smell.
+
+
+    Seein'' all this reminds me of all the teams I''ve worked with...
+    All the co-workers that have come and gone. Some of whom, eh... Went out too
+    soon.
+
+
+    So ehh, listen, young''in! Don''t blow your candle out too soon now,
+    ya hear me? Maybe you''re rollin'' in cash after sellin'' all your stuff, but
+    that don''t make ya invincible! Eheh, heh heh, imagine... *ehem* Now... ta-ta!'

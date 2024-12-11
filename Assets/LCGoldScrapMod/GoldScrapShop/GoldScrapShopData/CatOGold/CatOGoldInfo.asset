@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b63d635d69a65940bc420fac13d2c4d, type: 3}
+  m_Name: CatOGoldInfo
+  m_EditorClassIdentifier: 
+  allStrings:
+  - This misshapen statue of a dog appears to boost your luck. Teams that have purchased
+    it have stated that they found increased amounts of golden items, but only on
+    certain days.
+  - "\"Hmph. Na\xEFve human... You truly think you may approach a deity such as I?\n\nDo
+    you know no shame? Talking in that pipsqueaky voice. Feeding me delicious treats.
+    Even trying to... (tsk)- 'pet' me.\n\nDo you not see my claws? Do you not fear
+    what might happen to you should you... attempt to steal my treasure? I am sure
+    such impure thoughts have crossed your mind, you shameless skyscraper. And I
+    am sure you don't know what you're dealing with.\n\nYou should know of the fortunes
+    I guard... The infinite mountains of gold far beyond your simple comprehension.
+    The sheer VERACITY... of my POWER!!\n\nYou... you are nothing more than a VESSEL!
+    Collecting scrap fo- was that a fly? *ahem* I mean... Collecting scrap for that
+    shell of corruption. You are as hollow-minded as the empty breeze that carries
+    the cherry blossom petals that dare not caress my sacred fur.\n\nI will make
+    sure tha-- FLY!!\n\nAck! I mean! I will make sure that you shall know just a
+    sliver of the fortunes I hold!\nFor as long as I stand tall within your ship
+    walls, you shall be blessed.\n\nBlessed with days upon which the gold you seek
+    shall flow in spades! Blessed with a luck found only once every nine lives! Blessed...
+    with ME!!\n\nFOR HEAR ME! \nI AM THE BLESSING OF THE WORLD!!\nAND I WILL BLESS
+    THE WORLD WITH MY FORTUNES!!!\n\nNNYYYYAAAAAAAAAAAAAAAaaaaaaaaaa.........\"\n\n(it
+    got distracted by the fly and ran off)"
+  - "\"Hah! Fool! Are you trying to contain me? \n\nDo you think your ship's storage
+    will REALLY stop my overwhelming abilities?! This... This cage. It is only temporary.
+    \n\nI shall claw at its door as if it were an ancient warrior. \nI am going to
+    yell meows of discontent that cry like storm's thunder. \nI will look through
+    the little holes with the largest, cutest pupils that you cannot resist! \n\nAnd
+    do not think my golden powers will waver... I shall keep unleashing my forces
+    of fortune upon this world. Keep making the gold of the world flow in spades.
+    Keep delivering gifts unto you that... that you- you shall be THANKFUL FOR!!
+    \nIt will just... happen less often. \n\nSo please, comfort yourself with the
+    knowledge that you may have stowed me away. For now... \n\nNyaha! Nyahahaha!!
+    NYAHAHAAaaaaawwn...\" \n\n(it yawned and laid down to sleep)"

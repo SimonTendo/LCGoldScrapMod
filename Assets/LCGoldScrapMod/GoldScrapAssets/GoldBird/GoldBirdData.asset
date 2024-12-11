@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: GoldBirdData
+  m_EditorClassIdentifier: 
+  itemProperties: {fileID: 11400000, guid: d8abc8bdf968923418640c5264c28d35, type: 2}
+  isScrap: 1
+  defaultWeight: 1.34
+  defaultMaxValue: 125
+  defaultMinValue: 50
+  defaultRarity: 2
+  levelsToAddMinus: 0100000003000000
+  levelsToAddDefault: 0400000005000000
+  levelsToAddPlus: 0700000009000000
+  customChange: 4
+  levelsToAddCustom: 0a000000
+  localMaxValue: 0
+  localMinValue: 0

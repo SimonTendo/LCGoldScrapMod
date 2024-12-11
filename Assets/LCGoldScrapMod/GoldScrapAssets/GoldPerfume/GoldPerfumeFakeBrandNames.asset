@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b63d635d69a65940bc420fac13d2c4d, type: 3}
+  m_Name: GoldPerfumeFakeBrandNames
+  m_EditorClassIdentifier: 
+  allStrings:
+  - Gold Perfume
+  - Pet d'Or
+  - Company Cologne
+  - Oh the Toilet
+  - Bracko Rabanne
+  - Butler's Finest
+  - Tom Fardd
+  - Hugo Barber
+  - Coil Klein
+  - Fragrance Keeper
+  - FOR MANLY MEN YEAH
+  - Intern's Basics
+  - LizardSpores
+  - Masking Scent
+  - Ralph Lasso
+  - Gordion's Grace
+  - Young Spice
+  - '[dungeonType] Smell'
+  - Essence of [currentLevel]
+  - '[randomPlayer]''s odor'
+  - Ouwe Stinkerd's
+  - Strong Stuff
+  - DeodoRend
+  - '[profitQuota]-Quota Tang'
+  - '[currentWeather] Stench'
+  - '"goop" by Goopy Goblin'
+  - Billion Gold

@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+  m_Name: GoldScrapShopDirectoryLOGInfo
+  m_EditorClassIdentifier: 
+  displayText: '
+
+    Here at the Company, we believe wisdom should be passed on
+    between generations. Therefore, we have brought back a retired, yet experienced
+    employee. This veteran has a nose for gold, having brought back more valuable
+    scrap than most teams combined.
+
+
+    Use the ''SCAN'' command to see how much
+    gold scrap is on the planet, its value, and a score indicating how worthwhile
+    it is.
+
+
+    Additionally, using the command ''DLOG'', he will be able to offer
+    extra help about the gold items, such as its distance from any entrance, whether
+    it is two-handed, a tool, or another noteworthy piece of knowledge. Simply filter
+    out important information.
+
+
+'
+  terminalEvent: 
+  clearPreviousText: 1
+  maxCharactersToType: 25
+  buyItemIndex: -1
+  buyVehicleIndex: -1
+  isConfirmationNode: 0
+  buyRerouteToMoon: -1
+  displayPlanetInfo: -1
+  shipUnlockableID: -1
+  buyUnlockable: 0
+  returnFromStorage: 0
+  itemCost: 0
+  creatureFileID: -1
+  creatureName: 
+  storyLogFileID: -1
+  overrideOptions: 0
+  acceptAnything: 0
+  terminalOptions: []
+  playClip: {fileID: 0}
+  playSyncedClip: -1
+  displayTexture: {fileID: 0}
+  displayVideo: {fileID: 0}
+  loadImageSlowly: 0
+  persistentImage: 0

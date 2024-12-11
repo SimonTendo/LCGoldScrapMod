@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+  m_Name: GoldScrapHelpSpawnNode
+  m_EditorClassIdentifier: 
+  displayText: "\"Where can I find gold scrap?\"\n\nBy default, gold scrap will only
+    appear on vanilla Lethal Company moons where the original version of that scrap
+    appears. \n\nFor example, if an item only spawns on Offense and Dine, even if
+    it's very rare for it to spawn there, the gold version of that item also only
+    spawns on Offense and Dine. But there is an exception: S+ Levels. On moons with
+    a Hazard Level of S+ or higher, ALL gold scrap can appear, meaning gold scrap
+    more consistenly spawns there too.\n\nHowever, using the mod manager's Edit config
+    settings, you can set what moons you want gold scrap to appear on, how rare it
+    is, and even if it should spawn on custom moons. So feel free to take control
+    over what you think feels best!\n\n"
+  terminalEvent: 
+  clearPreviousText: 1
+  maxCharactersToType: 20
+  buyItemIndex: -1
+  buyVehicleIndex: -1
+  isConfirmationNode: 0
+  buyRerouteToMoon: -1
+  displayPlanetInfo: -1
+  shipUnlockableID: -1
+  buyUnlockable: 0
+  returnFromStorage: 0
+  itemCost: 0
+  creatureFileID: -1
+  creatureName: 
+  storyLogFileID: -1
+  overrideOptions: 0
+  acceptAnything: 0
+  terminalOptions: []
+  playClip: {fileID: 0}
+  playSyncedClip: -1
+  displayTexture: {fileID: 0}
+  displayVideo: {fileID: 0}
+  loadImageSlowly: 0
+  persistentImage: 0

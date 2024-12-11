@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+  m_Name: GoldScrapLog1Node
+  m_EditorClassIdentifier: 
+  displayText: 'StartGoldroutine(ScanLog(logNumber1));
+
+
+    ===
+
+    hey companyyyy
+    hiiiiiiii. spying on a girl''s privacy by reading through her diary now huh?
+    tut tut. that''s poor form even for you... buuut I''ll let it slide this time
+    because, really, where would you be without me and my inventions? ;3
+
+    first
+    you forced me to hand over the solution that finally solves your dumb teleportation
+    problem, then I wasn''t allowed to keep time-magic all to myself, boohoo, and
+    now you''re calling my pride and joy some "undisclosed device" that everyone
+    needs to do test runs with. but you know that without me all those interns would
+    be tripping right off of cliffs, like that Offense guy haha.
+
+
+    dear mandatory
+    diary, today I found no gold, yeah so anyways *ohmigosh those robots*, I love
+    being able to study them all day long!! I guess giving you my creations at least
+    lets me work without a quota so I can just sit here and scavengggge all day long.
+    and then I can tinkerrrr all night long, and then I can regretttt not getting
+    enough sleep the next dayyyy xZ
+
+
+    there was an eclipse today! i LOOVE seeing
+    all those robots in action! and it''s sooooo satisfying watching them blast those
+    monsters to smithereens. I errr... did stay back in the ship thoo. they might
+    be cute and full of rad tech, but they can also burn my skin to a crisp if they
+    so please :P
+
+
+    I think I spotted some sort of... mole...? today? he didn''t
+    notice me tho, he just kinda stared around blankly. maybe he knew there wasn''t
+    any gold on this devoid-of-life planet, as I couldnt find squat either
+
+
+    again
+    didn''t get any gold and this diary thing is keeping me away from my experiments,
+    so I''ll just leave it for someone else to find. and here''s a tip for you on
+    my "undisclosed device": if you got this diary using a ladder or jetpack, then
+    good on you but you''re doing it wrong.
+
+    you gotta use my device to PFEEEEEWWWW
+    yourself into the sky! it''s amazinggg!! careful you don''t land on a lower surface
+    than where you started tho, cuz that''s gonna cost you your ankles
+
+    but yeah
+    anyways have funnnnn byyeeeee ^v^
+
+    ===
+
+
+    Performance: Helpful
+
+    Consequence:
+    Think of branding for device
+
+
+'
+  terminalEvent: 
+  clearPreviousText: 1
+  maxCharactersToType: 35
+  buyItemIndex: -1
+  buyVehicleIndex: -1
+  isConfirmationNode: 0
+  buyRerouteToMoon: -1
+  displayPlanetInfo: -1
+  shipUnlockableID: -1
+  buyUnlockable: 0
+  returnFromStorage: 0
+  itemCost: 0
+  creatureFileID: -1
+  creatureName: Genius
+  storyLogFileID: -1
+  overrideOptions: 0
+  acceptAnything: 0
+  terminalOptions: []
+  playClip: {fileID: 0}
+  playSyncedClip: -1
+  displayTexture: {fileID: 0}
+  displayVideo: {fileID: 0}
+  loadImageSlowly: 0
+  persistentImage: 0

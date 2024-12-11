@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: GoldenFlaskData
+  m_EditorClassIdentifier: 
+  itemProperties: {fileID: 11400000, guid: 5f9596d1fc67cd743b38e8434c7f98e7, type: 2}
+  isScrap: 1
+  defaultWeight: 1.2
+  defaultMaxValue: 110
+  defaultMinValue: 40
+  defaultRarity: 3
+  levelsToAddMinus: 
+  levelsToAddDefault: 07000000
+  levelsToAddPlus: 0400000009000000
+  customChange: -2
+  levelsToAddCustom: 000000000100000002000000
+  localMaxValue: 0
+  localMinValue: 0
