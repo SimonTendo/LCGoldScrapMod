@@ -83,13 +83,13 @@ public class Config
             "Other",
             "Other Sound Effects",
             true,
-            "Set whether gold scrap that makes unique noise, such as the Airhorn, uses sounds from other media or vanilla Lethal Company item sounds."
+            "Set whether gold scrap that makes unique noise, such as the Golden Airhorn, uses sounds from other media or vanilla Lethal Company item sounds."
             );
         replaceEnemySFX = cfg.Bind(
             "Other",
             "Other Enemy Sounds",
             false,
-            "Set whether gold scrap that is based on enemies, such as the Gold Spring, uses sounds from other media or vanilla Lethal Company enemy sounds."
+            "Set whether gold scrap that is based on enemies or hazards, such as the Gold Spring, uses sounds from other media or vanilla Lethal Company enemy sounds."
             );
         fixScan = cfg.Bind(
             "Other",

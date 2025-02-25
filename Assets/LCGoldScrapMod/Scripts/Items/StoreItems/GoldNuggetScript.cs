@@ -141,9 +141,11 @@ public class GoldNuggetScript : GrabbableObject
         if (itemType == ItemTypes.GoldOre && StartOfRound.Instance.currentLevel.planetHasTime)
         {
             int newOreIncrease = -1;
-            while (newOreIncrease == -1 || NewIncreaseInSameQuadrant(newOreIncrease))
+            int attempts = 0;
+            while (attempts < 10 && (newOreIncrease == -1 || NewIncreaseInSameQuadrant(newOreIncrease)))
             {
                 newOreIncrease = GetNewOreIncrease();
+                attempts++;
             }
             int bonusQuotas = TimeOfDay.Instance.timesFulfilledQuota + 1 - oreQuotasWithoutBonus;
             if (bonusQuotas > 0)
@@ -198,14 +200,22 @@ public class GoldNuggetScript : GrabbableObject
             SetCreditsCardStartClientRpc(CreditsCardManager.GetCurrentSaveCardValue(currentSave));
             if (currentSave < 0 || currentSave >= CreditsCardManager.nextCardValue.Length)
             {
-                for (int i = 0; i < CreditsCardManager.nextCardValue.Length; i++)
+                Logger.LogDebug($"could not load nextCardValue[{currentSave}], resetting all values");
+                for (int i = 0; i < CreditsCardManager.previousCredits.Length; i++)
                 {
-                    CreditsCardManager.nextCardValue[i] = 0;
+                    CreditsCardManager.previousCredits[i] = 0;
+                }
+                CreditsCardManager.tempCardValue = 0;
+                for (int j = 0; j < CreditsCardManager.nextCardValue.Length; j++)
+                {
+                    CreditsCardManager.nextCardValue[j] = 0;
                 }
             }
             else
             {
+                CreditsCardManager.previousCredits[currentSave] = 0;
                 CreditsCardManager.nextCardValue[currentSave] = 0;
+                Logger.LogDebug($"reset [{currentSave}] to: previous = {CreditsCardManager.previousCredits[currentSave]} && next = {CreditsCardManager.nextCardValue[currentSave]}");
             }
         }
     }

@@ -66,7 +66,7 @@ public class General
         return helmetLightsObject;
     }
 
-    public static bool DoesMoonHaveGoldScrap(int moonLevelID = -1)
+    public static bool DoesMoonHaveGoldScrap(int moonLevelID = -1, bool checkScene = true)
     {
         if (moonLevelID == -1 || moonLevelID < 0 || moonLevelID >= StartOfRound.Instance.levels.Length)
         {
@@ -90,12 +90,15 @@ public class General
         }
 
         //As a failsafe, check to see if the current planet has any gold scrap that is not in the ship
-        foreach (GoldScrapObject goldScrap in Object.FindObjectsOfType<GoldScrapObject>())
+        if (checkScene)
         {
-            if (goldScrap.item != null && !goldScrap.item.isInShipRoom)
+            foreach (GoldScrapObject goldScrap in Object.FindObjectsOfType<GoldScrapObject>())
             {
-                Logger.LogDebug("current scene not in ship returned true");
-                return true;
+                if (goldScrap.item != null && !goldScrap.item.isInShipRoom)
+                {
+                    Logger.LogDebug("current scene not in ship returned true");
+                    return true;
+                }
             }
         }
 
@@ -256,7 +259,10 @@ public class General
             if (!unlock)
             {
                 StoreAndTerminal.runtimeDiscoBallSongs.allClips.Clear();
-                StoreAndTerminal.runtimeDiscoBallSongs.allClips.Add(sharedSFXdiscoBallMusic);
+                if (sharedSFXdiscoBallMusic != null)
+                {
+                    StoreAndTerminal.runtimeDiscoBallSongs.allClips.Add(sharedSFXdiscoBallMusic);
+                }
                 Logger.LogDebug("Reset Disco Ball songs!");
             }
             else
@@ -293,6 +299,50 @@ public class General
             {
                 SharedAudioMethods.AudioClipAddNew(clip, discoBallPlaylist, true);
             }
+        }
+    }
+
+    public static void BreakPocketedItem(GrabbableObject item, int itemSlot = -1)
+    {
+        if (StartOfRound.Instance.shipBounds.bounds.Contains(item.transform.position))
+        {
+            item.transform.SetParent(StartOfRound.Instance.elevatorTransform);
+        }
+        else
+        {
+            item.transform.SetParent(StartOfRound.Instance.propsContainer);
+        }
+        item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
+        item.targetFloorPosition = item.transform.parent.InverseTransformPoint(item.transform.position);
+        item.fallTime = 1f;
+        item.reachedFloorTarget = true;
+        item.hasHitGround = true;
+        item.parentObject = null;
+        item.heldByPlayerOnServer = false;
+        item.isHeld = false;
+        item.isPocketed = false;
+        item.playerHeldBy.carryWeight = Mathf.Clamp(item.playerHeldBy.carryWeight - (item.itemProperties.weight - 1), 1f, 10f);
+        if (itemSlot == -1)
+        {
+            for (int i = 0; i < item.playerHeldBy.ItemSlots.Length; i++)
+            {
+                GrabbableObject itemInSlot = item.playerHeldBy.ItemSlots[i];
+                if (itemInSlot != null && itemInSlot == item)
+                {
+                    itemSlot = i;
+                    break;
+                }
+            }
+        }
+        if (itemSlot == -1)
+        {
+            Logger.LogWarning("General failed to find itemSlot for BreakPocketedItem()!");
+            return;
+        }
+        item.playerHeldBy.ItemSlots[itemSlot] = null;
+        if (item.playerHeldBy == GameNetworkManager.Instance.localPlayerController)
+        {
+            HUDManager.Instance.itemSlotIcons[itemSlot].enabled = false;
         }
     }
 }

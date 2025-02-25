@@ -228,10 +228,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  startingValue: 500
+  startingValue: 1000
   startingValueFever: 2500
-  itemValuePercentage: 100
-  consecutiveIncreaseDropoff: 15
+  itemValuePercentage: 150
+  consecutiveIncreaseDropoff: 25
 --- !u!82 &9143842869932078031
 AudioSource:
   m_ObjectHideFlags: 0

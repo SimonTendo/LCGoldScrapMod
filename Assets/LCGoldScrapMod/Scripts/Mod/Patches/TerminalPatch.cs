@@ -379,6 +379,10 @@ public class TerminalPatch
             {
                 __instance.LoadNewNode(__instance.terminalNodes.specialNodes[9]);
             }
+            else if (node == StoreAndTerminal.goldCrownBuyNode && StartOfRound.Instance.connectedPlayersAmount == 0)
+            {
+                __instance.LoadNewNode(StoreAndTerminal.goldCrownSingleplayerInfo);
+            }
         }
     }
     [HarmonyPatch(typeof(Terminal), "SetItemSales")]

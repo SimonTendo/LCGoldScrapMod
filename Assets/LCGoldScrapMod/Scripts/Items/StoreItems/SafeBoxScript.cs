@@ -39,6 +39,7 @@ public class SafeBoxScript : NetworkBehaviour
     private bool localPlayerTrapped;
     public int minBonksToEscape;
     public int maxItemsToSave;
+    private int overCapacity;
     private int currentBonks;
     public float checkTrappedInterval;
     private float checkTrappedTimer;
@@ -96,10 +97,7 @@ public class SafeBoxScript : NetworkBehaviour
 
     private void OnClose()
     {
-        if (trappedPlayers.Count != 0)
-        {
-            buildModeObject.inUse = true;
-        }
+        buildModeObject.inUse = trappedPlayers.Count != 0;
         insideTrigger.interactable = true;
         GrabbableObject[] allItemsInBounds = GetItemsInSafe();
         foreach (GrabbableObject item in allItemsInBounds)
@@ -148,7 +146,7 @@ public class SafeBoxScript : NetworkBehaviour
         outsideAudio.PlayOneShot(closeClipFail);
         WalkieTalkie.TransmitOneShotAudio(outsideAudio, closeClipFail, 0.5f);
         RoundManager.Instance.PlayAudibleNoise(transform.position, 10f, 0.5f);
-        outsideTrigger.hoverTip = "Too full to Close : [E]";
+        outsideTrigger.hoverTip = $"Over capacity ({overCapacity}) : [E]";
     }
 
 
@@ -160,10 +158,11 @@ public class SafeBoxScript : NetworkBehaviour
         {
             return;
         }
-        int weightOfItems = GetWeightOfItems(GetItemsInSafe());
-        if (weightOfItems > maxItemsToSave)
+        int totalWeight = GetWeightOfItems(GetItemsInSafe());
+        int overCapacity = totalWeight - maxItemsToSave;
+        if (overCapacity > 0)
         {
-            CloseSafeFailClientRpc();
+            CloseSafeFailClientRpc(overCapacity);
             return;
         }
         int[] playersIDs = GetPlayersInSafe();
@@ -284,18 +283,22 @@ public class SafeBoxScript : NetworkBehaviour
     [ClientRpc]
     public void CloseSafeNormalClientRpc()
     {
+        buildModeObject.inUse = true;
         doorAnimator.SetTrigger("CloseNormal");
     }
 
     [ClientRpc]
     private void CloseSafeTrapClientRpc()
     {
+        buildModeObject.inUse = true;
         doorAnimator.SetTrigger("CloseTrapped");
     }
 
     [ClientRpc]
-    private void CloseSafeFailClientRpc()
+    private void CloseSafeFailClientRpc(int hostOvercapacity)
     {
+        buildModeObject.inUse = false;
+        overCapacity = hostOvercapacity;
         doorAnimator.SetTrigger("CloseFail");
     }
 
@@ -369,12 +372,9 @@ public class SafeBoxScript : NetworkBehaviour
     [ClientRpc]
     private void SyncUponJoinClientRpc(int playerID, bool hostIsOpen)
     {
-        if (playerID == (int)StartOfRound.Instance.localPlayerController.playerClientId)
+        if (playerID == (int)StartOfRound.Instance.localPlayerController.playerClientId && hostIsOpen)
         {
-            if (hostIsOpen)
-            {
-                OpenSafeLocal();
-            }
+            OpenSafeLocal();
         }
     }
 
@@ -414,7 +414,7 @@ public class SafeBoxScript : NetworkBehaviour
     public class NewNetworkObjectDespawn
     {
         [HarmonyPrefix]
-        public static bool CheckIfInSafeBounds(NetworkObject __instance)
+        public static bool CheckIfInSafe(NetworkObject __instance)
         {
             if (StartOfRound.Instance.allPlayersDead)
             {

@@ -74,7 +74,7 @@ MonoBehaviour:
   mainMesh: {fileID: 1247519366474271771}
   mainTransform: {fileID: 8566833038933607554}
   placeObjectCollider: {fileID: 8894172531853828478}
-  yOffset: 0.025
+  yOffset: 0.525
   overrideWallOffset: 0
   wallOffset: 0
   collisionPointCheck: {x: 0, y: 0, z: 0}
@@ -251,6 +251,7 @@ MonoBehaviour:
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
   overrideOffset: 1
+  unlockableID: -1
 --- !u!1 &8303340364715294263
 GameObject:
   m_ObjectHideFlags: 0

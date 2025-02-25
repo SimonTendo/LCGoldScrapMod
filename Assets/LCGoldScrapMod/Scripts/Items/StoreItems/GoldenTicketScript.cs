@@ -191,29 +191,7 @@ public class GoldenTicketScript : GrabbableObject
         DestroyObjectInHand(playerHeldBy);
         if (isPocketed)
         {
-            if (StartOfRound.Instance.shipBounds.bounds.Contains(transform.position))
-            {
-                transform.SetParent(StartOfRound.Instance.elevatorTransform);
-            }
-            else
-            {
-                transform.SetParent(StartOfRound.Instance.propsContainer);
-            }
-            startFallingPosition = transform.parent.InverseTransformPoint(transform.position);
-            targetFloorPosition = transform.parent.InverseTransformPoint(transform.position);
-            fallTime = 1f;
-            reachedFloorTarget = true;
-            hasHitGround = true;
-            parentObject = null;
-            heldByPlayerOnServer = false;
-            isHeld = false;
-            isPocketed = false;
-            playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (itemProperties.weight - 1), 1f, 10f);
-            playerHeldBy.ItemSlots[itemSlot] = null;
-            if (playerHeldBy == GameNetworkManager.Instance.localPlayerController)
-            {
-                HUDManager.Instance.itemSlotIcons[itemSlot].enabled = false;
-            }
+            General.BreakPocketedItem(this, itemSlot);
         }
     }
 

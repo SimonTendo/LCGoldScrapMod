@@ -1,15 +1,16 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
 using BepInEx;
 using BepInEx.Logging;
+using BepInEx.Bootstrap;
 using HarmonyLib;
 using HarmonyLib.Tools;
-using BepInEx.Bootstrap;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 
-[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.0.0")]
+[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.0.7")]
 [BepInDependency("LCSimonTendoPlaylistsMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("LethalConfig", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
@@ -18,6 +19,7 @@ public class Plugin : BaseUnityPlugin
     public static AssetBundle CustomGoldScrapAssets;
     public static GoldScrapSaveData.SaveData saveData;
     public static string sAssemblyLocation;
+    public static string sSaveLocation;
     public static new Config myConfig { get; internal set; }
 
     public static bool alreadyAddedItems = false;
@@ -44,6 +46,8 @@ public class Plugin : BaseUnityPlugin
         Logger.LogInfo($"Plugin LCGoldScrapMod is loaded!");
 
         sAssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        sSaveLocation = GetSaveDataFolder();
+
         CustomGoldScrapAssets = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "goldscrapassetbundle"));
         if (CustomGoldScrapAssets == null)
         {
@@ -80,6 +84,25 @@ public class Plugin : BaseUnityPlugin
         LogManager.allLogPrefabs = CustomGoldScrapAssets.LoadAsset<GameObjectList>("Assets/LCGoldScrapMod/GoldScrapMisc/StoryLogs/AllLogs.asset");
         AssetsCollection.LoadEditorAssets();
         StoreAndTerminal.LoadEditorAssets();
+    }
+
+    //Method based heavily on that found in the decompiled LethalCompanyInputUtils.dll at LethalCompanyInputUtils.Utils.FsUtils.EnsureRequiredDirs()
+    public static string GetSaveDataFolder()
+    {
+        string vanillaSaveFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "ZeekerssRBLX", "Lethal Company");
+        if (!Directory.Exists(vanillaSaveFolder))
+        {
+            Logger.LogDebug("couldn't find vanillaSaveFolder, returning assembly folder");
+            return sAssemblyLocation;
+        }
+        string customSaveFolder = Path.Combine(vanillaSaveFolder, "SimonTendo");
+        if (!Directory.Exists(customSaveFolder))
+        {
+            Logger.LogDebug("No customSaveFolder existed yet, trying to create new one");
+            Directory.CreateDirectory(customSaveFolder);
+        }
+        Logger.LogInfo("Successfully found SaveData folder");
+        return customSaveFolder;
     }
 
     public static void LoadSavedData()
@@ -195,5 +218,3 @@ public class Plugin : BaseUnityPlugin
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(global::Config.sillyScrap, true));
     }
 }
-
-//GitHub test comment

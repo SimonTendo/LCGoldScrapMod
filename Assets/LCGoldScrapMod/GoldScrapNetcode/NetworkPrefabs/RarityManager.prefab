@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 608065650e94b0649b00bfd7863f7b00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultDaysBetweenFevers: 6
-  chanceOfXDaysBetweenFevers: 01000000070000000a000000190000000f000000210000003c00000014000000280000000500000003000000
+  defaultDaysBetweenFevers: 5
+  chanceOfXDaysBetweenFevers: 03000000050000000a000000190000000f000000210000004100000014000000280000000700000001000000
   multiplierNormal: 3
   multiplierFoggy: 4
   multiplierRainy: 3

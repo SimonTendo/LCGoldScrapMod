@@ -32,13 +32,14 @@ public class CreditsCardManager : NetworkBehaviour
     private IEnumerator WaitForHostToBePicked()
     {
         yield return new WaitUntil(() => GameNetworkManager.Instance.localPlayerController != null);
+        yield return new WaitForSeconds(1f);
         SetBuyingRate();
     }
 
     public void SetBuyingRate() 
     {
         int saveFile = GameNetworkManager.Instance.saveFileNum;
-        if (GameNetworkManager.Instance.localPlayerController.isHostPlayerObject && saveFile >= 0 && saveFile < previousCredits.Length && previousCredits[saveFile] != 0)
+        if (GameNetworkManager.Instance.localPlayerController.isHostPlayerObject && saveFile >= 0 && saveFile < previousCredits.Length)
         {
             SetBuyingRateClientRpc(previousCredits[saveFile]);
         }
@@ -66,7 +67,7 @@ public class CreditsCardManager : NetworkBehaviour
         }
         int valueToSet = terminalScript.groupCredits;
         Logger.LogDebug($"groupCredits: {valueToSet}");
-        if (overtimeIndex < previousCredits.Length)
+        if (overtimeIndex >= 0 && overtimeIndex < previousCredits.Length)
         {
             Logger.LogDebug($"overtime: {previousCredits[overtimeIndex]}");
             valueToSet += previousCredits[overtimeIndex];
@@ -87,9 +88,9 @@ public class CreditsCardManager : NetworkBehaviour
         if (creditsCardItem.creditsWorth != 0)
         {
             int price = 100;
-            if (Random.Range(0, 4) == 0)
+            if (Random.Range(0, 5) == 0)
             {
-                price -= Random.Range(2, 9) * 10;
+                price -= Random.Range(3, 9) * 10;
             }
             SetNewSalesClientRpc(price);
         }
@@ -140,8 +141,8 @@ public class CreditsCardManager : NetworkBehaviour
             if (terminalScript != null)
             {
                 terminalScript.itemSalesPercentages[creditsCardNodeBuy.buyItemIndex] = newSalesValue;
+                Plugin.Logger.LogDebug($"sale: {100 - newSalesValue}%");
             }
-            Plugin.Logger.LogDebug($"sale: {100 - newSalesValue}%");
         }
     }
 

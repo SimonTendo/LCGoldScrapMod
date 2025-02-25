@@ -103,9 +103,11 @@ public class RarityManager : NetworkBehaviour
     {
         hadFeverYesterday = true;
         int randomLevelID = -1;
-        while (randomLevelID == -1 || !General.DoesMoonHaveGoldScrap(randomLevelID))
+        int attempts = 0;
+        while (attempts < 10 && (randomLevelID == -1 || !General.DoesMoonHaveGoldScrap(randomLevelID, false)))
         {
             randomLevelID = GetRandomLevelID();
+            attempts++;
         }
         Logger.LogDebug($"rolled randomLevelID: {randomLevelID}");
         int multiplier = GetMultiplierByWeather(randomLevelID);

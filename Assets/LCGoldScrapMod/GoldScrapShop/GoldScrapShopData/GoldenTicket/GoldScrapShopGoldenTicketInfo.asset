@@ -26,7 +26,8 @@ MonoBehaviour:
     everyone should keep their items!
 
 
-    *Ticket itself is destroyed upon use.
+    *Ticket itself is almost always destroyed
+    upon use.
 
 
 '

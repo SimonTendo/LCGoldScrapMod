@@ -65,9 +65,15 @@ public class StartOfRoundPatch
                 General.SetMedalsOnJoin();
                 if (StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.catOGoldID].hasBeenUnlockedByPlayer && !RarityManager.hadFreeFirstFever)
                 {
-                    Plugin.Logger.LogDebug($"cat unlocked upon start, likely from previous save file");
+                    Plugin.Logger.LogDebug("cat unlocked upon start, likely from previous save file");
                     RarityManager.hadFreeFirstFever = true;
                     RarityManager.instance.RollForGoldFever();
+                }
+                UnlockableItem safeBox = StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.safeBoxID];
+                if (safeBox.hasBeenUnlockedByPlayer && safeBox.inStorage)
+                {
+                    Plugin.Logger.LogDebug("safe in storage upon start, setting to instantiate");
+                    safeBox.spawnPrefab = true;
                 }
             }
             else

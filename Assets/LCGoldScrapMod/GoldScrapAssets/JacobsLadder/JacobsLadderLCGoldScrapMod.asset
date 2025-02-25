@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: JacobsLadderLCGoldScrapMod
   m_EditorClassIdentifier: 
   itemId: 0
-  itemName: Jacob's Ladder
+  itemName: Jacobs Ladder
   spawnPositionTypes: []
   twoHanded: 0
   twoHandedAnimation: 0

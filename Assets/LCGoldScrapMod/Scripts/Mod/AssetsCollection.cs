@@ -1932,7 +1932,7 @@ public class AssetsCollection
 
 
             //BunnyHopSFX
-            if (sharedSFXbunnyHop == null && unlockable.unlockableName == "Bunny Suit")
+            if (unlockable.unlockableName == "Bunny Suit")
             {
                 AudioClip bunnyHopSFX = unlockable.jumpAudio;
                 if (bunnyHopSFX != null && bunnyHopSFX.samples == 34667)
@@ -1949,14 +1949,14 @@ public class AssetsCollection
 
 
             //DiscoBallMusic
-            if (sharedSFXdiscoBallMusic == null && unlockable.unlockableName == "Disco Ball")
+            if (unlockable.unlockableName == "Disco Ball")
             {
                 Logger.LogDebug("Trying to build DISCO BALL PLAYLIST");
                 discoBallStaticPrefab = unlockable.prefabObject;
-                AudioClip discoBallMusic = unlockable.prefabObject.transform.GetChild(0).GetChild(1).GetComponent<AudioSource>().clip;
-                if (discoBallMusic != null && discoBallMusic.samples == 2501673)
+                AudioSource discoBallMusic = unlockable.prefabObject.transform.Find("AnimContainer")?.Find("Audio")?.GetComponent<AudioSource>();
+                if (discoBallMusic != null && discoBallMusic.clip != null && discoBallMusic.clip.samples == 2501673)
                 {
-                    sharedSFXdiscoBallMusic = discoBallMusic;
+                    sharedSFXdiscoBallMusic = discoBallMusic.clip;
                 }
                 else
                 {

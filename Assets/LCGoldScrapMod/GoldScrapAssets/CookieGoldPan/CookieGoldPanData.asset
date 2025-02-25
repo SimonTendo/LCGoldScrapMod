@@ -19,10 +19,10 @@ MonoBehaviour:
   defaultMaxValue: 100
   defaultMinValue: 20
   defaultRarity: 3
-  levelsToAddMinus: 02000000
+  levelsToAddMinus: 
   levelsToAddDefault: 030000000800000007000000
   levelsToAddPlus: 040000000a00000009000000
   customChange: -2
-  levelsToAddCustom: 0000000001000000
+  levelsToAddCustom: 000000000100000002000000
   localMaxValue: 0
   localMinValue: 0

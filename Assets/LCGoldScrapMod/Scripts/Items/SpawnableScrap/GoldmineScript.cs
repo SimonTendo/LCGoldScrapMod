@@ -32,7 +32,8 @@ public class GoldmineScript : GrabbableObject
     {
         base.Start();
         triggerLight.enabled = false;
-        if (IsServer && !isInShipRoom && Random.Range(1, 101) <= 25)
+        int chanceToStartActive = Config.hostToolRebalance ? 67 : 33;
+        if (IsServer && !isInShipRoom && Random.Range(1, 101) < chanceToStartActive)
         {
             ToggleActiveClientRpc(true);
         }

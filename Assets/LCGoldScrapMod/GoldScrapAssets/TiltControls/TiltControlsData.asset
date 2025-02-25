@@ -19,8 +19,8 @@ MonoBehaviour:
   defaultMaxValue: 80
   defaultMinValue: 40
   defaultRarity: 3
-  levelsToAddMinus: 
-  levelsToAddDefault: 020000000800000007000000
+  levelsToAddMinus: 02000000
+  levelsToAddDefault: 0800000007000000
   levelsToAddPlus: 09000000
   customChange: -2
   levelsToAddCustom: 0000000001000000

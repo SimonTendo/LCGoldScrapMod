@@ -84,7 +84,19 @@ public class GameNetworkManagerPatch
         [HarmonyPrefix]
         public static void DisconnectPostfix(GameNetworkManager __instance)
         {
-            if (__instance.localPlayerController != null && __instance.localPlayerController.isHostPlayerObject && CreditsCardManager.previousCredits[__instance.saveFileNum] != 0)
+            if (__instance == null || __instance.localPlayerController == null || !__instance.localPlayerController.isHostPlayerObject)
+            {
+                Plugin.Logger.LogDebug("null or client, returning");
+                return;
+            }
+            int saveNum = __instance.saveFileNum;
+            if (saveNum < 0 || saveNum >= CreditsCardManager.previousCredits.Length)
+            {
+                Plugin.Logger.LogInfo($"saveFileNum [{saveNum}] outside bounds of CreditsCardManager array; GoldScrapSaveData will not be saved");
+                return;
+            }
+            int overtimeNum = saveNum + 3;
+            if (CreditsCardManager.previousCredits[saveNum] != 0 || (overtimeNum >= 0 && overtimeNum < CreditsCardManager.previousCredits.Length && CreditsCardManager.previousCredits[overtimeNum] != 0))
             {
                 GoldScrapSaveData.SaveData saveData = new GoldScrapSaveData.SaveData();
                 saveData.Save();

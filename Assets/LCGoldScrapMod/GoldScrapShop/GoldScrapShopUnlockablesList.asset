@@ -169,7 +169,7 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  - unlockableName: Cat o' Gold
+  - unlockableName: Cat o Gold
     prefabObject: {fileID: 1250886009260231830, guid: 2518ac2cacd508b4fa5372cbb03a6e03,
       type: 3}
     unlockableType: 1
@@ -205,7 +205,7 @@ MonoBehaviour:
     placedRotation: {x: 0, y: 0, z: 0}
     luckValue: -0.125
     inStorage: 0
-    canBeStored: 0
+    canBeStored: 1
     maxNumber: 1
     hasBeenUnlockedByPlayer: 0
     suitMaterial: {fileID: 0}

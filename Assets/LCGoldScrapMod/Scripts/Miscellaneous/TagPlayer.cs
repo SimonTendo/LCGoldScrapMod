@@ -11,7 +11,7 @@ public class TagPlayer : NetworkBehaviour, IGoldenGlassSecret
     public static GameObject tagContainer;
     public ScanNodeProperties scanNode;
     public StringList allPlayerDescriptions;
-    public Collider colliderToToggle;
+    public GameObject scanNodeObject;
     private int onPlayerIndex = -1;
 
     public static void PutTagOnPlayers()
@@ -27,7 +27,8 @@ public class TagPlayer : NetworkBehaviour, IGoldenGlassSecret
 
     void Start()
     {
-        colliderToToggle.enabled = false;
+        scanNode.enabled = false;
+        scanNodeObject.SetActive(false);
         if (IsServer)
         {
             SendDescriptionClientRpc(RerollSubText(), onPlayerIndex);
@@ -40,7 +41,7 @@ public class TagPlayer : NetworkBehaviour, IGoldenGlassSecret
 
     void Update()
     {
-        if (onPlayerIndex != -1 && colliderToToggle.enabled)
+        if (onPlayerIndex != -1 && scanNode.enabled)
         {
             transform.position = StartOfRound.Instance.allPlayerScripts[onPlayerIndex].playerEye.position;
         }
@@ -79,12 +80,14 @@ public class TagPlayer : NetworkBehaviour, IGoldenGlassSecret
     {
         if (StartOfRound.Instance.allPlayerScripts[onPlayerIndex] != StartOfRound.Instance.localPlayerController)
         {
-            colliderToToggle.enabled = true;
+            scanNodeObject.SetActive(true);
+            scanNode.enabled = true;
         }
     }
 
     void IGoldenGlassSecret.EndReveal()
     {
-        colliderToToggle.enabled = false;
+        scanNode.enabled = false;
+        scanNodeObject.SetActive(false);
     }
 }

@@ -37,10 +37,7 @@ public class GoldRemoteScript : GrabbableObject
             BreakerBox breakerBox = FindObjectOfType<BreakerBox>();
             if (roundManager != null && breakerBox != null)
             {
-                if (!Config.hostToolRebalance)
-                {
-                    roundManager.SwitchPower(!breakerBox.isPowerOn);
-                }
+                roundManager.SwitchPower(!breakerBox.isPowerOn);
             }
         }
         else

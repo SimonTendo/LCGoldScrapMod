@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 using GameNetcodeStuff;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -125,6 +126,92 @@ public class StorePatch
             else if (unlockableID == StoreAndTerminal.directoryLogID)
             {
                 DLOGManager.instance.SetTutorialText();
+            }
+        }
+    }
+
+
+
+    //Safe Box patches setting spawnPrefab to move it rather than despawn it
+    [HarmonyPatch(typeof(StartOfRound), "SpawnUnlockable")]
+    public class NewStartOfRoundSpawnUnlockable
+    {
+        [HarmonyPrefix]
+        public static void SpawnUnlockablePrefix(StartOfRound __instance, int unlockableIndex)
+        {
+            if (unlockableIndex == StoreAndTerminal.safeBoxID)
+            {
+                UnlockableItem safeData = __instance.unlockablesList.unlockables[unlockableIndex];
+                SafeBoxScript safeScript = Object.FindObjectOfType<SafeBoxScript>();
+                safeData.spawnPrefab = safeScript == null;
+                Logger.LogDebug($"spawned SafeBox with instantiate {safeData.spawnPrefab}");
+            }
+        }
+    }
+    [HarmonyPatch(typeof(ShipBuildModeManager))]
+    public class SafeBoxStorage
+    {
+        [HarmonyPrefix, HarmonyPatch("StoreObjectLocalClient")]
+        public static void Local(ShipBuildModeManager __instance)
+        {
+            PlaceableShipObject placingObject = PrivateAccesser.GetPrivateField<PlaceableShipObject>(__instance, "placingObject");
+            if (placingObject == null)
+            {
+                Logger.LogDebug("null, returning");
+                return;
+            }
+            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindObjectOfType<SafeBoxScript>() != null)
+            {
+                Logger.LogDebug("storing SafeBox: Local");
+                UnlockableItem safeData = StartOfRound.Instance.unlockablesList.unlockables[placingObject.unlockableID];
+                safeData.spawnPrefab = false;
+            }
+        }
+        [HarmonyPrefix, HarmonyPatch("StoreObjectServerRpc")]
+        public static void Server(NetworkObjectReference objectRef)
+        {
+            if (!objectRef.TryGet(out var networkObject))
+            {
+                Logger.LogDebug("false, returning");
+                return;
+            }
+            PlaceableShipObject placingObject = networkObject.gameObject.GetComponentInChildren<PlaceableShipObject>();
+            if (placingObject == null)
+            {
+                Logger.LogDebug("null, returning");
+                return;
+            }
+            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindObjectOfType<SafeBoxScript>() != null)
+            {
+                Logger.LogDebug("storing SafeBox: Server");
+                UnlockableItem safeData = StartOfRound.Instance.unlockablesList.unlockables[placingObject.unlockableID];
+                safeData.spawnPrefab = false;
+            }
+        }
+        [HarmonyPrefix, HarmonyPatch("StoreShipObjectClientRpc")]
+        public static void Client(NetworkObjectReference objectRef, int playerWhoStored)
+        {
+            if (playerWhoStored == (int)GameNetworkManager.Instance.localPlayerController.playerClientId)
+            {
+                Logger.LogDebug("local, returning");
+                return;
+            }
+            if (!objectRef.TryGet(out var networkObject))
+            {
+                Logger.LogDebug("false, returning");
+                return;
+            }
+            PlaceableShipObject placingObject = networkObject.gameObject.GetComponentInChildren<PlaceableShipObject>();
+            if (placingObject == null)
+            {
+                Logger.LogDebug("null, returning");
+                return;
+            }
+            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindObjectOfType<SafeBoxScript>() != null)
+            {
+                Logger.LogDebug("storing SafeBox: Client");
+                UnlockableItem safeData = StartOfRound.Instance.unlockablesList.unlockables[placingObject.unlockableID];
+                safeData.spawnPrefab = false;
             }
         }
     }

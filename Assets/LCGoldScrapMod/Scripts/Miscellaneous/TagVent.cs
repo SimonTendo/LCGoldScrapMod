@@ -10,11 +10,11 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
 
     private EnemyVent attachedToVent;
     public ScanNodeProperties scanNode;
-    public Collider colliderToToggle;
+    public GameObject scanNodeObject;
 
     private void Start()
     {
-        colliderToToggle.enabled = false;
+        scanNodeObject.SetActive(false);
     }
 
     public void AssignName(string startingText)
@@ -73,17 +73,19 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
         [HarmonyPostfix, HarmonyPatch("SyncVentSpawnTimeClientRpc")]
         public static void VentTagDisplaySpawning(EnemyVent __instance)
         {
-            TagVent childTag = __instance.GetComponentInChildren<TagVent>();
+            TagVent childTag = __instance.GetComponentInChildren<TagVent>(true);
             if (childTag != null)
             {
+                Logger.LogDebug($"#{__instance.NetworkObjectId} setting name");
                 childTag.AssignName("Will spawn:");
+                Logger.LogDebug($"set name of {childTag.name} to {childTag.scanNode.subText}");
             }
         }
 
         [HarmonyPostfix, HarmonyPatch("OpenVentClientRpc")]
         public static void VentTagDisplaySpawned(EnemyVent __instance)
         {
-            TagVent childTag = __instance.GetComponentInChildren<TagVent>();
+            TagVent childTag = __instance.GetComponentInChildren<TagVent>(true);
             if (childTag != null)
             {
                 childTag.AssignName("Spawned:");
@@ -95,12 +97,12 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
     {
         if (!Config.hostToolRebalance)
         {
-            colliderToToggle.enabled = true;
+            scanNodeObject.SetActive(true);
         }
     }
 
     void IGoldenGlassSecret.EndReveal()
     {
-        colliderToToggle.enabled = false;
+        scanNodeObject.SetActive(false);
     }
 }

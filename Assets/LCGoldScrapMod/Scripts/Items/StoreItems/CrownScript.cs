@@ -70,14 +70,10 @@ public class CrownScript : GrabbableObject
         launchLight.enabled = false;
         scrapPersistedThroughRounds = true;
         loopAudio.Stop();
-        if (radarIcon != null)
-        {
-            Destroy(radarIcon.gameObject);
-        }
         if (IsServer && !isInShipRoom)
         {
             int valueToSend = RarityManager.CurrentlyGoldFever() ? startingValueFever : startingValue;
-            SyncValueClientRpc(valueToSend);
+            SyncValueClientRpc(valueToSend, 0);
         }
     }
 
@@ -127,6 +123,7 @@ public class CrownScript : GrabbableObject
 
     private void CheckLaunchCondition(int launchType)
     {
+        Logger.LogDebug($"checking with launchType {launchType}");
         switch (launchType)
         {
             case 0:
@@ -144,7 +141,7 @@ public class CrownScript : GrabbableObject
         {
             return;
         }
-        Logger.LogDebug($"started launch");
+        Logger.LogDebug($"#{NetworkObjectId}: started launch");
         activatedLaunch = true;
         launchGoingUp = true;
         hasHitGround = false;
@@ -168,6 +165,10 @@ public class CrownScript : GrabbableObject
         {
             farAudio.PlayOneShot(launchClip);
             WalkieTalkie.TransmitOneShotAudio(farAudio, launchClip);
+        }
+        if (radarIcon == null)
+        {
+            radarIcon = Instantiate(StartOfRound.Instance.itemRadarIconPrefab, RoundManager.Instance.mapPropsContainer.transform).transform;
         }
         if (IsServer)
         {
@@ -405,6 +406,10 @@ public class CrownScript : GrabbableObject
                 HUDManager.Instance.ClearControlTips();
             }
         }
+        if (radarIcon != null)
+        {
+            Destroy(radarIcon.gameObject);
+        }
         playerWornBy.twoHanded = false;
         playerWornBy.twoHandedAnimation = false;
         playerWornBy.isHoldingObject = false;
@@ -457,25 +462,26 @@ public class CrownScript : GrabbableObject
         else
         {
             samePlayerStreak = 0;
-            previousAddedAmount = wearingPlayerTotalProfit - wearingPlayerTotalProfit / Mathf.Max(1, StartOfRound.Instance.gameStats.daysSpent);
+            previousAddedAmount = wearingPlayerTotalProfit - wearingPlayerTotalProfit / Mathf.Max(1, StartOfRound.Instance.gameStats.daysSpent / 2);
             Logger.LogDebug($"removed from this players totalProfit {wearingPlayerTotalProfit / Mathf.Max(1, StartOfRound.Instance.gameStats.daysSpent)} with days {StartOfRound.Instance.gameStats.daysSpent}");
         }
         float newPercentage;
         if (RarityManager.CurrentlyGoldFever())
         {
-            newPercentage = 1f;
+            newPercentage = (float)itemValuePercentage / 100;
         }
         else
         {
-            newPercentage = (float)Mathf.Clamp(itemValuePercentage - consecutiveIncreaseDropoff * samePlayerStreak, 10, 100) / 100;
+            newPercentage = (float)Mathf.Clamp(itemValuePercentage - consecutiveIncreaseDropoff * samePlayerStreak, 10, itemValuePercentage) / 100;
         }
-        int amountToAdd = (int)Mathf.Lerp(0, wearingPlayerTotalProfit - previousAddedAmount, newPercentage);
+        int amountToAdd = (int)((wearingPlayerTotalProfit - previousAddedAmount) * newPercentage);
         if (playerWornBy == playerWearingDayStart)
         {
             previousAddedAmount += amountToAdd;
         }
-        Logger.LogDebug($"totalProfit: {wearingPlayerTotalProfit} | streak: {samePlayerStreak} | percentage: {newPercentage} | previous: {previousAddedAmount} | add: {amountToAdd}");
-        SyncValueClientRpc(scrapValue + amountToAdd);
+        int newValue = scrapValue + amountToAdd;
+        Logger.LogDebug($"totalProfit: {wearingPlayerTotalProfit} | streak: {samePlayerStreak} | percentage: {newPercentage} | previous: {previousAddedAmount} | add: {amountToAdd} | new: {newValue}");
+        SyncValueClientRpc(newValue, samePlayerStreak);
     }
 
 
@@ -488,9 +494,10 @@ public class CrownScript : GrabbableObject
     }
 
     [ClientRpc]
-    private void SyncValueClientRpc(int value)
+    private void SyncValueClientRpc(int value, int hostStreak)
     {
         SetScrapValue(value);
+        samePlayerStreak = hostStreak;
         Logger.LogDebug($"trying to set value of {gameObject.name} #{NetworkObjectId} on local client, value: {scrapValue}");
     }
 
@@ -529,9 +536,9 @@ public class CrownScript : GrabbableObject
                 if (crown.playerWornBy == crown.playerWearingDayStart)
                 {
                     string textToAdd = "Maintained their royalty.";
-                    if (crown.samePlayerStreak >= 3)
+                    if (crown.samePlayerStreak >= 2)
                     {
-                        textToAdd = $"{crown.samePlayerStreak}-day crown streak.";
+                        textToAdd = $"{crown.samePlayerStreak + 1}-day crown streak.";
                     }
                     __instance.gameStats.allPlayerStats[(int)crown.playerWornBy.playerClientId].playerNotes.Add(textToAdd);
                     writtenToPlayers.Add(crown.playerWornBy);
@@ -550,6 +557,26 @@ public class CrownScript : GrabbableObject
                     __instance.gameStats.allPlayerStats[(int)crown.playerWornBy.playerClientId].playerNotes.Add("Started their reign.");
                     writtenToPlayers.Add(crown.playerWornBy);
                     continue;
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerControllerB), "DamagePlayer")]
+    public class NewPlayerDamage
+    {
+        [HarmonyPostfix]
+        public static void DamagePlayerPostfix(PlayerControllerB __instance)
+        {
+            if (StartOfRound.Instance.connectedPlayersAmount == 0 && __instance.IsOwner && !__instance.isPlayerDead && __instance.AllowPlayerDeath() && FindObjectOfType<CrownScript>() != null)
+            {
+                foreach (CrownScript crown in FindObjectsOfType<CrownScript>())
+                {
+                    if (crown.playerWornBy != null && crown.playerWornBy == __instance)
+                    {
+                        Logger.LogDebug($"DamagePlayer Patch setting {crown.name} #{crown.NetworkObjectId} to launch!!");
+                        crown.StartLaunch();
+                    }
                 }
             }
         }

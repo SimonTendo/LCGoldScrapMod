@@ -27,12 +27,12 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
     public AudioClip[] hitClip;
     public AudioClip emptiedClip;
     public AudioClip allNodesEmptyJingle;
-    public Collider scanNode;
+    public GameObject scanNodeObject;
 
     void Start()
     {
         revealedLight.enabled = false;
-        scanNode.enabled = false;
+        scanNodeObject.SetActive(false);
         if (Config.hostToolRebalance)
         {
             revealedLight.shadows = LightShadows.Hard;
@@ -116,7 +116,7 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
             nodeExhausted = true;
             pickaxeCollider.enabled = false;
             revealedLight.enabled = false;
-            scanNode.enabled = false;
+            scanNodeObject.SetActive(false);
             nodeAudio.PlayOneShot(emptiedClip);
             WalkieTalkie.TransmitOneShotAudio(nodeAudio, emptiedClip);
             Logger.LogDebug($"Gold Node #{NetworkObjectId} exhausted!!!");
@@ -168,13 +168,13 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
         {
             revealedLight.intensity = minDim;
             revealedLight.enabled = true;
-            scanNode.enabled = true;
+            scanNodeObject.SetActive(true);
         }
     }
 
     void IGoldenGlassSecret.EndReveal()
     {
         revealedLight.enabled = false;
-        scanNode.enabled = false;
+        scanNodeObject.SetActive(false);
     }
 }

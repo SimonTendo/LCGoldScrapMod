@@ -54,7 +54,7 @@ MonoBehaviour:
   toolTips:
   - 'Extend : [LMB]'
   - 'Switch : [Q]'
-  verticalOffset: 0.3
+  verticalOffset: 0.25
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 0
   restingRotation: {x: 0, y: 0, z: 90}

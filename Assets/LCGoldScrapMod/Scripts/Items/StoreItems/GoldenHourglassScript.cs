@@ -229,6 +229,10 @@ public class GoldenHourglassScript : GrabbableObject
         if (willActivate)
         {
             DestroyObjectInHand(playerHeldBy);
+            if (isPocketed)
+            {
+                General.BreakPocketedItem(this);
+            }
             StartCoroutine(DelaySettingObjectAway());
             if (!StartOfRound.Instance.shipHasLanded)
             {

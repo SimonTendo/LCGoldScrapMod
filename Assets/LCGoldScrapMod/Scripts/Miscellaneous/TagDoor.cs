@@ -8,12 +8,11 @@ public class TagDoor : MonoBehaviour, IGoldenGlassSecret
 
     public static GameObject tagContainer;
 
-    public ScanNodeProperties scanNode;
-    public Collider colliderToToggle;
+    public GameObject scanNodeObject;
 
     void Start()
     {
-        colliderToToggle.enabled = false;
+        scanNodeObject.SetActive(false);
         Logger.LogDebug($"spawned {name} at {transform.position}");
     }
 
@@ -21,13 +20,13 @@ public class TagDoor : MonoBehaviour, IGoldenGlassSecret
     {
         if (!Config.hostToolRebalance)
         {
-            colliderToToggle.enabled = true;
+            scanNodeObject.SetActive(true);
         }
     }
 
     void IGoldenGlassSecret.EndReveal()
     {
-        colliderToToggle.enabled = false;
+        scanNodeObject.SetActive(false);
     }
 
     [HarmonyPatch(typeof(DoorLock), "Awake")]

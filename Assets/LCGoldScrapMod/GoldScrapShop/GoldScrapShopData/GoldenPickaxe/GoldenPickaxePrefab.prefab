@@ -185,7 +185,8 @@ MonoBehaviour:
   isHoldingButton: 0
   reelUp: {fileID: 0}
   swing: {fileID: 0}
-  hitSFX: []
+  hitSFX:
+  - {fileID: 0}
   shovelAudio: {fileID: 9162518087423659506}
   durability: 50
   breakClip: {fileID: 0}

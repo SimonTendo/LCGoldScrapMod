@@ -301,6 +301,10 @@ public class GoldenPickaxeScript : Shovel
         WalkieTalkie.TransmitOneShotAudio(shovelAudio, breakClip);
         RoundManager.Instance.PlayAudibleNoise(transform.position);
         DestroyObjectInHand(playerHeldBy);
+        if (isPocketed)
+        {
+            General.BreakPocketedItem(this);
+        }
         DelaySettingObjectAway();
         Logger.LogDebug($"Golden Pickaxe #{NetworkObjectId} broke!!!");
     }

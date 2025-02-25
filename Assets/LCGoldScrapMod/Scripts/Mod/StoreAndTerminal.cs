@@ -23,6 +23,9 @@ public class StoreAndTerminal
     public static AudioClipList runtimeDiscoBallSongs;
     public static StringList catOGoldInfoStrings;
 
+    public static TerminalNode goldCrownBuyNode;
+    public static TerminalNode goldCrownSingleplayerInfo;
+
     public static AudioClip sharedSFXPlaceShipObject;
     public static TerminalKeyword keywordBuy;
     public static TerminalKeyword keywordInfo;
@@ -36,6 +39,8 @@ public class StoreAndTerminal
         allGoldStoreItemNames = Plugin.CustomGoldScrapAssets.LoadAsset<StringList>("Assets/LCGoldScrapMod/GoldScrapShop/AllGoldStoreItemNames.asset");
         runtimeDiscoBallSongs = Plugin.CustomGoldScrapAssets.LoadAsset<AudioClipList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/RuntimeDiscoBallSongs.asset");
         catOGoldInfoStrings = Plugin.CustomGoldScrapAssets.LoadAsset<StringList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/CatOGold/CatOGoldInfo.asset");
+        goldCrownBuyNode = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrown.asset");
+        goldCrownSingleplayerInfo = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrownWarning.asset");
     }
 
     public static void GetConfirmAndDenyTerminal(StartOfRound __instance)
@@ -95,6 +100,7 @@ public class StoreAndTerminal
                 originalBuyCompatibleNouns.Add(GoldScrapShopCompatibleNoun(itemName));
                 originalInfoCompatibleNouns.Add(GoldScrapInfoCompatibleNoun(itemName));
             }
+            originalBuyCompatibleNouns.Add(GoldScrapSpecialCompatibleNoun("GoldCrown", "Warning"));
 
             //__instance.terminalNodes.allKeywords = originalAllKeywords.ToArray();
             keywordBuy.compatibleNouns = originalBuyCompatibleNouns.ToArray();
@@ -102,11 +108,25 @@ public class StoreAndTerminal
         }
     }
 
+    public static void SetSpecialStoreNodes()
+    {
+        goldCrownSingleplayerInfo.terminalOptions[0].noun = keywordConfirm;
+        goldCrownSingleplayerInfo.terminalOptions[1] = compatibleNounDeny;
+    }
+
     public static CompatibleNoun GoldScrapShopCompatibleNoun(string itemName)
     {
         CompatibleNoun newCompatibleNoun = new CompatibleNoun();
         newCompatibleNoun.noun = GoldScrapShopKeyword(itemName);
-        newCompatibleNoun.result = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/" + itemName + "/GoldScrapShop" + itemName + ".asset");
+        newCompatibleNoun.result = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}.asset");
+        return newCompatibleNoun;
+    }
+
+    public static CompatibleNoun GoldScrapSpecialCompatibleNoun(string itemName, string nodeAddition)
+    {
+        CompatibleNoun newCompatibleNoun = new CompatibleNoun();
+        newCompatibleNoun.noun = GoldScrapShopKeyword(itemName);
+        newCompatibleNoun.result = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}{nodeAddition}.asset");
         return newCompatibleNoun;
     }
 
@@ -114,7 +134,7 @@ public class StoreAndTerminal
     {
         CompatibleNoun newCompatibleNoun = new CompatibleNoun();
         newCompatibleNoun.noun = GoldScrapShopKeyword(itemName);
-        newCompatibleNoun.result = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/" + itemName + "/GoldScrapShop" + itemName + "Info.asset");
+        newCompatibleNoun.result = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}Info.asset");
         return newCompatibleNoun;
     }
 
@@ -204,6 +224,8 @@ public class StoreAndTerminal
             allShipUnlockableIDs.Add(itemID);
             Logger.LogDebug($"Added {itemName} to unlockablesList with shipUnlockableID {itemID}");
         }
+
+        SetSpecialStoreNodes();
     }
 
     public static void AddGoldItemsToShop()

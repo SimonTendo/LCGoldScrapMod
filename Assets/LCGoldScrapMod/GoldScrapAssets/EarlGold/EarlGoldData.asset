@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemProperties: {fileID: 11400000, guid: 1532b3341cc3ad3449317bc8d4aae0c6, type: 2}
   isScrap: 1
+  isStoreItem: 0
   defaultWeight: 1.2
   defaultMaxValue: 140
   defaultMinValue: 80
   defaultRarity: 2
-  levelsToAddMinus: 010000000200000003000000
-  levelsToAddDefault: 04000000080000000a00000005000000
+  levelsToAddMinus: 0100000002000000
+  levelsToAddDefault: 0300000004000000080000000a00000005000000
   levelsToAddPlus: 060000000700000009000000
   customChange: 0
   levelsToAddCustom: 

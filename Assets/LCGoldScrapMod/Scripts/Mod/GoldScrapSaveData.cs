@@ -20,7 +20,7 @@ public class GoldScrapSaveData
         public void Save()
         {
             Plugin.Logger.LogInfo("Saving LCGoldScrapMod SaveData...");
-            string SavePath = new string(Path.Combine(Plugin.sAssemblyLocation, "SaveData.xml"));
+            string SavePath = new string(Path.Combine(Plugin.sSaveLocation, "LCGoldScrapMod.xml"));
             XmlSerializer serializer = new XmlSerializer(typeof(DataToSave));
             using (FileStream stream = new FileStream(SavePath, FileMode.Create))
             {
@@ -30,13 +30,15 @@ public class GoldScrapSaveData
 
         public void Load()
         {
-            string savePath = new string(Path.Combine(Plugin.sAssemblyLocation, "SaveData.xml"));
+            string savePath = new string(Path.Combine(Plugin.sSaveLocation, "LCGoldScrapMod.xml"));
             if (File.Exists(savePath))
             {
+                //Loading the SaveData
                 XmlSerializer serializer = new XmlSerializer(typeof(DataToSave));
                 using FileStream stream = new FileStream(savePath, FileMode.Open);
                 DataToSave LoadedData = (DataToSave)serializer.Deserialize(stream);
 
+                //The variables to set from the loaded data
                 CreditsCardManager.previousCredits = LoadedData.savedPreviousCredits;
 
                 Plugin.Logger.LogInfo("Loaded LCGoldScrapMod SaveData");

@@ -3381,7 +3381,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject2;
-                if (Config.replaceSFX.Value || sharedSFXlandmineTrigger == null || sharedSFXlandmineBeep == null || sharedSFXlandmineOn == null || sharedSFXlandmineOff == null)
+                if (Config.replaceEnemySFX.Value || sharedSFXlandmineTrigger == null || sharedSFXlandmineBeep == null || sharedSFXlandmineOn == null || sharedSFXlandmineOff == null)
                 {
                     itemScript.triggerClip = LoadReplaceSFX($"{itemFolder}TriggerSFX");
                     itemScript.beepClip = LoadReplaceSFX($"{itemFolder}BeepSFX");
