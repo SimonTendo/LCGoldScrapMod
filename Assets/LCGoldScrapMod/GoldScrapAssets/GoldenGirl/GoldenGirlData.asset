@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldenGirlData
   m_EditorClassIdentifier: 
+  folderName: GoldenGirl
   itemProperties: {fileID: 11400000, guid: f06aeac4061d64a4f8b19a1d35b60c91, type: 2}
   isScrap: 1
   defaultWeight: 1.96
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 
   customChange: 1
   levelsToAddCustom: 0800000006000000
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

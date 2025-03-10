@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: ComedyGoldData
   m_EditorClassIdentifier: 
+  folderName: ComedyGold
   itemProperties: {fileID: 11400000, guid: 0450bdf0d6831a54abffc1cdaff5c4cf, type: 2}
   isScrap: 1
   defaultWeight: 1.14
@@ -21,5 +22,15 @@ MonoBehaviour:
   levelsToAddMinus: 0100000002000000
   levelsToAddDefault: 0700000008000000
   levelsToAddPlus: 0600000009000000
+  customChange: 0
+  levelsToAddCustom: 
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

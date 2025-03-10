@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: TatteredGoldSheetData
   m_EditorClassIdentifier: 
+  folderName: TatteredGoldSheet
   itemProperties: {fileID: 11400000, guid: 63456d219bb3e27419299a0f67a85c14, type: 2}
   isScrap: 1
   defaultWeight: 1.28
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 09000000
   customChange: 1
   levelsToAddCustom: 0100000002000000
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

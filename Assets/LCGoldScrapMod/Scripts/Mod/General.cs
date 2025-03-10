@@ -16,15 +16,16 @@ public class General
     {
         if (!alreadyAddedItems)
         {
-            foreach (ItemData item in Plugin.allGoldScrap.allItemData)
+            foreach (ItemData item in Plugin.allGoldGrabbableObjects)
             {
-                item.itemProperties.spawnPrefab.AddComponent<GoldScrapObject>();
+                item.itemProperties.spawnPrefab.AddComponent<GoldScrapObject>().data = item;
                 if (item.isStoreItem)
                 {
                     item.itemProperties.spawnPrefab.AddComponent<GoldStoreItem>();
                 }
+                item.localItemsListIndex = StartOfRound.Instance.allItemsList.itemsList.Count;
                 StartOfRound.Instance.allItemsList.itemsList.Add(item.itemProperties);
-                Logger.LogDebug($"Added {item.name.Remove(item.name.Length - 4, 4)} to allItemsList");
+                Logger.LogDebug($"Added {item.folderName} to allItemsList with localItemsListIndex {item.localItemsListIndex}");
             }
             alreadyAddedItems = true;
         }
@@ -38,29 +39,43 @@ public class General
             {
                 continue;
             }
-            GameObject JacobsLadderHelmetLights = Object.Instantiate(jacobsLadderPrefab, FindHelmetLights(player.gameObject).transform, false);
+            GameObject foundHelmetLight = FindHelmetLights(player.gameObject);
+            if (foundHelmetLight == null || jacobsLadderPrefab == null)
+            {
+                Logger.LogError($"failed to AddJacobsLadderToHelmetLights for player {player} (foundHelmetLight? {foundHelmetLight != null})");
+                return;
+            }
+            GameObject JacobsLadderHelmetLights = Object.Instantiate(jacobsLadderPrefab, foundHelmetLight.transform, false);
             List<Light> HelmetLights = player.allHelmetLights.ToList();
+            jacobsLadderFlashlightID = HelmetLights.Count; 
             HelmetLights.Add(JacobsLadderHelmetLights.GetComponent<Light>());
-            HelmetLights[HelmetLights.Count - 1].lightShadowCasterMode = LightShadowCasterMode.Everything;
-            HelmetLights[HelmetLights.Count - 1].shadows = LightShadows.Hard;
-            HelmetLights[HelmetLights.Count - 1].intensity = 400f;
-            HelmetLights[HelmetLights.Count - 1].enabled = false;
-            jacobsLadderFlashlightID = HelmetLights.Count - 1;
+            HelmetLights[jacobsLadderFlashlightID].lightShadowCasterMode = LightShadowCasterMode.Everything;
+            HelmetLights[jacobsLadderFlashlightID].shadows = LightShadows.Hard;
+            HelmetLights[jacobsLadderFlashlightID].intensity = 400f;
+            HelmetLights[jacobsLadderFlashlightID].enabled = false;
             player.allHelmetLights = HelmetLights.ToArray();
         }
     }
 
     public static GameObject FindHelmetLights(GameObject playerObject)
     {
-        GameObject scavengerModelObject = playerObject.transform.Find("ScavengerModel").gameObject;
-        GameObject metarigObject = scavengerModelObject.transform.Find("metarig").gameObject;
-        GameObject cameraContainerObject = metarigObject.transform.Find("CameraContainer").gameObject;
-        GameObject mainCameraObject = cameraContainerObject.transform.Find("MainCamera").gameObject;
-        GameObject helmetLightsObject = mainCameraObject.transform.Find("HelmetLights").gameObject;
+        GameObject helmetLightsObject = null;
+        try
+        {
+            GameObject scavengerModelObject = playerObject.transform.Find("ScavengerModel").gameObject;
+            GameObject metarigObject = scavengerModelObject.transform.Find("metarig").gameObject;
+            GameObject cameraContainerObject = metarigObject.transform.Find("CameraContainer").gameObject;
+            GameObject mainCameraObject = cameraContainerObject.transform.Find("MainCamera").gameObject;
+            helmetLightsObject = mainCameraObject.transform.Find("HelmetLights").gameObject;
+        }
+        catch (System.Exception e)
+        {
+            Logger.LogError($"error caught when trying to FindHelmetLights: {e}");
+        }
 
         if (helmetLightsObject == null)
         {
-            Logger.LogError($"{playerObject.name}'s HelmetLights GameObject could not be found. JacobsLadder likely will not work on them.");
+            Logger.LogWarning($"{playerObject.name}'s HelmetLights GameObject could not be found. JacobsLadder likely will not work on them.");
         }
 
         return helmetLightsObject;
@@ -68,7 +83,7 @@ public class General
 
     public static bool DoesMoonHaveGoldScrap(int moonLevelID = -1, bool checkScene = true)
     {
-        if (moonLevelID == -1 || moonLevelID < 0 || moonLevelID >= StartOfRound.Instance.levels.Length)
+        if (moonLevelID < 0 || moonLevelID >= StartOfRound.Instance.levels.Length)
         {
             moonLevelID = StartOfRound.Instance.currentLevelID;
         }
@@ -82,7 +97,7 @@ public class General
         }
         foreach (SpawnableItemWithRarity item in level.spawnableScrap)
         {
-            if (item.spawnableItem.name.Contains("LCGoldScrapMod"))
+            if (item != null && item.spawnableItem != null && item.spawnableItem.name.Contains("LCGoldScrapMod"))
             {
                 Logger.LogDebug($"level #{moonLevelID} item list returned true");
                 return true;
@@ -92,7 +107,7 @@ public class General
         //As a failsafe, check to see if the current planet has any gold scrap that is not in the ship
         if (checkScene)
         {
-            foreach (GoldScrapObject goldScrap in Object.FindObjectsOfType<GoldScrapObject>())
+            foreach (GoldScrapObject goldScrap in Object.FindObjectsByType<GoldScrapObject>(FindObjectsSortMode.None))
             {
                 if (goldScrap.item != null && !goldScrap.item.isInShipRoom)
                 {
@@ -104,6 +119,42 @@ public class General
 
         //If both fail, return false
         Logger.LogDebug($"DoesMoonHaveGoldScrap({moonLevelID}) returned false");
+        return false;
+    }
+
+    public static bool IsMoonAccessible(int moonLevelID)
+    {
+        //Check if the Terminal has a route keyword with this levelID, if not, players cannot play it and thus this moon should not be counted
+        TerminalKeyword routeKeyword = StoreAndTerminal.keywordRoute;
+        if (routeKeyword == null || routeKeyword.compatibleNouns == null || routeKeyword.compatibleNouns.Length == 0)
+        {
+            Logger.LogWarning($"failed to find keywordRoute ({routeKeyword}) or compatibleNouns in DoesMoonHaveGoldScrap()");
+            return false;
+        }
+        else
+        {
+            foreach (CompatibleNoun cNoun in routeKeyword.compatibleNouns)
+            {
+                if (cNoun == null || cNoun.result == null || cNoun.result.terminalOptions == null || cNoun.result.terminalOptions.Length == 0)
+                {
+                    continue;
+                }
+                for (int c = 0; c < cNoun.result.terminalOptions.Length; c++)
+                {
+                    CompatibleNoun tOption = cNoun.result.terminalOptions[c];
+                    if (tOption == null || tOption.noun == null || string.IsNullOrEmpty(tOption.noun.word) || tOption.result == null)
+                    {
+                        continue;
+                    }
+                    if (tOption.noun.word == "confirm" && tOption.result.buyRerouteToMoon == moonLevelID)
+                    {
+                        Logger.LogDebug($"IsMoonAccessible() found buyRerouteToMoon #{tOption.result.buyRerouteToMoon} on {tOption.result}");
+                        return true;
+                    }
+                }
+            }
+        }
+        Logger.LogDebug($"IsMoonAccessible could not find CompatibleNoun with moonLevelID {moonLevelID}");
         return false;
     }
 
@@ -146,67 +197,67 @@ public class General
     {
         Logger.LogDebug($"started SyncUponJoin() with playerID at index [{playerID}]");
 
-        foreach (GoldenGirlScript goldenGirlScript in Object.FindObjectsOfType<GoldenGirlScript>())
+        foreach (GoldenGirlScript goldenGirlScript in Object.FindObjectsByType<GoldenGirlScript>(FindObjectsSortMode.None))
         {
             goldenGirlScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldPerfumeScript goldPerfumeScript in Object.FindObjectsOfType<GoldPerfumeScript>())
+        foreach (GoldPerfumeScript goldPerfumeScript in Object.FindObjectsByType<GoldPerfumeScript>(FindObjectsSortMode.None))
         {
             goldPerfumeScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (JackInTheGoldScript jackInTheGoldScript in Object.FindObjectsOfType<JackInTheGoldScript>())
+        foreach (JackInTheGoldScript jackInTheGoldScript in Object.FindObjectsByType<JackInTheGoldScript>(FindObjectsSortMode.None))
         {
             jackInTheGoldScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldBirdScript goldBirdScript in Object.FindObjectsOfType<GoldBirdScript>())
+        foreach (GoldBirdScript goldBirdScript in Object.FindObjectsByType<GoldBirdScript>(FindObjectsSortMode.None))
         {
             goldBirdScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldenClockScript goldenClockScript in Object.FindObjectsOfType<GoldenClockScript>())
+        foreach (GoldenClockScript goldenClockScript in Object.FindObjectsByType<GoldenClockScript>(FindObjectsSortMode.None))
         {
             goldenClockScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldmineScript goldmineScript in Object.FindObjectsOfType<GoldmineScript>())
+        foreach (GoldmineScript goldmineScript in Object.FindObjectsByType<GoldmineScript>(FindObjectsSortMode.None))
         {
             goldmineScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldenHourglassScript goldenHourglassScript in Object.FindObjectsOfType<GoldenHourglassScript>())
+        foreach (GoldenHourglassScript goldenHourglassScript in Object.FindObjectsByType<GoldenHourglassScript>(FindObjectsSortMode.None))
         {
             goldenHourglassScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldenPickaxeScript goldenPickaxeScript in Object.FindObjectsOfType<GoldenPickaxeScript>())
+        foreach (GoldenPickaxeScript goldenPickaxeScript in Object.FindObjectsByType<GoldenPickaxeScript>(FindObjectsSortMode.None))
         {
             goldenPickaxeScript.SyncDurabilityServerRpc(false, -1, playerID);
         }
 
-        foreach (GoldkeeperScript goldkeeperScript in Object.FindObjectsOfType<GoldkeeperScript>())
+        foreach (GoldkeeperScript goldkeeperScript in Object.FindObjectsByType<GoldkeeperScript>(FindObjectsSortMode.None))
         {
             goldkeeperScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (CrownScript crownScript in Object.FindObjectsOfType<CrownScript>())
+        foreach (CrownScript crownScript in Object.FindObjectsByType<CrownScript>(FindObjectsSortMode.None))
         {
             crownScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (SafeBoxScript safeBoxScript in Object.FindObjectsOfType<SafeBoxScript>())
+        foreach (SafeBoxScript safeBoxScript in Object.FindObjectsByType<SafeBoxScript>(FindObjectsSortMode.None))
         {
             safeBoxScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldfatherClockScript goldfatherClockScript in Object.FindObjectsOfType<GoldfatherClockScript>())
+        foreach (GoldfatherClockScript goldfatherClockScript in Object.FindObjectsByType<GoldfatherClockScript>(FindObjectsSortMode.None))
         {
             goldfatherClockScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldenGloveScript goldenGloveScript in Object.FindObjectsOfType<GoldenGloveScript>())
+        foreach (GoldenGloveScript goldenGloveScript in Object.FindObjectsByType<GoldenGloveScript>(FindObjectsSortMode.None))
         {
             goldenGloveScript.SyncUponJoinServerRpc(playerID);
         }

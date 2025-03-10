@@ -18,7 +18,7 @@ public class TagDoor : MonoBehaviour, IGoldenGlassSecret
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Config.hostToolRebalance)
+        if (!Configs.hostToolRebalance)
         {
             scanNodeObject.SetActive(true);
         }

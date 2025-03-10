@@ -4,7 +4,7 @@ using Unity.Netcode;
 using BepInEx.Logging;
 using HarmonyLib;
 
-public class GoldenPickaxeScript : Shovel
+public class GoldenPickaxeScript : Shovel, IGoldenGlassSecret
 {
     private static ManualLogSource Logger = Plugin.Logger;
 
@@ -15,6 +15,8 @@ public class GoldenPickaxeScript : Shovel
     [Header("Durability")]
     public int durability = 50;
     public AudioClip breakClip;
+    public GameObject scanNodeObject;
+    public ScanNodeProperties scanNodeScript;
 
     [Space(3f)]
     [Header("Damage modifiers")]
@@ -38,6 +40,7 @@ public class GoldenPickaxeScript : Shovel
     public override void Start()
     {
         base.Start();
+        scanNodeObject.SetActive(false);
         if (RarityManager.CurrentlyGoldFever())
         {
             durability *= 2;
@@ -45,6 +48,7 @@ public class GoldenPickaxeScript : Shovel
             GetComponent<MeshRenderer>().materials = newMats;
             Logger.LogDebug($"Pickaxe #{NetworkObjectId} started during suspected GoldFever, doubled local durability to {durability}");
         }
+        UpdateScanNodeDurability();
     }
 
     [HarmonyPatch(typeof(Shovel), "HitShovelClientRpc")]
@@ -263,6 +267,7 @@ public class GoldenPickaxeScript : Shovel
             lastNumber = hostLastNumber;
             shovelHitForce = lastNumber == 9 && durability != 50 ? 99 : 1;
             Logger.LogDebug($"D: durability: {durability} | lastNumber: {lastNumber} | shovelHitForce {shovelHitForce}");
+            UpdateScanNodeDurability();
             if (durability <= 0)
             {
                 BreakPickaxe();
@@ -289,7 +294,7 @@ public class GoldenPickaxeScript : Shovel
     {
         shovelAudio.PlayOneShot(critClip);
         WalkieTalkie.TransmitOneShotAudio(shovelAudio, critClip);
-        if (Config.hostToolRebalance)
+        if (Configs.hostToolRebalance)
         {
             BreakPickaxe();
         }
@@ -307,6 +312,15 @@ public class GoldenPickaxeScript : Shovel
         }
         DelaySettingObjectAway();
         Logger.LogDebug($"Golden Pickaxe #{NetworkObjectId} broke!!!");
+    }
+
+    private void UpdateScanNodeDurability()
+    {
+        if (scanNodeScript == null)
+        {
+            return;
+        }
+        scanNodeScript.subText = $"Durability: {durability}";
     }
 
     private IEnumerator DelaySettingObjectAway()
@@ -328,5 +342,15 @@ public class GoldenPickaxeScript : Shovel
     {
         yield return null;
         performedHitThisFrame = false;
+    }
+
+    void IGoldenGlassSecret.BeginReveal()
+    {
+        scanNodeObject.SetActive(true);
+    }
+
+    void IGoldenGlassSecret.EndReveal()
+    {
+        scanNodeObject.SetActive(false);
     }
 }

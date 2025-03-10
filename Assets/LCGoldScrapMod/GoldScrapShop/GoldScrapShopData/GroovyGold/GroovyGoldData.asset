@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: GroovyGoldData
+  m_EditorClassIdentifier: 
+  folderName: GroovyGold
+  itemProperties: {fileID: 0}
+  isScrap: 0
+  defaultWeight: 1
+  defaultMaxValue: 0
+  defaultMinValue: 0
+  defaultRarity: 3
+  levelsToAddMinus: 
+  levelsToAddDefault: 
+  levelsToAddPlus: 
+  customChange: 0
+  levelsToAddCustom: 
+  isStoreItem: 1
+  storeDefaultPrice: 150
+  maxFeverSalePercentage: 80
+  alreadyPurchasedText: Unlocked
+  storeTerminalNodes:
+  - {fileID: 11400000, guid: d555cb2f57e97bd4db04577059fc3546, type: 2}
+  - {fileID: 11400000, guid: 597efe6760e0c9b47ad614765915b4fb, type: 2}
+  unlockableProperties:
+    unlockableName: Groovy Gold
+    prefabObject: {fileID: 0}
+    unlockableType: -1
+    shopSelectionNode: {fileID: 11400000, guid: d555cb2f57e97bd4db04577059fc3546,
+      type: 2}
+    alwaysInStock: 1
+    IsPlaceable: 0
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0
+    inStorage: 0
+    canBeStored: 0
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 0
+    jumpAudio: {fileID: 0}
+  localItemsListIndex: -1
+  localMaxValue: 0
+  localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1
+  localUnlockableID: -1

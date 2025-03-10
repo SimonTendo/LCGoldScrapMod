@@ -28,12 +28,13 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
     public AudioClip emptiedClip;
     public AudioClip allNodesEmptyJingle;
     public GameObject scanNodeObject;
+    public ScanNodeProperties scanNodeScript;
 
     void Start()
     {
         revealedLight.enabled = false;
         scanNodeObject.SetActive(false);
-        if (Config.hostToolRebalance)
+        if (Configs.hostToolRebalance)
         {
             revealedLight.shadows = LightShadows.Hard;
         }
@@ -75,8 +76,9 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
     {
         int minDurability = durabilityBase - durabilityOffset;
         int maxDurability = durabilityBase + durabilityOffset;
-        durability = Random.Range(minDurability, maxDurability + 1);
-        Logger.LogDebug($"#{NetworkObjectId}: host set durability to {durability}");
+        int durabilityToSet = Random.Range(minDurability, maxDurability + 1);
+        Logger.LogDebug($"#{NetworkObjectId}: host setting durability to {durabilityToSet}");
+        SetDurabilityLocally(durabilityToSet);
         yield return new WaitForSeconds(3f);
         SetDurabilityClientRpc(durability);
     }
@@ -85,6 +87,7 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
     {
         durability = receivedDurability;
         Logger.LogDebug($"#{NetworkObjectId}: locally set durability to {durability}");
+        UpdateScanNodeDurability();
     }
 
     [ClientRpc]
@@ -111,6 +114,7 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
     {
         durability = receivedDurability;
         Logger.LogDebug($"{gameObject.name} #{NetworkObjectId}: {durability} left");
+        UpdateScanNodeDurability();
         if (durability <= 0)
         {
             nodeExhausted = true;
@@ -148,7 +152,7 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
 
     private IEnumerator CheckRemainingNodes()
     {
-        GoldenPickaxeNode[] allNodes = FindObjectsOfType<GoldenPickaxeNode>();
+        GoldenPickaxeNode[] allNodes = FindObjectsByType<GoldenPickaxeNode>(FindObjectsSortMode.None);
         foreach (GoldenPickaxeNode node in allNodes)
         {
             if (!node.nodeExhausted)
@@ -160,6 +164,15 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
         nodeAudio.PlayOneShot(allNodesEmptyJingle);
         WalkieTalkie.TransmitOneShotAudio(nodeAudio, allNodesEmptyJingle);
         RoundManager.Instance.PlayAudibleNoise(transform.position, 25f, 0.25f);
+    }
+
+    private void UpdateScanNodeDurability()
+    {
+        if (scanNodeScript == null)
+        {
+            return;
+        }
+        scanNodeScript.subText = $"Hits left: {durability}";
     }
 
     void IGoldenGlassSecret.BeginReveal()

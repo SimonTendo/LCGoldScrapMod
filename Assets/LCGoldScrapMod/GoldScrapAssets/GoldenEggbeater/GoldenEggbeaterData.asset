@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldenEggbeaterData
   m_EditorClassIdentifier: 
+  folderName: GoldenEggbeater
   itemProperties: {fileID: 11400000, guid: 35258af4b619a6c4dbcfc3f087cd449e, type: 2}
   isScrap: 1
   defaultWeight: 1.16
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 09000000
   customChange: -2
   levelsToAddCustom: 000000000100000002000000
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

@@ -10,7 +10,7 @@ using HarmonyLib.Tools;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 
-[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.0.7")]
+[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.1.0")]
 [BepInDependency("LCSimonTendoPlaylistsMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("LethalConfig", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
@@ -20,7 +20,7 @@ public class Plugin : BaseUnityPlugin
     public static GoldScrapSaveData.SaveData saveData;
     public static string sAssemblyLocation;
     public static string sSaveLocation;
-    public static new Config myConfig { get; internal set; }
+    public static Configs myConfig { get; internal set; }
 
     public static bool alreadyAddedItems = false;
     public static bool alreadyAddedUnlockables = false;
@@ -28,8 +28,7 @@ public class Plugin : BaseUnityPlugin
     public static bool appliedHostConfigs = false;
 
     //Miscellaneous objects
-    public static ItemDataList allGoldScrap;
-    public static UnlockableItem[] allGoldUnlockables;
+    public static ItemData[] allGoldGrabbableObjects;
     public static GameObject[] allMiscNetworkPrefabs;
     public static bool goldScrapSpawnEnabled = true;
     public static int suspectedLevelListLength = -1;
@@ -67,14 +66,13 @@ public class Plugin : BaseUnityPlugin
         LoadMiscellaneous();
         LoadSavedData();
         GetCompatability();
-        global::Config.LoadAndDisplayConfigs();
+        Configs.LoadAndDisplayConfigs();
         UnityNetcodePatcher();
     }
 
     public static void LoadMiscellaneous()
     {
-        allGoldScrap = CustomGoldScrapAssets.LoadAsset<ItemDataList>("Assets/LCGoldScrapMod/GoldScrapNetcode/GoldScrapItemList.asset");
-        allGoldUnlockables = CustomGoldScrapAssets.LoadAsset<UnlockablesList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopUnlockablesList.asset").unlockables.ToArray();
+        allGoldGrabbableObjects = CustomGoldScrapAssets.LoadAsset<ItemDataList>("Assets/LCGoldScrapMod/GoldScrapNetcode/GoldScrapItemList.asset").allItemData;
         allMiscNetworkPrefabs = CustomGoldScrapAssets.LoadAsset<GameObjectList>("Assets/LCGoldScrapMod/GoldScrapNetcode/MiscNetworkPrefabs.asset").allPrefabs;
         TagPlayer.tagContainer = CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapMisc/GoldenGlassSecrets/ScanNodes/Players/PlayerTagScanNode.prefab");
         TagVent.tagContainer = CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapMisc/GoldenGlassSecrets/ScanNodes/Vents/VentTagScanNode.prefab");
@@ -147,7 +145,7 @@ public class Plugin : BaseUnityPlugin
     {
         Logger.LogDebug($"Starting search for {name}");
         GameObject objectToSearch;
-        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         foreach (GameObject obj in allObjects)
         {
             if (obj.name == name)
@@ -202,19 +200,20 @@ public class Plugin : BaseUnityPlugin
     {
         LethalConfigManager.SetModIcon(CustomGoldScrapAssets.LoadAsset<Sprite>("Assets/LCGoldScrapMod/GoldScrapVisuals/Sprites/icon.png"));
         LethalConfigManager.SetModDescription("Add 50 gold versions of scrap and 20 store unlockables!");
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(global::Config.selectedLevels, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(global::Config.minValueMultiplier, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(global::Config.maxValueMultiplier, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(global::Config.rarityMultiplier, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(global::Config.weightMultiplier, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(global::Config.moddedMoonSpawn, true));
-        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(global::Config.moddedMoonRarity, true));
-        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(global::Config.moddedMoonCost, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(global::Config.newSFX, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(global::Config.replaceSFX, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(global::Config.replaceEnemySFX, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(global::Config.fixScan, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(global::Config.toolsRebalance, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(global::Config.sillyScrap, true));
+        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(Configs.selectedLevels, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.minValueMultiplier, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.maxValueMultiplier, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.rarityMultiplier, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.weightMultiplier, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.priceMultiplier, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.moddedMoonSpawn, true));
+        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(Configs.moddedMoonRarity, true));
+        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(Configs.moddedMoonCost, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.newSFX, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.replaceSFX, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.replaceEnemySFX, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.fixScan, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.toolsRebalance, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.sillyScrap, true));
     }
 }

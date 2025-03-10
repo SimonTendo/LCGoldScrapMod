@@ -283,9 +283,23 @@ AnimationClip:
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0
+    functionName: SetInteractableFromAnimation
+    data: false
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.5
     functionName: PlayCreakSFX
     data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 2
+    functionName: SetInteractableFromAnimation
+    data: true
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

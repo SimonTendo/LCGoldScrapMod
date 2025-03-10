@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldBeaconData
   m_EditorClassIdentifier: 
+  folderName: GoldBeacon
   itemProperties: {fileID: 11400000, guid: ab10dba86c9153741920ff04369361e8, type: 2}
   isScrap: 1
   defaultWeight: 1.25
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 06000000
   customChange: 1
   levelsToAddCustom: 05000000
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

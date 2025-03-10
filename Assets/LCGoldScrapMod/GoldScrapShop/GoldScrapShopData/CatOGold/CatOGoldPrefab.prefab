@@ -55,6 +55,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
   - {fileID: 2100000, guid: b20c42110194bf846b2d516838190992, type: 2}
+  - {fileID: 2100000, guid: a751096b4a1024b4cafa5827e2946403, type: 2}
   - {fileID: 2100000, guid: 0e39137b48c32fb4b85e555cb19e51ce, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -274,6 +275,8 @@ GameObject:
   - component: {fileID: 8566833038933607554}
   - component: {fileID: -8141750573028388120}
   - component: {fileID: 8949439280982683815}
+  - component: {fileID: 2495094473691956106}
+  - component: {fileID: 5632366847868569627}
   m_Layer: 0
   m_Name: CatOGoldPrefab
   m_TagString: Untagged
@@ -296,6 +299,7 @@ Transform:
   m_Children:
   - {fileID: 4987145490542494327}
   - {fileID: 1148277805773722033}
+  - {fileID: 4340512868489314428}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-8141750573028388120
@@ -336,6 +340,57 @@ MonoBehaviour:
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
   overrideOffset: 1
+  unlockableID: -1
+--- !u!114 &2495094473691956106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250886009260231830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 613bff19186e5c34caefcbfbf1564f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  armAnimator: {fileID: 3851098432171125986}
+  animSpeedPerDayToFever:
+  - 1.5
+  - 1
+  - 0.75
+  - 0.67
+  - 0.5
+  - 0.33
+  - 0.25
+  - 0.1
+  - 0.1
+  - 0.1
+  meshRenderer: {fileID: 5165642680144099343}
+  matsNormal:
+  - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
+  - {fileID: 2100000, guid: b20c42110194bf846b2d516838190992, type: 2}
+  - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
+  - {fileID: 2100000, guid: 0e39137b48c32fb4b85e555cb19e51ce, type: 2}
+  matsFever:
+  - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
+  - {fileID: 2100000, guid: a4853071697d300439427b8376c8fbd7, type: 2}
+  - {fileID: 2100000, guid: a751096b4a1024b4cafa5827e2946403, type: 2}
+  - {fileID: 2100000, guid: 0e39137b48c32fb4b85e555cb19e51ce, type: 2}
+  scanNodeObject: {fileID: 4081545020826977476}
+  scanNode: {fileID: 7572126966293642905}
+--- !u!114 &5632366847868569627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250886009260231830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e1377fc47f6e340b98f60f17b5f9d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 0}
 --- !u!1 &3303036949850430151
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +497,80 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &4081545020826977476
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4340512868489314428}
+  - component: {fileID: 7572126966293642905}
+  - component: {fileID: 4339636428030122253}
+  m_Layer: 22
+  m_Name: ScanNode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4340512868489314428
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4081545020826977476}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8566833038933607554}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7572126966293642905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4081545020826977476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRange: 7
+  minRange: 1
+  requiresLineOfSight: 1
+  headerText: Cat o' Gold
+  subText: 
+  scrapValue: 0
+  creatureScanID: -1
+  nodeType: 2
+--- !u!65 &4339636428030122253
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4081545020826977476}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8303340364715294263
 GameObject:
   m_ObjectHideFlags: 0

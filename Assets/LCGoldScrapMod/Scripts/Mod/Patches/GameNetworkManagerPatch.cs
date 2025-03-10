@@ -25,21 +25,27 @@ public class GameNetworkManagerPatch
             //Register NetworkPrefabs of all miscellaneous gameObjects
             foreach (GameObject prefab in Plugin.allMiscNetworkPrefabs)
             {
-                NetworkManager.Singleton.AddNetworkPrefab(prefab);
+                if (prefab != null)
+                {
+                    NetworkManager.Singleton.AddNetworkPrefab(prefab);
+                }
             }
 
             //Register NetworkPrefabs of all Gold Scrap
-            foreach (ItemData item in Plugin.allGoldScrap.allItemData)
+            foreach (ItemData item in Plugin.allGoldGrabbableObjects)
             {
-                NetworkManager.Singleton.AddNetworkPrefab(item.itemProperties.spawnPrefab);
+                if (item != null && item.itemProperties != null && item.itemProperties.spawnPrefab != null)
+                {
+                    NetworkManager.Singleton.AddNetworkPrefab(item.itemProperties.spawnPrefab);
+                }
             }
 
             //Register NetworkPrefabs of all placeable GoldStore Unlockables
-            foreach (UnlockableItem item in Plugin.allGoldUnlockables)
+            foreach (ItemData unlockable in StoreAndTerminal.allGoldStoreItemData)
             {
-                if (item.prefabObject != null)
+                if (unlockable != null && unlockable.unlockableProperties != null && unlockable.unlockableProperties.prefabObject != null)
                 {
-                    NetworkManager.Singleton.AddNetworkPrefab(item.prefabObject);
+                    NetworkManager.Singleton.AddNetworkPrefab(unlockable.unlockableProperties.prefabObject);
                 }
             }
 

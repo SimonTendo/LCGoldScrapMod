@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldSpringData
   m_EditorClassIdentifier: 
+  folderName: GoldSpring
   itemProperties: {fileID: 11400000, guid: 6670078ca79add7459ae02d8bffce1a7, type: 2}
   isScrap: 1
   defaultWeight: 1.25
@@ -21,5 +22,15 @@ MonoBehaviour:
   levelsToAddMinus: 0a000000
   levelsToAddDefault: 0300000007000000
   levelsToAddPlus: 0500000009000000
+  customChange: 0
+  levelsToAddCustom: 
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

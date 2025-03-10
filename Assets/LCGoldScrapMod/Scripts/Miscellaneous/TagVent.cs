@@ -29,8 +29,9 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
     private string GetEnemyName()
     {
         EnemyType givenType = attachedToVent.enemyType;
-        if (givenType == null || givenType.enemyName == null || givenType.enemyName == "")
+        if (givenType == null || string.IsNullOrEmpty(givenType.enemyName))
         {
+            Logger.LogDebug($"givenType null? {givenType == null}");
             return "???";
         }
         switch (givenType.enemyName)
@@ -68,6 +69,10 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
             TagVent tag = spawnedTag.GetComponent<TagVent>();
             tag.attachedToVent = __instance;
             Logger.LogDebug($"spawned {spawnedTag.name} on {tag.attachedToVent.gameObject.name} #{tag.attachedToVent.NetworkObjectId}");
+            if (tag.attachedToVent.caveVent)
+            {
+                tag.scanNode.headerText = tag.scanNode.headerText.Replace("Vent", "Crevasse");
+            }
         }
 
         [HarmonyPostfix, HarmonyPatch("SyncVentSpawnTimeClientRpc")]
@@ -77,7 +82,7 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
             if (childTag != null)
             {
                 Logger.LogDebug($"#{__instance.NetworkObjectId} setting name");
-                childTag.AssignName("Will spawn:");
+                childTag.AssignName("Occupied by:");
                 Logger.LogDebug($"set name of {childTag.name} to {childTag.scanNode.subText}");
             }
         }
@@ -88,14 +93,14 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
             TagVent childTag = __instance.GetComponentInChildren<TagVent>(true);
             if (childTag != null)
             {
-                childTag.AssignName("Spawned:");
+                childTag.AssignName("Released:");
             }
         }
     }
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Config.hostToolRebalance)
+        if (!Configs.hostToolRebalance)
         {
             scanNodeObject.SetActive(true);
         }

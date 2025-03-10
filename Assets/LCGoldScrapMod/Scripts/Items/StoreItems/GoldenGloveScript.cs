@@ -132,7 +132,7 @@ public class GoldenGloveScript : GrabbableObject
         {
             GetLayers();
         }
-        if (Config.hostToolRebalance)
+        if (Configs.hostToolRebalance)
         {
             RebalanceTool();
         }
@@ -189,7 +189,7 @@ public class GoldenGloveScript : GrabbableObject
         {
             holdingPlayer.isInsideFactory = playerHeldBy.isInsideFactory;
             int presetToUse = -1;
-            EntranceTeleport[] allEntrances = FindObjectsOfType<EntranceTeleport>();
+            EntranceTeleport[] allEntrances = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.None);
             foreach (EntranceTeleport entrance in allEntrances)
             {
                 if (holdingPlayer.isInsideFactory == entrance.isEntranceToBuilding)
@@ -876,7 +876,7 @@ public class GoldenGloveScript : GrabbableObject
                 }
                 else if (stateIndex == 1 && RoundManager.Instance.currentDungeonType == 4 && playerHeldBy.isInsideFactory && collidedObject.CompareTag("Rock"))
                 {
-                    GoldenPickaxeNode[] allGoldNodes = FindObjectsOfType<GoldenPickaxeNode>();
+                    GoldenPickaxeNode[] allGoldNodes = FindObjectsByType<GoldenPickaxeNode>(FindObjectsSortMode.None);
                     if (allGoldNodes.Length > 0)
                     {
                         float smallestDistance = 999f;
@@ -2142,7 +2142,7 @@ public class GoldenGloveScript : GrabbableObject
     private void CollideBridgeServerRpc(float angleHitAt, Vector3 bridgeAtPos)
     {
         Logger.LogDebug($"{name} #{NetworkObjectId} [{stateIndex}] SERVER receiving hit BRIDGE with angle {angleHitAt} at position {bridgeAtPos}");
-        foreach (BridgeTrigger walkBridge in FindObjectsOfType<BridgeTrigger>())
+        foreach (BridgeTrigger walkBridge in FindObjectsByType<BridgeTrigger>(FindObjectsSortMode.None))
         {
             if (walkBridge.transform.position == bridgeAtPos)
             {
@@ -2343,7 +2343,7 @@ public class GoldenGloveScript : GrabbableObject
     private GoldenGloveScript PlayerAlreadyHeldByGlove(PlayerControllerB hitPlayer)
     {
         GoldenGloveScript gloveHoldingPlayer = null;
-        foreach (GoldenGloveScript glove in FindObjectsOfType<GoldenGloveScript>())
+        foreach (GoldenGloveScript glove in FindObjectsByType<GoldenGloveScript>(FindObjectsSortMode.None))
         {
             if (glove != this && glove.holdingPlayer == hitPlayer)
             {
@@ -2440,7 +2440,7 @@ public class GoldenGloveScript : GrabbableObject
             }
             if (hostHoldingItem != -1)
             {
-                foreach (GrabbableObject item in FindObjectsOfType<GrabbableObject>())
+                foreach (GrabbableObject item in FindObjectsByType<GrabbableObject>(FindObjectsSortMode.None))
                 {
                     if ((int)item.NetworkObjectId == hostHoldingItem)
                     {

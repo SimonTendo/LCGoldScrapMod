@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldJugData
   m_EditorClassIdentifier: 
+  folderName: GoldJug
   itemProperties: {fileID: 11400000, guid: 06fa6aee05978a146aa4b1e22e78aa9b, type: 2}
   isScrap: 1
   defaultWeight: 1.32
@@ -21,5 +22,15 @@ MonoBehaviour:
   levelsToAddMinus: 08000000
   levelsToAddDefault: 0200000007000000
   levelsToAddPlus: 09000000
+  customChange: 0
+  levelsToAddCustom: 
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

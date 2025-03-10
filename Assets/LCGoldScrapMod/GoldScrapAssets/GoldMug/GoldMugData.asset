@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldMugData
   m_EditorClassIdentifier: 
+  folderName: GoldMug
   itemProperties: {fileID: 11400000, guid: 9a804ed4b515bfd4ebaa34685a92f11e, type: 2}
   isScrap: 1
   defaultWeight: 1.15
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 0500000009000000
   customChange: -2
   levelsToAddCustom: 0100000002000000
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

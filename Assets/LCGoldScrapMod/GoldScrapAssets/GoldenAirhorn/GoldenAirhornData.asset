@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldenAirhornData
   m_EditorClassIdentifier: 
+  folderName: GoldenAirhorn
   itemProperties: {fileID: 11400000, guid: d3d13280cdd122c4d80d4ec2f944876c, type: 2}
   isScrap: 1
   defaultWeight: 1.17
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 0a000000050000000600000009000000
   customChange: 0
   levelsToAddCustom: 
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

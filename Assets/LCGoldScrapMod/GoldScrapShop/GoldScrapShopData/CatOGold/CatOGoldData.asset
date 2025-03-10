@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
+  m_Name: CatOGoldData
+  m_EditorClassIdentifier: 
+  folderName: CatOGold
+  itemProperties: {fileID: 0}
+  isScrap: 0
+  defaultWeight: 1
+  defaultMaxValue: 0
+  defaultMinValue: 0
+  defaultRarity: 3
+  levelsToAddMinus: 
+  levelsToAddDefault: 
+  levelsToAddPlus: 
+  customChange: 0
+  levelsToAddCustom: 
+  isStoreItem: 1
+  storeDefaultPrice: 777
+  maxFeverSalePercentage: 0
+  alreadyPurchasedText: Domesticated
+  storeTerminalNodes:
+  - {fileID: 11400000, guid: b42e785200a480b45877f02aec7217c2, type: 2}
+  - {fileID: 11400000, guid: 98b5b7a332777074fa44127442b68c10, type: 2}
+  unlockableProperties:
+    unlockableName: Cat o Gold
+    prefabObject: {fileID: 1250886009260231830, guid: 2518ac2cacd508b4fa5372cbb03a6e03,
+      type: 3}
+    unlockableType: 1
+    shopSelectionNode: {fileID: 11400000, guid: b42e785200a480b45877f02aec7217c2,
+      type: 2}
+    alwaysInStock: 1
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0.25
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
+  localItemsListIndex: -1
+  localMaxValue: 0
+  localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1
+  localUnlockableID: -1

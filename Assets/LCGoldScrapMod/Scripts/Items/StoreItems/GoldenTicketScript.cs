@@ -40,7 +40,7 @@ public class GoldenTicketScript : GrabbableObject
             }
 
             //First check if there is any Golden Ticket in the world at all, this to prevent the entire calculation every time
-            GoldenTicketScript[] goldenTickets = FindObjectsOfType<GoldenTicketScript>();
+            GoldenTicketScript[] goldenTickets = FindObjectsByType<GoldenTicketScript>(FindObjectsSortMode.None);
             bool foundValidTicket = false;
             foreach (GoldenTicketScript ticket in goldenTickets)
             {
@@ -79,7 +79,7 @@ public class GoldenTicketScript : GrabbableObject
 
             //Check if there is an inverse teleporter, should the normal teleporter check fail
             ShipTeleporter inverseTeleporter = null;
-            ShipTeleporter[] allTeleporters = FindObjectsOfType<ShipTeleporter>();
+            ShipTeleporter[] allTeleporters = FindObjectsByType<ShipTeleporter>(FindObjectsSortMode.None);
             foreach (ShipTeleporter teleporter in allTeleporters)
             {
                 if (teleporter.isInverseTeleporter)

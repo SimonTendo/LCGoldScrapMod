@@ -127,6 +127,10 @@ public class StorePatch
             {
                 DLOGManager.instance.SetTutorialText();
             }
+            else if (unlockableID == StoreAndTerminal.catOGoldID)
+            {
+                RarityManager.instance.daysUntilNextFever = 1;
+            }
         }
     }
 

@@ -73,6 +73,7 @@ public class CrownScript : GrabbableObject
         if (IsServer && !isInShipRoom)
         {
             int valueToSend = RarityManager.CurrentlyGoldFever() ? startingValueFever : startingValue;
+            valueToSend = (int)((float)valueToSend * Configs.hostPriceMultiplier);
             SyncValueClientRpc(valueToSend, 0);
         }
     }
@@ -82,10 +83,8 @@ public class CrownScript : GrabbableObject
     {
         if (playerWornBy != null)
         {
-            if (isInFactory != playerWornBy.isInsideFactory)
-            {
-                isInFactory = playerWornBy.isInsideFactory;
-            }
+            isInFactory = playerWornBy.isInsideFactory;
+            isInShipRoom = playerWornBy.isInHangarShipRoom;
             if (!playerWornBy.isPlayerControlled)
             {
                 parentObject = null;
@@ -385,7 +384,6 @@ public class CrownScript : GrabbableObject
         isPocketed = false;
         mainCollider.enabled = false;
         scanNodeCollider.enabled = !wearerLocal;
-        targetFloorPosition = new Vector3(3000f, -400f, 3000f);
         fallTime = 0f;
         int itemSlot = -1;
         for (int i = 0; i < playerWornBy.ItemSlots.Length; i++)
@@ -426,7 +424,7 @@ public class CrownScript : GrabbableObject
 
     private bool PlayerAlreadyWearingCrown(PlayerControllerB playerTryingToWear)
     {
-        foreach (CrownScript crown in FindObjectsOfType<CrownScript>())
+        foreach (CrownScript crown in FindObjectsByType<CrownScript>(FindObjectsSortMode.None))
         {
             if (crown.playerWornBy == playerTryingToWear)
             {
@@ -480,7 +478,8 @@ public class CrownScript : GrabbableObject
             previousAddedAmount += amountToAdd;
         }
         int newValue = scrapValue + amountToAdd;
-        Logger.LogDebug($"totalProfit: {wearingPlayerTotalProfit} | streak: {samePlayerStreak} | percentage: {newPercentage} | previous: {previousAddedAmount} | add: {amountToAdd} | new: {newValue}");
+        newValue = (int)((float)newValue * Configs.hostPriceMultiplier);
+        Logger.LogDebug($"totalProfit: {wearingPlayerTotalProfit} | streak: {samePlayerStreak} | percentage: {newPercentage} | previous: {previousAddedAmount} | add: {amountToAdd} | new: {newValue} | config: {Configs.hostPriceMultiplier}");
         SyncValueClientRpc(newValue, samePlayerStreak);
     }
 
@@ -526,7 +525,7 @@ public class CrownScript : GrabbableObject
         public static void WritePlayerNotesPostfix(StartOfRound __instance)
         {
             List<PlayerControllerB> writtenToPlayers = new List<PlayerControllerB>();
-            CrownScript[] allCrowns = FindObjectsOfType<CrownScript>();
+            CrownScript[] allCrowns = FindObjectsByType<CrownScript>(FindObjectsSortMode.None);
             foreach (CrownScript crown in allCrowns)
             {
                 if (writtenToPlayers.Contains(crown.playerWornBy) || crown.playerWornBy == null)
@@ -570,7 +569,7 @@ public class CrownScript : GrabbableObject
         {
             if (StartOfRound.Instance.connectedPlayersAmount == 0 && __instance.IsOwner && !__instance.isPlayerDead && __instance.AllowPlayerDeath() && FindObjectOfType<CrownScript>() != null)
             {
-                foreach (CrownScript crown in FindObjectsOfType<CrownScript>())
+                foreach (CrownScript crown in FindObjectsByType<CrownScript>(FindObjectsSortMode.None))
                 {
                     if (crown.playerWornBy != null && crown.playerWornBy == __instance)
                     {

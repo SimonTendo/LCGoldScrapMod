@@ -35,7 +35,7 @@ public class GoldenGuardianScript : GrabbableObject
     public void LocalPlayerStartExplosion(bool delay = false, bool fromKillCommand = false)
     {
         float delayTime = 1.75f;
-        if (Config.hostToolRebalance)
+        if (Configs.hostToolRebalance)
         {
             delayTime = 1.3f;
             delay = true;
@@ -82,7 +82,7 @@ public class GoldenGuardianScript : GrabbableObject
         {
             audioSource.Stop();
             DestroyObjectInHand(playerHeldBy);
-            if (!Config.hostToolRebalance)
+            if (!Configs.hostToolRebalance)
             {
                 audioSource.PlayOneShot(explodeClip);
                 WalkieTalkie.TransmitOneShotAudio(audioSource, explodeClip, 1f);
@@ -160,7 +160,7 @@ public class GoldenGuardianScript : GrabbableObject
         if (heldItem != null && !heldItem.deactivated && (isKillCommand || !heldItem.aboutToExplode))
         {
             Logger.LogDebug($"GoldenGuardianScript patch: local player likely holding GoldenGuardian on server, trying to execute explosion | isKillCommand = {isKillCommand}");
-            bool delay = !isKillCommand && Config.hostToolRebalance;
+            bool delay = !isKillCommand && Configs.hostToolRebalance;
             heldItem.LocalPlayerStartExplosion(delay, isKillCommand);
             return false;
         }

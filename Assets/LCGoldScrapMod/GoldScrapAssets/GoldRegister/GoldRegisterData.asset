@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldRegisterData
   m_EditorClassIdentifier: 
+  folderName: GoldRegister
   itemProperties: {fileID: 11400000, guid: 2c48c17640775d449b8b5461e902f558, type: 2}
   isScrap: 1
   defaultWeight: 1.84
@@ -21,5 +22,15 @@ MonoBehaviour:
   levelsToAddMinus: 
   levelsToAddDefault: 000000000100000002000000040000000500000007000000
   levelsToAddPlus: 060000000800000009000000
+  customChange: 0
+  levelsToAddCustom: 
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

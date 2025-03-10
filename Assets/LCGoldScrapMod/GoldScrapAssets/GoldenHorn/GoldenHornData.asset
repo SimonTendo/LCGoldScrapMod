@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldenHornData
   m_EditorClassIdentifier: 
+  folderName: GoldenHorn
   itemProperties: {fileID: 11400000, guid: ae7d075d9c963b343866d8d0c5323bf8, type: 2}
   isScrap: 1
-  isStoreItem: 0
   defaultWeight: 1.18
   defaultMaxValue: 180
   defaultMinValue: 120
@@ -24,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 0400000009000000
   customChange: 0
   levelsToAddCustom: 
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

@@ -19,7 +19,7 @@ public class LightSwitchRevealer : MonoBehaviour, IGoldenGlassSecret
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Config.hostToolRebalance)
+        if (!Configs.hostToolRebalance)
         {
             lightSource.enabled = true;
         }

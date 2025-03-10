@@ -10,7 +10,7 @@ public class CreditsCardManager : NetworkBehaviour
 
     public static CreditsCardManager instance;
 
-    public Item creditsCardItem;
+    public ItemData creditsCardItem;
     public TerminalNode creditsCardNode;
     public TerminalNode creditsCardNodeBuy;
     public TerminalNode creditsCardNodeUnavailable;
@@ -50,9 +50,9 @@ public class CreditsCardManager : NetworkBehaviour
     {
         if (playerID == -1 || playerID == (int)StartOfRound.Instance.localPlayerController.playerClientId)
         {
-            if (value < 0) value = 0;
-            creditsCardItem.creditsWorth = value;
-            Logger.LogDebug($"set buying rate to {creditsCardItem.creditsWorth}");
+            if (value < -1) value = -1;
+            creditsCardItem.itemProperties.creditsWorth = value;
+            Logger.LogDebug($"set buying rate to {creditsCardItem.itemProperties.creditsWorth}");
         }
     }
 
@@ -77,20 +77,20 @@ public class CreditsCardManager : NetworkBehaviour
         previousCredits[currentSave] = valueToSet;
     }
 
-    public void StartSaleReroll()
+    public void StartSaleReroll(bool guaranteeSale = false)
     {
-        StartCoroutine(RerollSalesPercentage());
+        StartCoroutine(RerollSalesPercentage(guaranteeSale));
     }
 
-    private IEnumerator RerollSalesPercentage()
+    private IEnumerator RerollSalesPercentage(bool guaranteeSale)
     {
         yield return new WaitUntil(() => !StartOfRound.Instance.shipIsLeaving);
-        if (creditsCardItem.creditsWorth != 0)
+        if (creditsCardItem.itemProperties.creditsWorth >= 0)
         {
             int price = 100;
-            if (Random.Range(0, 5) == 0)
+            if (guaranteeSale || Random.Range(0, 4) == 0)
             {
-                price -= Random.Range(3, 9) * 10;
+                price -= Random.Range(3, creditsCardItem.maxFeverSalePercentage / 10 + 1) * 10;
             }
             SetNewSalesClientRpc(price);
         }
@@ -141,7 +141,15 @@ public class CreditsCardManager : NetworkBehaviour
             if (terminalScript != null)
             {
                 terminalScript.itemSalesPercentages[creditsCardNodeBuy.buyItemIndex] = newSalesValue;
-                Plugin.Logger.LogDebug($"sale: {100 - newSalesValue}%");
+                Logger.LogDebug($"terminal sale: {100 - newSalesValue}%");
+                for (int i = 0; i < StoreAndTerminal.allGoldStoreItemData.Length; i++)
+                {
+                    if (StoreAndTerminal.allGoldStoreItemData[i] == creditsCardItem && i >= 0 && i < RarityManager.allItemPricePercentages.Length)
+                    {
+                        RarityManager.allItemPricePercentages[i] = newSalesValue;
+                        Logger.LogDebug($"gold store sale: {100 - newSalesValue}%");
+                    }
+                }
             }
         }
     }
@@ -164,7 +172,7 @@ public class CreditsCardManager : NetworkBehaviour
         }
         else
         {
-            nextCardValue[currentSave] = creditsCardItem.creditsWorth;
+            nextCardValue[currentSave] = creditsCardItem.itemProperties.creditsWorth;
         }
         TakeCreditsCardOutOfRotationClientRpc();
     }
@@ -172,19 +180,19 @@ public class CreditsCardManager : NetworkBehaviour
     [ClientRpc]
     private void TakeCreditsCardOutOfRotationClientRpc()
     {
-        creditsCardItem.creditsWorth = 0;
+        creditsCardItem.itemProperties.creditsWorth = -1;
         Terminal terminalScript = FindObjectOfType<Terminal>();
         if (terminalScript != null)
         {
             terminalScript.itemSalesPercentages[creditsCardNodeBuy.buyItemIndex] = 100;
-            Logger.LogDebug($"TakeCreditsCardOutOfRotationClientRpc(): value = {creditsCardItem.creditsWorth} | sale = {100 - terminalScript.itemSalesPercentages[creditsCardNodeBuy.buyItemIndex]}%");
+            Logger.LogDebug($"TakeCreditsCardOutOfRotationClientRpc(): value = {creditsCardItem.itemProperties.creditsWorth} | sale = {100 - terminalScript.itemSalesPercentages[creditsCardNodeBuy.buyItemIndex]}%");
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void SyncUponJoinServerRpc(int playerID)
     {
-        SetBuyingRateClientRpc(creditsCardItem.creditsWorth, playerID);
+        SetBuyingRateClientRpc(creditsCardItem.itemProperties.creditsWorth, playerID);
         Terminal terminalScript = FindObjectOfType<Terminal>();
         if (terminalScript != null)
         {

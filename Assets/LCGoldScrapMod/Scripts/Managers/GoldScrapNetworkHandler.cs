@@ -24,23 +24,23 @@ public class GoldScrapNetworkHandler : NetworkBehaviour
     public void SendConfigsToNewPlayerServerRpc(int playerID)
     {
         Plugin.Logger.LogDebug($"Received server call to send CONFIG to new client at index: [{playerID}]");
-        SetHostConfigsClientRpc(playerID, Config.weightMultiplier.Value, Config.toolsRebalance.Value);
+        SetHostConfigsClientRpc(playerID, Configs.weightMultiplier.Value, Configs.toolsRebalance.Value, Configs.priceMultiplier.Value);
     }
 
     [ClientRpc]
-    private void SetHostConfigsClientRpc(int playerID, float multiplier, bool toolsRebalance)
+    private void SetHostConfigsClientRpc(int playerID, float multiplierWeight, bool toolsRebalance, float multiplierPrice)
     {
         PlayerControllerB receivedPlayer = StartOfRound.Instance.allPlayerScripts[playerID];
         if (receivedPlayer == GameNetworkManager.Instance.localPlayerController)
         {
-            StartCoroutine(SyncConfigsOnDelay(toolsRebalance, multiplier));
+            StartCoroutine(SyncConfigsOnDelay(toolsRebalance, multiplierWeight, multiplierPrice));
         }
     }
 
-    private IEnumerator SyncConfigsOnDelay(bool toolsRebalance, float multiplier)
+    private IEnumerator SyncConfigsOnDelay(bool toolsRebalance, float multiplierWeight, float multiplierPrice)
     {
         yield return new WaitForSeconds(1f);
-        RuntimeChanges.SyncHostConfigs(toolsRebalance, multiplier);
+        RuntimeChanges.SyncHostConfigs(toolsRebalance, multiplierWeight, multiplierPrice);
     }
 
     [ServerRpc(RequireOwnership = false)]

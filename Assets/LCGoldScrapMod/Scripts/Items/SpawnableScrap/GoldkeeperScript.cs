@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using BepInEx.Logging;
 using GameNetcodeStuff;
 
-public class GoldkeeperScript : GrabbableObject
+public class GoldkeeperScript : GrabbableObject, IGoldenGlassSecret
 {
     private static ManualLogSource Logger = Plugin.Logger;
 
@@ -14,6 +14,7 @@ public class GoldkeeperScript : GrabbableObject
     public Collider losBlocker;
     public NavMeshObstacle navBlocker;
     private Coroutine checkDistanceCoroutine;
+    public MeshRenderer blockerRenderer;
 
     public override void Start()
     {
@@ -105,5 +106,15 @@ public class GoldkeeperScript : GrabbableObject
             }
             LogEnabled();
         }
+    }
+
+    void IGoldenGlassSecret.BeginReveal()
+    {
+        blockerRenderer.enabled = true;
+    }
+
+    void IGoldenGlassSecret.EndReveal()
+    {
+        blockerRenderer.enabled = false;
     }
 }

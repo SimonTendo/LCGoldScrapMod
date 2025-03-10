@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldenPickaxeData
   m_EditorClassIdentifier: 
+  folderName: GoldenPickaxe
   itemProperties: {fileID: 11400000, guid: 9387fa9f85319d6429ee1fe0f42b22d5, type: 2}
   isScrap: 0
-  isStoreItem: 1
   defaultWeight: 1.12
   defaultMaxValue: 0
   defaultMinValue: 0
@@ -24,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 
   customChange: 0
   levelsToAddCustom: 
+  isStoreItem: 1
+  storeDefaultPrice: 75
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

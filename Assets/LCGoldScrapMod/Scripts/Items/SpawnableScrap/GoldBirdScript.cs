@@ -130,7 +130,7 @@ public class GoldBirdScript : GrabbableObject
         {
             if (GameNetworkManager.Instance != null && GameNetworkManager.Instance.localPlayerController != null && GameNetworkManager.Instance.localPlayerController.isHostPlayerObject)
             {
-                foreach (GoldBirdScript goldBird in FindObjectsOfType<GoldBirdScript>())
+                foreach (GoldBirdScript goldBird in FindObjectsByType<GoldBirdScript>(FindObjectsSortMode.None))
                 {
                     goldBird.AwakenClientRpc((int)(goldBird.scrapValue * Random.Range(3f, 4f)));
                 }

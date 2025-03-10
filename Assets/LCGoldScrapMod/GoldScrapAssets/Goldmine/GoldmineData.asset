@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldmineData
   m_EditorClassIdentifier: 
+  folderName: Goldmine
   itemProperties: {fileID: 11400000, guid: a8acbeb778bfb8e4193434dda0d5211e, type: 2}
   isScrap: 1
   defaultWeight: 1.18
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 06000000
   customChange: 3
   levelsToAddCustom: 09000000
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3227564690
+CRC: 2338166742
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 15c02e5e73a06a8e56f910b348d4a446
+    Hash: d9cb065bfeee873c6c28a45752adafd8
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 48a9cfdecc78465179f433e8f9fffcde
+    Hash: c67d82039b58aefc496a59ba26d9dba4
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 15c02e5e73a06a8e56f910b348d4a446
+    Hash: d9cb065bfeee873c6c28a45752adafd8
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -45,15 +45,13 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: c7b430c469db0421764b70ff9c06bc0d, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: fb5890291368e4720f01896e9c2e556e, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 813b8f52ff359f646b02b2ebcf1a6c92, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: ac761dd3dbe5a4880072170caeb8e06d, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: a1e4de5016bc7d3489c4e220ab953575, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 613bff19186e5c34caefcbfbf1564f09, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: df8a8ec1fb4e08d01a3bd16540b76614, type: 3}
 - Class: 114
@@ -215,6 +213,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapAssets/CuddlyGold/CuddlyGoldData.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/SillyArt/Textures/GoldScrapSillyArt2.jpg
 - Assets/LCGoldScrapMod/GoldScrapAssets/Goldkeeper/GoldkeeperData.asset
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldTrophy/GoldTrophyData.asset
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/CookieGoldPan.blend
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldToilet/GoldToiletPrefab.prefab
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/SillyArt/Textures/GoldScrapSillyArt3.jpg
@@ -256,6 +255,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/ArtOfGoldData.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenBell/GoldenBellPrefab.prefab
 - Assets/LCGoldScrapMod/GoldScrapMisc/StoryLogs/LogIcon.blend
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/CatOGold/CatOGoldData.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldenTicket/GoldenTicketPrefab.prefab
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldOre/GoldScrapShopGoldOreBuy.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldfatherTick0.ogg
@@ -291,6 +291,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenGlass/GoldenGlassPrefab.prefab
 - Assets/LCGoldScrapMod/GoldScrapTerminal/GoldScrapHelpModelsKeyword.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/CookieGoldPan/CookieGoldPanLCGoldScrapMod.asset
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldToilet/GoldToiletData.asset
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/GoldPan.blend
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/JacobsLadderDark.mat
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/ToiletChargeSFX.ogg
@@ -406,6 +407,8 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldSign/GoldSignData.asset
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/TatteredGoldSheetAlt.blend
 - Assets/LCGoldScrapMod/GoldScrapMisc/StoryLogs/LogFile2/GoldScrapLog2Node.asset
+- Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatEmmissive.mat
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldMedal/GoldMedalData.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/SafeBox/GoldScrapShopSafeBoxInfo.asset
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/GoldenGrunt.blend
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/FabricRed.mat
@@ -454,7 +457,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldfatherSway1.ogg
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/Artwork/Materials/ArtOfGoldMat2Dylerious.mat
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldTypeEngine/GoldTypeEngineData.asset
-- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldScrapShopNode.asset
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopNode.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DirectoryLOG/DLOGScan/DLOGSpaceText.asset
 - Assets/LCGoldScrapMod/GoldScrapMisc/GoldenGlassSecrets/ScanNodes/Doors/DoorTagScanNode.prefab
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldBeacon/GoldBeaconData.asset
@@ -487,6 +490,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrownKeyword.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/NewSFX/GoldenGloveExtendStart.ogg
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Sprites/GoldenGloveIconPaper1.png
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldfatherClock/GoldfatherClockData.asset
 - Assets/LCGoldScrapMod/GoldScrapTerminal/GoldScrapHelpModsKeyword.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldenClockOff.ogg
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/SillyArt/Textures/GoldScrapSillyArt4.jpg
@@ -497,7 +501,6 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldenTicket/GoldScrapShopGoldenTicketKeyword.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/DropPurifiedMask.ogg
 - Assets/LCGoldScrapMod/GoldScrapAssets/TatteredGoldSheet/TatteredGoldSheetLCGoldScrapMod.asset
-- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopItemsList.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/Artwork/Textures/ArtOfGoldArtwork1Yardan.png
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenRetriever/GoldenRetrieverPrefab.prefab
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/DropMetalObjectHeavy1.ogg
@@ -513,6 +516,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Animation/AnimatorControllers/CatOGoldArm.controller
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenClock/GoldenClockData.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/FlashlightOut.ogg
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GroovyGold/GroovyGoldData.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenGuardian/GoldenGuardianData.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DirectoryLOG/DLOGScan/DLOGHelpText.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldenPickaxe/GoldScrapShopGoldenPickaxeBuy.asset
@@ -527,6 +531,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/CreditsCard/CreditsCardData.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenGuardian/GoldenGuardianPrefab.prefab
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenClock/GoldenClockLCGoldScrapMod.asset
+- Assets/LCGoldScrapMod/GoldScrapShop/AllGoldStoreItemData.asset
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/GoldenClock.blend
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldPan/GoldPanPrefab.prefab
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/SillyArt/Materials/ArtOfGoldSillyArt5.mat
@@ -686,7 +691,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMat.mat
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/Fart4.ogg
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/GoldTypeEngine.blend
-- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldScrapShopKeyword.asset
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopKeyword.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldBirdAlarm.ogg
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/ArtOfGoldFrame.blend
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrownInfo.asset
@@ -695,6 +700,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldmineBeepSFX.ogg
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldTrophy/GoldTrophy.blend
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/ToiletFlushSFX.ogg
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/BronzeSuit/BronzeSuitData.asset
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/GoldenGrenade.blend
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldMug/GoldMugLCGoldScrapMod.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldenGlove/GoldScrapShopGoldenGloveKeyword.asset
@@ -725,9 +731,8 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/LogsLogbookPaperMat.mat
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/Artwork/Textures/ArtOfGoldArtworkContribution.png
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldTypeEngine/GoldTypeEnginePrefab.prefab
-- Assets/LCGoldScrapMod/GoldScrapShop/AllGoldStoreItemNames.asset
-- Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/AudienceApplauseSFX.ogg
 - Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/ArtOfGoldLCGoldScrapMod.asset
+- Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/AudienceApplauseSFX.ogg
 - Assets/LCGoldScrapMod/GoldScrapTerminal/GoldScrapHelpExplainNode.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/ComedyGold/ComedyGoldLCGoldScrapMod.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DirectoryLOG/DLOGScan/DLOGScanNode.asset
@@ -817,19 +822,21 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/CatOGold/CatOGold.blend
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/AudienceSadSFX.ogg
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldSpring/GoldSpringPrefab.prefab
-- Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldTransparentMat.mat
+- Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatTransparent.mat
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrown.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenBell/GoldenBellData.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/Goldfish/GoldfishData.asset
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Sprites/icon.png
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/AirhornSFX.ogg
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/TicketInverseSFX.ogg
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/SilverSuit/SilverSuitData.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenGlass/GoldenGlassLCGoldScrapMod.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/ClownhornFar.ogg
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldSpringStop.ogg
 - Assets/LCGoldScrapMod/GoldScrapTerminal/GoldScrapHelpMainKeywordAlt0.asset
 - Assets/LCGoldScrapMod/GoldScrapMisc/GoldenGlassSecrets/ScanNodes/Players/AllPlayerTagDescriptions.asset
 - Assets/LCGoldScrapMod/GoldScrapMisc/StoryLogs/LogFile4/GoldScrapLog4.prefab
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DirectoryLOG/DirectoryLOGData.asset
 - Assets/LCGoldScrapMod/GoldScrapMisc/StoryLogs/LogFile3/GoldScrapLog3.prefab
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldNugget/SillyGoldNugget.blend
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldfatherSway0.ogg
@@ -842,8 +849,10 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/MarigoldGrab.ogg
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/LogsBuriedLogDirtMat.mat
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldenGuardianBuildUp.ogg
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldSuit/GoldSuitData.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/GoldScrapShopGroovyGoldMusic.ogg
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldfatherCrash.ogg
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/SafeBox/SafeBoxData.asset
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldSign/GoldSignPrefab.prefab
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GoldfatherSway3.ogg
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/PickaxeHotCold5.ogg
@@ -896,7 +905,6 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapMisc/GoldenGlassSecrets/ScanNodes/Players/PlayerTagScanNode.prefab
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldPerfume/GoldPerfumeFakeBrandNames.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/GrabGoldTypeEngine.ogg
-- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopUnlockablesList.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/GrabGoldJug.ogg
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/SafeBox/GoldScrapShopSafeBoxKeyword.asset
 - Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DirectoryLOG/DLOGScan/DLOGOutroText.asset
@@ -916,6 +924,7 @@ Assets:
 - Assets/LCGoldScrapMod/GoldScrapAssets/GoldenGlass/GoldenGlassData.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/GrabCuddlyGold.ogg
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/PickaxeCritSFX.ogg
+- Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldenThrone/GoldenThroneData.asset
 - Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/FlashlightClick1SFX.ogg
 - Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/ArtOfGoldArtwork.blend
 - Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/GrabGolderBar.ogg

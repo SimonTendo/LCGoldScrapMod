@@ -29,7 +29,7 @@ public class StartOfRoundPatch
             General.AddAllItemsToAllItemsListAwake();
             RegisterGoldScrap.SetAllItemsAwake();
 
-            Config.hostToolRebalance = false;
+            Configs.hostToolRebalance = false;
             Plugin.appliedHostConfigs = false;
         }
     }
@@ -50,7 +50,7 @@ public class StartOfRoundPatch
                 StoreAndTerminal.defaultHelmetMaterial = GameNetworkManager.Instance.localPlayerController.localVisor.GetChild(0).GetComponent<MeshRenderer>().materials[0];
             }
 
-            if (Config.moddedMoonSpawn.Value && !RegisterGoldScrap.alreadyAddedGoldScrapOnModded)
+            if (Configs.moddedMoonSpawn.Value && !RegisterGoldScrap.alreadyAddedGoldScrapOnModded)
             {
                 RegisterGoldScrap.RegisterGoldScrapModded();
             }
@@ -63,10 +63,9 @@ public class StartOfRoundPatch
                 DLOGManager.instance.SetTextServerRpc(true, false);
                 General.SetDiscoBallOnJoin();
                 General.SetMedalsOnJoin();
-                if (StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.catOGoldID].hasBeenUnlockedByPlayer && !RarityManager.hadFreeFirstFever)
+                if (StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.catOGoldID].hasBeenUnlockedByPlayer)
                 {
                     Plugin.Logger.LogDebug("cat unlocked upon start, likely from previous save file");
-                    RarityManager.hadFreeFirstFever = true;
                     RarityManager.instance.RollForGoldFever();
                 }
                 UnlockableItem safeBox = StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.safeBoxID];
@@ -102,7 +101,7 @@ public class StartOfRoundPatch
         [HarmonyPostfix]
         public static void openingDoorsSequencePostfix(StartOfRound __instance)
         {
-            foreach (CrownScript crown in Object.FindObjectsOfType<CrownScript>())
+            foreach (CrownScript crown in Object.FindObjectsByType<CrownScript>(FindObjectsSortMode.None))
             {
                 crown.RegisterPlayerWearingDayStart();
             }
@@ -118,7 +117,7 @@ public class StartOfRoundPatch
                 GoldenHourglassManager.instance.CheckToSetTime(false);
                 GoldNodeManager.instance.StartSpawnNodes();
                 LogManager.instance.SpawnLogs();
-                if (RarityManager.CurrentlyGoldFever())
+                if (RarityManager.CurrentlyGoldFever() || RarityManager.CurrentlyGoldFever(true))
                 {
                     RarityManager.instance.PlayGoldFeverSFX();
                 }
@@ -141,7 +140,7 @@ public class StartOfRoundPatch
         private static int SubtractGoldNuggetsFromCollectedValue(int __result)
         {
             int goldStoreItemValue = 0;
-            GoldStoreItem[] allStoreItems = Object.FindObjectsOfType<GoldStoreItem>();
+            GoldStoreItem[] allStoreItems = Object.FindObjectsByType<GoldStoreItem>(FindObjectsSortMode.None);
             foreach (GoldStoreItem gold in allStoreItems)
             {
                 GrabbableObject itemProperties = gold.GetComponent<GrabbableObject>();
@@ -169,27 +168,27 @@ public class StartOfRoundPatch
         {
             if (__instance.IsServer)
             {
-                foreach (GoldBirdScript goldBird in Object.FindObjectsOfType<GoldBirdScript>())
+                foreach (GoldBirdScript goldBird in Object.FindObjectsByType<GoldBirdScript>(FindObjectsSortMode.None))
                 {
                     goldBird.DeactivateAtEndOfDayClientRpc();
                 }
 
-                foreach (GoldNuggetScript goldOre in Object.FindObjectsOfType<GoldNuggetScript>())
+                foreach (GoldNuggetScript goldOre in Object.FindObjectsByType<GoldNuggetScript>(FindObjectsSortMode.None))
                 {
                     goldOre.IncreaseGoldOre();
                 }
 
-                foreach (GoldenPickaxeNode goldNode in Object.FindObjectsOfType<GoldenPickaxeNode>())
+                foreach (GoldenPickaxeNode goldNode in Object.FindObjectsByType<GoldenPickaxeNode>(FindObjectsSortMode.None))
                 {
                     goldNode.GetComponent<NetworkObject>().Despawn();
                 }
 
-                foreach (CrownScript crown in Object.FindObjectsOfType<CrownScript>())
+                foreach (CrownScript crown in Object.FindObjectsByType<CrownScript>(FindObjectsSortMode.None))
                 {
                     crown.CalculateStreakValueIncrease();
                 }
 
-                if (RarityManager.selectedLevel != -1)
+                if (RarityManager.selectedLevel != -1 && (TimeOfDay.Instance.daysUntilDeadline == 0 || __instance.currentLevel.planetHasTime || __instance.currentLevel.spawnEnemiesAndScrap))
                 {
                     RarityManager.instance.SetGoldFeverForLevel();
                 }
@@ -213,7 +212,7 @@ public class StartOfRoundPatch
             {
                 RarityManager.instance.RollForGoldFever();
 
-                foreach (GoldfatherClockScript goldfatherClock in Object.FindObjectsOfType<GoldfatherClockScript>())
+                foreach (GoldfatherClockScript goldfatherClock in Object.FindObjectsByType<GoldfatherClockScript>(FindObjectsSortMode.None))
                 {
                     if (goldfatherClock.timeCanTick)
                     {

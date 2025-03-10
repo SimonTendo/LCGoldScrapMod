@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldBirdData
   m_EditorClassIdentifier: 
+  folderName: GoldBird
   itemProperties: {fileID: 11400000, guid: d8abc8bdf968923418640c5264c28d35, type: 2}
   isScrap: 1
   defaultWeight: 1.34
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 0700000009000000
   customChange: 4
   levelsToAddCustom: 0a000000
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

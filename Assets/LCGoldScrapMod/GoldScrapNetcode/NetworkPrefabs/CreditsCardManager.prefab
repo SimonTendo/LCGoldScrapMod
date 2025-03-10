@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4d828aa70d9fa42a0e5085467ebe71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  creditsCardItem: {fileID: 11400000, guid: 6342944fee0860a49bae86229c6d800a, type: 2}
+  creditsCardItem: {fileID: 11400000, guid: 3130d06fd6889f948b9534a9e6f605da, type: 2}
   creditsCardNode: {fileID: 11400000, guid: 895c586b1166f9349adefa0ef76acc12, type: 2}
   creditsCardNodeBuy: {fileID: 11400000, guid: dd600baf6d1e14c4d982916c6454918d, type: 2}
   creditsCardNodeUnavailable: {fileID: 11400000, guid: e533dcd8cf3c4db47b06a9477dfc71e6,

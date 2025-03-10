@@ -19,7 +19,7 @@ public class TerminalPatch
             if (!Plugin.alreadyAddedUnlockables)
             {
                 StoreAndTerminal.AddGoldUnlockablesToShop(StartOfRound.Instance);
-                if (Config.replaceSFX.Value && Plugin.v50Compatible)
+                if (Configs.replaceSFX.Value && Plugin.v50Compatible)
                 {
                     StoreAndTerminal.LoadGoldStoreSuitJumpAudio();
                 }
@@ -115,7 +115,7 @@ public class TerminalPatch
         public static bool TextPostProcessPrefix(ref string modifiedDisplayText, ref string __result)
         {
             //[Custom Terminal Scan] TRUE
-            if (Config.fixScan.Value && modifiedDisplayText.Contains("[scanForItems]"))
+            if (Configs.fixScan.Value && modifiedDisplayText.Contains("[scanForItems]"))
             {
                 if (!General.DoesMoonHaveGoldScrap()) return true;
 
@@ -126,13 +126,13 @@ public class TerminalPatch
                 int goldScrapAmount = 0;
                 int goldScrapValue = 0;
 
-                GrabbableObject[] allItems = Object.FindObjectsOfType<GrabbableObject>();
+                GrabbableObject[] allItems = Object.FindObjectsByType<GrabbableObject>(FindObjectsSortMode.None);
                 foreach (GrabbableObject item in allItems)
                 {
                     if (item.itemProperties.isScrap && !item.isInShipRoom && !item.isInElevator)
                     {
                         normalScrapAmount++;
-                        normalScrapValue += item.scrapValue;
+                        normalScrapValue += item.scrapValue != 0 ? item.scrapValue : Random.Range((int)(item.itemProperties.minValue * RoundManager.Instance.scrapValueMultiplier), (int)(item.itemProperties.maxValue * RoundManager.Instance.scrapValueMultiplier));
                     }
 
                     if (item.itemProperties.name.Contains("LCGoldScrapMod") && !item.isInShipRoom)
@@ -141,7 +141,7 @@ public class TerminalPatch
                         {
                             goldScrapAmount++;
                         }
-                        goldScrapValue += item.scrapValue;
+                        goldScrapValue += item.scrapValue != 0 ? item.scrapValue : Random.Range((int)(item.itemProperties.minValue * RoundManager.Instance.scrapValueMultiplier), (int)(item.itemProperties.maxValue * RoundManager.Instance.scrapValueMultiplier));
                     }
                 }
 
@@ -171,13 +171,9 @@ public class TerminalPatch
         public static void TextPostProcessPostfix(Terminal __instance, ref string __result)
         {
             //Misc
-            if (__result.Contains("* Gold Nugget  //  Price: $100") && !__result.Contains("Gold Store"))
+            if (__result.Contains("* Gold Nugget  //  Price: $") && !__result.Contains("Gold Store"))
             {
-                __result = __result.Replace("* Gold Nugget  //  Price: $100", "\nLCGoldScrapMod:\n* Gold Nugget  //  Price: $100");
-            }
-            if (__result.Contains("* Gold Crown  //  Price: $5000") && !__result.Contains("Gold Store"))
-            {
-                __result = __result.Replace("* Gold Crown  //  Price: $5000", "* Gold Crown  //  Price: $5000\nType GOLD STORE for more upgrades and cosmetics!");
+                __result = __result.Replace("* Gold Nugget  //  Price: $", "\nLCGoldScrapMod\nType GOLD STORE for more upgrades and cosmetics!\n* Gold Nugget  //  Price: $");
             }
             if (__result.Contains("[goldScrapHostPlayer]"))
             {
@@ -186,25 +182,100 @@ public class TerminalPatch
 
 
 
-            //CreditsCard text replacement
-            if (__result.Contains("* Credits Card  //  Price: $0"))
+            //Runtime GoldStore text
+            if (__result.Contains("Welcome to the Gold Store!"))
             {
-                __result = __result.Replace("Price: $0", "Not in stock");
+                for (int i = 0; i < __result.Length; i++)
+                {
+                    string buildingString = null;
+                    if (buildingString == null && __result[i].ToString() == "[")
+                    {
+                        for (int j = i; j < i + 5; j++)
+                        {
+                            buildingString += __result[j];
+                            if (__result[j].ToString() == "]")
+                            {
+                                break;
+                            }
+                        }
+                        string numberString = buildingString;
+                        numberString = numberString.Remove(numberString.Length - 1);
+                        numberString = numberString.Remove(0, 1);
+                        bool successfulInt = true;
+                        if (System.Int32.TryParse(numberString, out int parsedIndex))
+                        {
+                            if (parsedIndex < 0 || parsedIndex >= StoreAndTerminal.allGoldStoreItemData.Length)
+                            {
+                                successfulInt = false;
+                            }
+                        }
+                        else
+                        {
+                            Plugin.Logger.LogError($"FAILED PARSE!!!!!!!");
+                            successfulInt = false;
+                        }
+                        Plugin.Logger.LogInfo($"successfulInt? {successfulInt} | parsedIndex {parsedIndex}");
+                        string textToWrite = buildingString;
+                        if (successfulInt)
+                        {
+                            ItemData dataToWorkFrom = StoreAndTerminal.allGoldStoreItemData[parsedIndex];
+                            if (dataToWorkFrom == null || (dataToWorkFrom.localBuyItemIndex == -1 && dataToWorkFrom.localUnlockableID == -1))
+                            {
+                                Plugin.Logger.LogError($"invalid dataToWorkFrom, null? {dataToWorkFrom == null}");
+                            }
+                            else if (dataToWorkFrom.localBuyItemIndex != -1 && dataToWorkFrom.itemProperties != null)
+                            {
+                                textToWrite = $"* {dataToWorkFrom.itemProperties.itemName} // ";
+                                if (!string.IsNullOrEmpty(dataToWorkFrom.alreadyPurchasedText) && dataToWorkFrom.itemProperties.creditsWorth < 0)
+                                {
+                                    textToWrite += dataToWorkFrom.alreadyPurchasedText;
+                                }
+                                else
+                                {
+                                    textToWrite += GetDisplayTextWithSale(textToWrite, parsedIndex, dataToWorkFrom);
+                                }
+                            }
+                            else if (dataToWorkFrom.localUnlockableID != -1 && dataToWorkFrom.unlockableProperties != null && !string.IsNullOrEmpty(dataToWorkFrom.unlockableProperties.unlockableName))
+                            {
+                                textToWrite = $"* {dataToWorkFrom.unlockableProperties.unlockableName} // ";
+                                if (!string.IsNullOrEmpty(dataToWorkFrom.alreadyPurchasedText) && StartOfRound.Instance.unlockablesList.unlockables[dataToWorkFrom.localUnlockableID].hasBeenUnlockedByPlayer)
+                                {
+                                    textToWrite += dataToWorkFrom.alreadyPurchasedText;
+                                }
+                                else
+                                {
+                                    textToWrite += GetDisplayTextWithSale(textToWrite, parsedIndex, dataToWorkFrom);
+                                }
+                            }
+                        }
+                        __result = __result.Replace(buildingString, textToWrite);
+                        buildingString = null;
+                    }
+                }
+            }
+
+
+
+            //CreditsCard text replacement
+            ItemData cardItem = CreditsCardManager.instance.creditsCardItem;
+            if (__result.Contains("* Credits Card  //  Price: $-1"))
+            {
+                __result = __result.Replace("Price: $-1", "Not in stock");
             }
             if (__result.Contains("[goldScrapCreditsCardSellingPrice]"))
             {
-                string currentPrice = CreditsCardManager.instance.creditsCardItem.creditsWorth != 0 ? $"${CreditsCardManager.instance.creditsCardItem.creditsWorth}" : "Not in stock";
+                string currentPrice = cardItem.itemProperties.creditsWorth >= 0 ? $"${cardItem.itemProperties.creditsWorth}" : cardItem.alreadyPurchasedText;
                 __result = __result.Replace("[goldScrapCreditsCardSellingPrice]", currentPrice);
             }
             if (__result.Contains("[goldScrapCreditsCardBuyingPrice]"))
             {
-                string currentPrice = CreditsCardManager.instance.creditsCardItem.creditsWorth != 0 ? $"Price: ${CreditsCardManager.instance.creditsCardItem.creditsWorth / 100f * __instance.itemSalesPercentages[CreditsCardManager.instance.creditsCardNode.buyItemIndex]}" : "Not in stock";
+                string currentPrice = cardItem.itemProperties.creditsWorth >= 0 ? $"Price: ${cardItem.itemProperties.creditsWorth / 100f * __instance.itemSalesPercentages[CreditsCardManager.instance.creditsCardNode.buyItemIndex]}" : cardItem.alreadyPurchasedText;
                 __result = __result.Replace("[goldScrapCreditsCardBuyingPrice]", currentPrice);
             }
             if (__result.Contains("[goldScrapCreditsCardSalesPercentage]"))
             {
                 string textToReplace = null;
-                if (CreditsCardManager.instance.creditsCardItem.creditsWorth != 0)
+                if (cardItem.itemProperties.creditsWorth >= 0)
                 {
                     textToReplace = $"({100 - __instance.itemSalesPercentages[CreditsCardManager.instance.creditsCardNodeBuy.buyItemIndex]}% OFF!)";
                 }
@@ -227,20 +298,10 @@ public class TerminalPatch
                     __result = "\n\n\n\n" + DLOGManager.instance.spaceTextList.allStrings[DLOGManager.selectedSpace] + "\n\n";
                 }
             }
-            if (__result.Contains("[goldScrapDLOGBuyingPrice]"))
-            {
-                string currentPrice = !StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.directoryLogID].hasBeenUnlockedByPlayer ? $"Price: ${StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.directoryLogID].shopSelectionNode.itemCost}" : "Accessed";
-                __result = __result.Replace("[goldScrapDLOGBuyingPrice]", currentPrice);
-            }
 
 
 
             //CatOGold & GoldWeather text replacement
-            if (__result.Contains("[goldScrapCatOGoldBuyingPrice]"))
-            {
-                string currentPrice = !StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.catOGoldID].hasBeenUnlockedByPlayer ? $"Price: ${StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.catOGoldID].shopSelectionNode.itemCost}" : "Domesticated";
-                __result = __result.Replace("[goldScrapCatOGoldBuyingPrice]", currentPrice);
-            }
             if (__result.Contains("[goldScrapCatOGoldInfo]"))
             {
                 int currentInfo = !StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.catOGoldID].hasBeenUnlockedByPlayer ? 0 : !StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.catOGoldID].inStorage ? 1 : 2;
@@ -269,9 +330,10 @@ public class TerminalPatch
                             string line = lines[i];
                             string selectedLevelName = __instance.moonsCatalogueList[levelIDInList].name;
                             string normalName = selectedLevelName.Remove(selectedLevelName.Length - 5, 5);
+                            string betweenBrackets = RarityManager.isSaleFever ? "Gold Sale" : "Gold Fever";
                             if (line.Contains(normalName))
                             {
-                                string textToAdd = line[line.Length - 1] == ' ' ? "(Gold Fever)" : " (Gold Fever)";
+                                string textToAdd = line[line.Length - 1] == ' ' ? $"({betweenBrackets})" : $" ({betweenBrackets})";
                                 __result = __result.Replace(line, line += textToAdd);
                                 break;
                             }
@@ -282,26 +344,8 @@ public class TerminalPatch
 
 
 
-            //Purchased SafeBox
-            if (__result.Contains("[goldScrapSafeBoxBuyingPrice]"))
-            {
-                string currentPrice = !StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.safeBoxID].hasBeenUnlockedByPlayer ? $"Price: ${StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.safeBoxID].shopSelectionNode.itemCost}" : "Secured";
-                __result = __result.Replace("[goldScrapSafeBoxBuyingPrice]", currentPrice);
-            }
-
-
-
-            //Purchased DiscoBallMusic
-            if (__result.Contains("[groovyGoldPurchased]"))
-            {
-                string textToset = !StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.groovyGoldID].hasBeenUnlockedByPlayer ? $"Price: ${StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.groovyGoldID].shopSelectionNode.itemCost}" : "Unlocked";
-                __result = __result.Replace("[groovyGoldPurchased]", textToset);
-            }
-
-
-
             //[Custom Terminal Scan] FALSE
-            if (!Config.fixScan.Value && __result.Contains(" objects outside the ship, totalling at an approximate value of $"))
+            if (!Configs.fixScan.Value && __result.Contains(" objects outside the ship, totalling at an approximate value of $"))
             {
                 if (!General.DoesMoonHaveGoldScrap()) return;
 
@@ -309,7 +353,7 @@ public class TerminalPatch
                 int goldScrapAmount = 0;
                 int goldScrapValue = 0;
 
-                foreach (GoldScrapObject goldScrap in Object.FindObjectsOfType<GoldScrapObject>())
+                foreach (GoldScrapObject goldScrap in Object.FindObjectsByType<GoldScrapObject>(FindObjectsSortMode.None))
                 {
                     if (goldScrap.item != null && goldScrap.item.itemProperties.name.Contains("LCGoldScrapMod") && !goldScrap.item.isInShipRoom)
                     {
@@ -317,7 +361,7 @@ public class TerminalPatch
                         {
                             goldScrapAmount++;
                         }
-                        goldScrapValue += goldScrap.item.scrapValue;
+                        goldScrapValue += goldScrap.item.scrapValue != 0 ? goldScrap.item.scrapValue : Random.Range((int)(goldScrap.item.itemProperties.minValue * RoundManager.Instance.scrapValueMultiplier), (int)(goldScrap.item.itemProperties.maxValue * RoundManager.Instance.scrapValueMultiplier));
                     }
                 }
 
@@ -333,6 +377,28 @@ public class TerminalPatch
                 __result = __result + textToAdd;
             }
         }
+    }
+
+    private static string GetDisplayTextWithSale(string textToWrite, int parsedIndex, ItemData dataToWorkFrom)
+    {
+        int sale = RarityManager.allItemPricePercentages[parsedIndex];
+        float salesPercentage = (float)(sale / 100f);
+        Plugin.Logger.LogDebug($"sale of {100 - sale}");
+        int displayPrice = 0;
+        if (dataToWorkFrom.itemProperties != null)
+        {
+            displayPrice = (int)((float)dataToWorkFrom.itemProperties.creditsWorth * salesPercentage);
+        }   
+        else if (dataToWorkFrom.storeTerminalNodes != null && dataToWorkFrom.storeTerminalNodes.Length > 0 && dataToWorkFrom.storeTerminalNodes[0] != null)
+        {
+            displayPrice = dataToWorkFrom.storeTerminalNodes[0].itemCost;
+        }
+        textToWrite = $"Price: ${displayPrice}";
+        if (sale != 100)
+        {
+            textToWrite += $"   ({100 - sale}% OFF!)";
+        }
+        return textToWrite;
     }
 
 
@@ -356,7 +422,7 @@ public class TerminalPatch
         [HarmonyPostfix]
         public static void LoadNodePostfix(Terminal __instance, TerminalNode node)
         {
-            if (node == CreditsCardManager.instance.creditsCardNode && CreditsCardManager.instance.creditsCardItem.creditsWorth == 0)
+            if (node == CreditsCardManager.instance.creditsCardNode && CreditsCardManager.instance.creditsCardItem.itemProperties.creditsWorth < 0)
             {
                 __instance.LoadNewNode(CreditsCardManager.instance.creditsCardNodeUnavailable);
             }
@@ -391,7 +457,7 @@ public class TerminalPatch
         [HarmonyPostfix]
         public static void SetItemSalesPostfix(Terminal __instance)
         {
-            if (__instance.IsServer && __instance.buyableItemsList.Contains(CreditsCardManager.instance.creditsCardItem) && StartOfRound.Instance.currentLevel.planetHasTime)
+            if (__instance.IsServer && __instance.buyableItemsList.Contains(CreditsCardManager.instance.creditsCardItem.itemProperties) && StartOfRound.Instance.currentLevel.planetHasTime)
             {
                 CreditsCardManager.instance.StartSaleReroll();
             }

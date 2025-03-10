@@ -123,7 +123,7 @@ public class LogManager : MonoBehaviour
                 if (logNode.storyLogFileID == logID)
                 {
                     Logger.LogDebug($"LogManager: intercepted ClientRpc to replicate RemoveLogCollectible {logID} on all players!");
-                    StoryLog[] allLogsInLevel = FindObjectsOfType<StoryLog>();
+                    StoryLog[] allLogsInLevel = FindObjectsByType<StoryLog>(FindObjectsSortMode.None);
                     foreach (StoryLog logScript in allLogsInLevel)
                     {
                         if (logScript.storyLogID == logNode.storyLogFileID)

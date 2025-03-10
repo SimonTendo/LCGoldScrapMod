@@ -66,7 +66,7 @@ public class RegisterGoldScrap
         GoldenGrenade.SetUp();
         GoldBeacon.SetUp();
 
-        Config.SetCustomGoldScrapValues();
+        Configs.SetCustomGoldScrapValues();
 
         //GoldStore
         GoldNugget.SetUp();
@@ -86,9 +86,9 @@ public class RegisterGoldScrap
 
     private static void RegisterGoldScrapVanilla(ItemData itemData, float customRarity)
     {
-        float minusLoss = -0.34f / Config.rarityMultiplier.Value;
-        float plusGain = 0.67f * Config.rarityMultiplier.Value;
-        float customChange = itemData.customChange > 0 ? itemData.customChange / 3f * Config.rarityMultiplier.Value : itemData.customChange * 3f / Config.rarityMultiplier.Value;
+        float minusLoss = -0.34f / Configs.rarityMultiplier.Value;
+        float plusGain = 0.67f * Configs.rarityMultiplier.Value;
+        float customChange = itemData.customChange > 0 ? itemData.customChange / 3f * Configs.rarityMultiplier.Value : itemData.customChange * 3f / Configs.rarityMultiplier.Value;
 
         foreach (SelectableLevel level in StartOfRound.Instance.levels)
         {
@@ -117,7 +117,7 @@ public class RegisterGoldScrap
     private static void AddSpawnableScrapToLevel(Item itemName, float itemRarity, SelectableLevel level, GoldScrapLevels selectedLevel, float difference = 0)
     {
         string selectedLevelName = selectedLevel.ToString();
-        if (!Config.IsLevelSelected(selectedLevelName)) return;
+        if (!Configs.IsLevelSelected(selectedLevelName)) return;
         string selectedLevelFull = selectedLevelName + "Level";
         if (level.name == selectedLevelFull)
         {
@@ -133,13 +133,17 @@ public class RegisterGoldScrap
     {
         foreach (SelectableLevel level in StartOfRound.Instance.levels)
         {
-            foreach (ItemData itemName in allGoldScrap.allItemData)
+            foreach (ItemData itemName in allGoldGrabbableObjects)
             {
-                if (level.levelID > suspectedLevelListLength && StoreAndTerminal.GetMoonTravelCost(level.levelID) >= Config.moddedMoonCost.Value)
+                if (itemName == null || itemName.itemProperties == null || itemName.isStoreItem)
+                {
+                    continue;
+                }
+                if (level.levelID > suspectedLevelListLength && StoreAndTerminal.GetMoonTravelCost(level.levelID) >= Configs.moddedMoonCost.Value)
                 {
                     SpawnableItemWithRarity GoldScrapWithRarity = new SpawnableItemWithRarity();
                     GoldScrapWithRarity.spawnableItem = itemName.itemProperties;
-                    GoldScrapWithRarity.rarity = Config.moddedMoonRarity.Value;
+                    GoldScrapWithRarity.rarity = Configs.moddedMoonRarity.Value;
                     level.spawnableScrap.Add(GoldScrapWithRarity);
                 }
             }
@@ -171,7 +175,7 @@ public class RegisterGoldScrap
             GameObject itemPrefab = itemName.spawnPrefab;
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldBoltMesh == null)
+            if (Configs.sillyScrap.Value || goldBoltMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -180,7 +184,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldBoltMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
@@ -191,7 +195,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -228,7 +232,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenAirhornMesh == null)
+            if (Configs.sillyScrap.Value || goldenAirhornMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -237,7 +241,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenAirhornMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("FlashlightGrab");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
@@ -253,7 +257,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXflashlightGrab;
                 itemName.dropSFX = sharedSFXdropMetalObject1;
-                if (Config.replaceSFX.Value || sharedSFXairhornNoise == null || sharedSFXairhornFarNoise == null)
+                if (Configs.replaceSFX.Value || sharedSFXairhornNoise == null || sharedSFXairhornFarNoise == null)
                 {
                     itemScript.noiseSFX[0] = LoadReplaceSFX("AirhornSFX");
                     itemScript.noiseSFXFar[0] = LoadReplaceSFX("AirhornFarSFX");
@@ -275,7 +279,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -311,7 +315,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenEggbeaterMesh == null)
+            if (Configs.sillyScrap.Value || goldenEggbeaterMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -320,7 +324,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenEggbeaterMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp2");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid3");
@@ -331,7 +335,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -368,7 +372,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || talkativeGoldBarMesh == null)
+            if (Configs.sillyScrap.Value || talkativeGoldBarMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.rotationOffset.Set(120.0f, -4.2f, -462.81f);
@@ -381,7 +385,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(0.11f, 0.15f, -0.04f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("FlashlightGrab");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight2");
@@ -392,7 +396,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject1;
-                if (Config.replaceSFX.Value || sharedSFXoldPhoneNoise == null)
+                if (Configs.replaceSFX.Value || sharedSFXoldPhoneNoise == null)
                 {
                     itemScript.grabAudio = LoadReplaceSFX("OldPhoneSFX");
                     itemScript.noiseLoudness = 0.5f;
@@ -404,7 +408,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -446,7 +450,7 @@ public class RegisterGoldScrap
             MeshFilter crankMeshFilter = goldRegisterCrank.GetComponent<MeshFilter>();
             MeshFilter drawerMeshFilter = goldRegisterDrawer.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldRegisterMainMesh == null || goldRegisterCrankMesh == null || goldRegisterDrawerMesh == null)
+            if (Configs.sillyScrap.Value || goldRegisterMainMesh == null || goldRegisterCrankMesh == null || goldRegisterDrawerMesh == null)
             {
                 mainMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -457,7 +461,7 @@ public class RegisterGoldScrap
                 drawerMeshFilter.mesh = goldRegisterDrawerMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy2");
@@ -472,7 +476,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject3;
-                if (Config.replaceSFX.Value || sharedSFXcashRegisterNoise == null)
+                if (Configs.replaceSFX.Value || sharedSFXcashRegisterNoise == null)
                 {
                     itemScript.noiseSFX[0] = LoadReplaceSFX("CashRegisterSFX");
                     itemScript.useCooldown = 1f;
@@ -492,7 +496,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -528,7 +532,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenBootsMesh == null)
+            if (Configs.sillyScrap.Value || goldenBootsMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.restingRotation.Set(-90.0f, 0.0f, 90.0f);
@@ -541,7 +545,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(0.1f, -0.1f, 0.15f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
                 itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
@@ -552,7 +556,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -589,7 +593,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenHornMesh == null)
+            if (Configs.sillyScrap.Value || goldenHornMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -598,7 +602,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenHornMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("FlashlightGrab");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid3");
@@ -614,7 +618,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXflashlightGrab;
                 itemName.dropSFX = sharedSFXdropMetalObject1;
-                if (Config.replaceSFX.Value || sharedSFXclownhornNoise == null || sharedSFXclownhornFarNoise == null)
+                if (Configs.replaceSFX.Value || sharedSFXclownhornNoise == null || sharedSFXclownhornFarNoise == null)
                 {
                     itemScript.noiseSFX[0] = LoadReplaceSFX("ClownhornSFX");
                     itemScript.noiseSFXFar[0] = LoadReplaceSFX("ClownhornFarSFX");
@@ -636,7 +640,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -674,7 +678,7 @@ public class RegisterGoldScrap
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             itemScript.maskIsHaunted = false;
             //Mesh
-            if (Config.sillyScrap.Value || purifiedMaskMesh == null)
+            if (Configs.sillyScrap.Value || purifiedMaskMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -683,7 +687,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = purifiedMaskMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
                 itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
@@ -694,7 +698,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -730,7 +734,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldAxleMesh == null)
+            if (Configs.sillyScrap.Value || goldAxleMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -739,7 +743,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldAxleMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy1");
@@ -750,7 +754,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -786,7 +790,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldJugMesh == null)
+            if (Configs.sillyScrap.Value || goldJugMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.rotationOffset.Set(190f, 20f, 0.0f);
@@ -799,7 +803,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(-0.1f, 0.08f, 0.21f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
                 itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
@@ -810,7 +814,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -847,7 +851,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenBellMesh == null)
+            if (Configs.sillyScrap.Value || goldenBellMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.rotationOffset.Set(0.0f, 100.0f, -29.2f);
@@ -858,7 +862,7 @@ public class RegisterGoldScrap
                 itemName.rotationOffset.Set(29.5f, 98f, -29.2f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
                 itemName.dropSFX = LoadSillySFX("DropBell");
@@ -867,7 +871,7 @@ public class RegisterGoldScrap
             else
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
-                if (Config.replaceSFX.Value || sharedSFXdropBell == null)
+                if (Configs.replaceSFX.Value || sharedSFXdropBell == null)
                 {
                     itemName.dropSFX = LoadReplaceSFX("BellSFX");
                     itemScript.dropAudio = LoadReplaceSFX("BellSFX");
@@ -879,7 +883,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -897,7 +901,7 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool()
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 itemScript.noiseRange = 128;
@@ -931,7 +935,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenGlassMesh == null)
+            if (Configs.sillyScrap.Value || goldenGlassMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -940,7 +944,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenGlassMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
@@ -951,7 +955,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject1;
-                if (Config.replaceSFX.Value || sharedSFXmenuConfirm == null ||  sharedSFXmenuCancel == null)
+                if (Configs.replaceSFX.Value || sharedSFXmenuConfirm == null ||  sharedSFXmenuCancel == null)
                 {
                     itemScript.beginRevealClip = LoadReplaceSFX($"{itemFolder}BeginSFX");   
                     itemScript.endRevealClip = LoadReplaceSFX($"{itemFolder}EndSFX");   
@@ -963,7 +967,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -981,7 +985,7 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool()
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 Material[] newMats = { defaultMaterialGold, defaultMaterialGold };
@@ -1016,7 +1020,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldMugMesh == null)
+            if (Configs.sillyScrap.Value || goldMugMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1025,7 +1029,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldMugMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp2");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
@@ -1036,7 +1040,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1072,7 +1076,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenFlaskMesh == null)
+            if (Configs.sillyScrap.Value || goldenFlaskMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1081,7 +1085,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenFlaskMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("GrabBottle");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
@@ -1092,7 +1096,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropGlass1;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1129,7 +1133,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || duckOfGoldMesh == null)
+            if (Configs.sillyScrap.Value || duckOfGoldMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.rotationOffset.Set(0.0f, 90.0f, 17.16f);
@@ -1142,13 +1146,13 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(0.06f, 0.19f, -0.03f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("GrabDuck");
                 itemName.dropSFX = LoadSillySFX("DropDuck");
                 itemScript.dropAudio = LoadSillySFX("DropDuck");
             }
-            else if (Config.replaceSFX.Value || sharedSFXgrabDuck == null || sharedSFXdropDuck == null)
+            else if (Configs.replaceSFX.Value || sharedSFXgrabDuck == null || sharedSFXdropDuck == null)
             {
                 itemName.grabSFX = LoadReplaceSFX("DuckSFX");
                 itemName.dropSFX = LoadReplaceSFX("DropSFX");
@@ -1161,7 +1165,7 @@ public class RegisterGoldScrap
                 itemScript.dropAudio = sharedSFXgrabDuck;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1198,7 +1202,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldSignMesh == null)
+            if (Configs.sillyScrap.Value || goldSignMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.restingRotation.Set(0.0f, 0.0f, 168.0f);
@@ -1211,7 +1215,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(-0.04f, -0.1f, 0.22f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid1");
@@ -1224,7 +1228,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject2;
-                if (Config.replaceSFX.Value || sharedSFXshovelHit0 == null || sharedSFXshovelHit1 == null || sharedSFXshovelReel == null || sharedSFXshovelSwing == null)
+                if (Configs.replaceSFX.Value || sharedSFXshovelHit0 == null || sharedSFXshovelHit1 == null || sharedSFXshovelReel == null || sharedSFXshovelSwing == null)
                 {
                     itemScript.hitSFX[0] = LoadReplaceSFX("SignHit0");
                     itemScript.hitSFX[1] = LoadReplaceSFX("SignHit1");
@@ -1240,7 +1244,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1258,11 +1262,11 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool(float hostWeightMultiplier)
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
-                itemName.weight = Config.CalculateWeightCustom(1.4f, hostWeightMultiplier);
-                if (!Config.sillyScrap.Value && goldSignMeshAlt != null)
+                itemName.weight = Configs.CalculateWeightCustom(1.4f, hostWeightMultiplier);
+                if (!Configs.sillyScrap.Value && goldSignMeshAlt != null)
                 {
                     itemPrefab.GetComponent<MeshFilter>().mesh = goldSignMeshAlt;
                 }
@@ -1275,8 +1279,8 @@ public class RegisterGoldScrap
             else
             {
                 itemName.isConductiveMetal = true;
-                itemName.weight = Config.CalculateWeightCustom(itemData.defaultWeight, hostWeightMultiplier);
-                if (!Config.sillyScrap.Value && goldSignMesh != null)
+                itemName.weight = Configs.CalculateWeightCustom(itemData.defaultWeight, hostWeightMultiplier);
+                if (!Configs.sillyScrap.Value && goldSignMesh != null)
                 {
                     itemPrefab.GetComponent<MeshFilter>().mesh = goldSignMesh;
                 }
@@ -1307,7 +1311,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldPuzzleMesh == null)
+            if (Configs.sillyScrap.Value || goldPuzzleMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.positionOffset.Set(0.0f, 0.1f, -0.33f);
@@ -1318,7 +1322,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(0.0f, 0.0f, 0.0f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
                 itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
@@ -1331,7 +1335,7 @@ public class RegisterGoldScrap
                 itemName.pocketSFX = null;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1368,7 +1372,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || comedyGoldMesh == null)
+            if (Configs.sillyScrap.Value || comedyGoldMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1377,7 +1381,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = comedyGoldMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
                 itemScript.fartAudios[0] = LoadSillySFX("Fart1");
@@ -1388,7 +1392,7 @@ public class RegisterGoldScrap
             else
             {
                 itemName.dropSFX = sharedSFXdropMetalObject1;
-                if (Config.replaceSFX.Value || sharedSFXwhoopieCushionNoise0 == null || sharedSFXwhoopieCushionNoise1 == null || sharedSFXwhoopieCushionNoise2 == null || sharedSFXwhoopieCushionNoise3 == null)
+                if (Configs.replaceSFX.Value || sharedSFXwhoopieCushionNoise0 == null || sharedSFXwhoopieCushionNoise1 == null || sharedSFXwhoopieCushionNoise2 == null || sharedSFXwhoopieCushionNoise3 == null)
                 {
                     itemScript.fartAudios[0] = LoadReplaceSFX("FartSFX1");
                     itemScript.fartAudios[1] = LoadReplaceSFX("FartSFX2");
@@ -1404,7 +1408,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1477,7 +1481,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || cookieGoldPanMesh == null)
+            if (Configs.sillyScrap.Value || cookieGoldPanMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1486,7 +1490,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = cookieGoldPanMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid3");
@@ -1497,7 +1501,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropThinMetal;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1533,7 +1537,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || golderBarMesh == null)
+            if (Configs.sillyScrap.Value || golderBarMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.rotationOffset.Set(0.0f, 0.0f, 280.0f);
@@ -1546,7 +1550,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(0.04f, 0.15f, -0.09f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
                 itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
@@ -1557,7 +1561,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1593,7 +1597,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || cuddlyGoldMesh == null)
+            if (Configs.sillyScrap.Value || cuddlyGoldMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1602,7 +1606,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = cuddlyGoldMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -1615,7 +1619,7 @@ public class RegisterGoldScrap
                 itemName.pocketSFX = null;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1651,7 +1655,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenGruntMesh == null)
+            if (Configs.sillyScrap.Value || goldenGruntMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1660,7 +1664,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenGruntMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -1671,7 +1675,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1707,7 +1711,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldkeeperMesh == null)
+            if (Configs.sillyScrap.Value || goldkeeperMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1716,7 +1720,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldkeeperMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -1727,7 +1731,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1765,7 +1769,7 @@ public class RegisterGoldScrap
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             MeshFilter HeadMeshFilter = itemPrefab.transform.GetChild(1).GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldSpringMesh == null || goldSpringHeadMesh == null)
+            if (Configs.sillyScrap.Value || goldSpringMesh == null || goldSpringHeadMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1775,7 +1779,7 @@ public class RegisterGoldScrap
                 HeadMeshFilter.mesh = goldSpringHeadMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -1786,7 +1790,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject2;
-                if (Config.replaceEnemySFX.Value || sharedSFXspringHardClip == null || sharedSFXspringSoftClip == null)
+                if (Configs.replaceEnemySFX.Value || sharedSFXspringHardClip == null || sharedSFXspringSoftClip == null)
                 {
                     itemScript.stopClip = LoadReplaceSFX($"{itemFolder}Stop");
                     itemScript.goClip = LoadReplaceSFX($"{itemFolder}Go");
@@ -1798,7 +1802,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1834,7 +1838,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || marigoldMesh == null)
+            if (Configs.sillyScrap.Value || marigoldMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.rotationOffset.Set(-40.0f, 160.0f, 285.0f);
@@ -1847,7 +1851,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(0.2f, -0.15f, 0.525f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -1858,7 +1862,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject2;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1895,7 +1899,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenGuardianMesh == null)
+            if (Configs.sillyScrap.Value || goldenGuardianMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1904,7 +1908,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenGuardianMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -1915,7 +1919,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject2;
-                if (Config.replaceEnemySFX.Value || sharedSFXnutcrackerAim == null || sharedSFXgunShoot == null)
+                if (Configs.replaceEnemySFX.Value || sharedSFXnutcrackerAim == null || sharedSFXgunShoot == null)
                 {
                     itemScript.buildUpClip = LoadReplaceSFX($"{itemFolder}BuildUp");
                     itemScript.explodeClip = LoadReplaceSFX($"{itemFolder}Explode");
@@ -1927,7 +1931,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -1947,7 +1951,7 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool()
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Golden Guardian...");
@@ -1978,7 +1982,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldTypeEngineMesh == null)
+            if (Configs.sillyScrap.Value || goldTypeEngineMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -1987,7 +1991,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldTypeEngineMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
                 itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
@@ -1998,7 +2002,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2034,7 +2038,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || tiltControlsMesh == null)
+            if (Configs.sillyScrap.Value || tiltControlsMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2043,7 +2047,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = tiltControlsMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
                 itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
@@ -2054,7 +2058,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject2;
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2104,7 +2108,7 @@ public class RegisterGoldScrap
             itemScript.flashlightTypeID = jacobsLadderFlashlightID;
             itemScript.flashlightBulb.intensity = 400;
             //Mesh
-            if (Config.sillyScrap.Value || jacobsLadderMesh == null)
+            if (Configs.sillyScrap.Value || jacobsLadderMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2113,7 +2117,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = jacobsLadderMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("FlashlightGrab");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
@@ -2128,7 +2132,7 @@ public class RegisterGoldScrap
                 itemName.grabSFX = sharedSFXflashlightGrab;
                 itemName.dropSFX = sharedSFXdropMetalObject1;
                 itemName.pocketSFX = sharedSFXflashlightPocket;
-                if (Config.replaceSFX.Value || sharedSFXflashlightOut == null || sharedSFXflashlightFlicker == null || sharedSFXflashlightClip == null)
+                if (Configs.replaceSFX.Value || sharedSFXflashlightOut == null || sharedSFXflashlightFlicker == null || sharedSFXflashlightClip == null)
                 {
                     itemScript.outOfBatteriesClip = LoadReplaceSFX("FlashlightOutSFX");
                     itemScript.flashlightFlicker = LoadReplaceSFX("FlashlightFlickerSFX");
@@ -2144,7 +2148,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconFlashlight == null)
+            if (Configs.sillyScrap.Value || sharedItemIconFlashlight == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2162,7 +2166,7 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool()
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 itemName.batteryUsage = 150;
@@ -2200,7 +2204,7 @@ public class RegisterGoldScrap
             MeshFilter RightArmMeshFilter = RightArm.GetComponent<MeshFilter>();
             MeshFilter LeftArmMeshFilter = LeftArm.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldToyRobotMainMesh == null || goldToyRobotMainMesh == null || goldToyRobotLeftMesh == null)
+            if (Configs.sillyScrap.Value || goldToyRobotMainMesh == null || goldToyRobotMainMesh == null || goldToyRobotLeftMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.rotationOffset.Set(-10.0f, 89.46f, 110.0f);
@@ -2215,7 +2219,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(0.0f, 0.09f, -0.15f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid2");
@@ -2225,7 +2229,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject2;
-                if (Config.replaceSFX.Value || sharedSFXrobotToyCheer == null)
+                if (Configs.replaceSFX.Value || sharedSFXrobotToyCheer == null)
                 {
                     itemScript.grabAudio = LoadReplaceSFX("ToyRobotSFX");
                 }
@@ -2235,7 +2239,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2271,7 +2275,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || tatteredGoldSheetMesh == null || tatteredGoldSheetAltMesh == null)
+            if (Configs.sillyScrap.Value || tatteredGoldSheetMesh == null || tatteredGoldSheetAltMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 itemName.meshVariants[0] = LoadSillyMesh(itemFolder);
@@ -2284,7 +2288,7 @@ public class RegisterGoldScrap
                 itemName.meshVariants[1] = tatteredGoldSheetAltMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid3");
             }
@@ -2293,7 +2297,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropThinMetal;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2330,7 +2334,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenGirlMesh == null)
+            if (Configs.sillyScrap.Value || goldenGirlMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2339,7 +2343,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenGirlMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight2");
                 itemScript.reappearClip = LoadSillySFX($"{itemFolder}Appear");
@@ -2347,7 +2351,7 @@ public class RegisterGoldScrap
             else
             {
                 itemName.dropSFX = sharedSFXdropMetalObject1;
-                if (Config.replaceEnemySFX.Value || sharedSFXgirlLaugh == null)
+                if (Configs.replaceEnemySFX.Value || sharedSFXgirlLaugh == null)
                 {
                     itemScript.reappearClip = LoadReplaceSFX($"{itemFolder}SFX");
                 }
@@ -2357,7 +2361,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2393,7 +2397,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldPanMesh == null)
+            if (Configs.sillyScrap.Value || goldPanMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2402,7 +2406,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldPanMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid1");
@@ -2413,7 +2417,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2450,7 +2454,7 @@ public class RegisterGoldScrap
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             MeshFilter frameMeshFilter = itemPrefab.transform.GetChild(1).gameObject.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || artOfGoldMesh == null)
+            if (Configs.sillyScrap.Value || artOfGoldMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 frameMeshFilter.mesh = LoadSillyMesh($"{itemFolder}Frame");
@@ -2461,7 +2465,7 @@ public class RegisterGoldScrap
                 frameMeshFilter.mesh = artOfGoldMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy1");
@@ -2472,7 +2476,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject2;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2481,7 +2485,7 @@ public class RegisterGoldScrap
                 itemName.itemIcon = sharedItemIconScrap;
             }
             //Artwork
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.materialVariants = artOfGoldMaterials.allSillyArtwork.ToArray();
             }
@@ -2517,7 +2521,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldPerfumeMesh == null)
+            if (Configs.sillyScrap.Value || goldPerfumeMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2526,7 +2530,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldPerfumeMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp2");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
@@ -2537,7 +2541,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2573,7 +2577,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || earlGoldMesh == null)
+            if (Configs.sillyScrap.Value || earlGoldMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2582,7 +2586,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = earlGoldMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
@@ -2593,7 +2597,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropThinMetal;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2629,7 +2633,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || extremelyGoldenCupMesh == null)
+            if (Configs.sillyScrap.Value || extremelyGoldenCupMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2638,7 +2642,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = extremelyGoldenCupMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
             }
@@ -2647,7 +2651,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2683,7 +2687,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldFishPropMesh == null)
+            if (Configs.sillyScrap.Value || goldFishPropMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2692,7 +2696,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldFishPropMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight2");
             }
@@ -2701,7 +2705,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2737,7 +2741,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldfishMesh == null)
+            if (Configs.sillyScrap.Value || goldfishMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2746,7 +2750,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldfishMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
             }
@@ -2755,7 +2759,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2792,7 +2796,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldRemoteMesh == null)
+            if (Configs.sillyScrap.Value || goldRemoteMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2801,7 +2805,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldRemoteMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
@@ -2811,7 +2815,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject1;
-                if (Config.replaceSFX.Value || sharedSFXremoteClick == null)
+                if (Configs.replaceSFX.Value || sharedSFXremoteClick == null)
                 {
                     itemScript.remoteAudio.clip = LoadReplaceSFX($"{itemFolder}SFX");
                 }
@@ -2821,7 +2825,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2839,7 +2843,7 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool()
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 itemScript.useCooldown = 1.5f;
@@ -2873,7 +2877,7 @@ public class RegisterGoldScrap
             MeshFilter jarMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             MeshFilter pickleMeshFilter = itemPrefab.transform.GetChild(0).GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldPicklesJarMesh == null || goldPicklesPickleMesh == null)
+            if (Configs.sillyScrap.Value || goldPicklesJarMesh == null || goldPicklesPickleMesh == null)
             {
                 jarMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 pickleMeshFilter.mesh = LoadSillyMesh($"{itemFolder}Pickle");
@@ -2884,7 +2888,7 @@ public class RegisterGoldScrap
                 pickleMeshFilter.mesh = goldPicklesPickleMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("GrabBottle");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
@@ -2895,7 +2899,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropGlass1;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2931,7 +2935,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenVisionMesh == null)
+            if (Configs.sillyScrap.Value || goldenVisionMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2940,7 +2944,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldenVisionMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -2951,7 +2955,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -2987,7 +2991,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldRingMesh == null)
+            if (Configs.sillyScrap.Value || goldRingMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -2996,7 +3000,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldRingMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -3007,7 +3011,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3045,7 +3049,7 @@ public class RegisterGoldScrap
             MeshFilter topMeshFilter = itemPrefab.transform.GetChild(1).GetChild(1).GetComponent<MeshFilter>();
             MeshFilter bottomMeshFilter = itemPrefab.transform.GetChild(1).GetChild(2).GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenRetrieverBodyMesh == null || goldenRetrieverTopMesh == null || goldenRetrieverBottomMesh == null)
+            if (Configs.sillyScrap.Value || goldenRetrieverBodyMesh == null || goldenRetrieverTopMesh == null || goldenRetrieverBottomMesh == null)
             {
                 bodyMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 topMeshFilter.mesh = null;
@@ -3058,7 +3062,7 @@ public class RegisterGoldScrap
                 bottomMeshFilter.mesh = goldenRetrieverBottomMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
                 itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
@@ -3069,7 +3073,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3110,7 +3114,7 @@ public class RegisterGoldScrap
             MeshFilter upperJawMeshFilter = itemPrefab.transform.GetChild(1).GetChild(3).GetComponent<MeshFilter>();
             MeshFilter lowerJawMeshFilter = itemPrefab.transform.GetChild(1).GetChild(4).GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || jackInTheGoldBodyMesh == null || jackInTheGoldLidMesh == null || jackInTheGoldCrankMesh == null || jackInTheGoldUpperJawMesh == null || jackInTheGoldLowerJawMesh == null)
+            if (Configs.sillyScrap.Value || jackInTheGoldBodyMesh == null || jackInTheGoldLidMesh == null || jackInTheGoldCrankMesh == null || jackInTheGoldUpperJawMesh == null || jackInTheGoldLowerJawMesh == null)
             {
                 bodyMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 lidMeshFilter.mesh = null;
@@ -3127,7 +3131,7 @@ public class RegisterGoldScrap
                 lowerJawMeshFilter.mesh = jackInTheGoldLowerJawMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid2");
@@ -3138,7 +3142,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject2;
-                if (Config.replaceEnemySFX.Value || sharedSFXjesterTheme == null || sharedSFXjesterPop == null)
+                if (Configs.replaceEnemySFX.Value || sharedSFXjesterTheme == null || sharedSFXjesterPop == null)
                 {
                     itemScript.pocketedThemeClip = LoadReplaceSFX($"{itemFolder}Theme");
                     itemScript.explodeClip = LoadReplaceSFX($"{itemFolder}Explode");
@@ -3150,7 +3154,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3187,7 +3191,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.transform.GetChild(1).GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldBirdMesh == null)
+            if (Configs.sillyScrap.Value || goldBirdMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -3196,7 +3200,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldBirdMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy3");
@@ -3210,7 +3214,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject3;
-                if (Config.replaceEnemySFX.Value || sharedSFXoldBirdAlarm == null || sharedSFXoldBirdWake == null || sharedSFXoldBirdOn == null || sharedSFXoldBirdOff == null || sharedSFXgunShoot == null)
+                if (Configs.replaceEnemySFX.Value || sharedSFXoldBirdAlarm == null || sharedSFXoldBirdWake == null || sharedSFXoldBirdOn == null || sharedSFXoldBirdOff == null || sharedSFXgunShoot == null)
                 {
                     itemScript.alarmClip = LoadReplaceSFX($"{itemFolder}Alarm");
                     itemScript.awakeClip = LoadReplaceSFX($"{itemFolder}Awake");
@@ -3228,7 +3232,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3271,7 +3275,7 @@ public class RegisterGoldScrap
             MeshFilter secondMeshFilter = itemPrefab.transform.GetChild(3).GetChild(0).GetComponent<MeshFilter>();
             MeshFilter minuteMeshFilter = itemPrefab.transform.GetChild(3).GetChild(1).GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldenClockBodyMesh == null || goldenClockMinuteMesh == null)
+            if (Configs.sillyScrap.Value || goldenClockBodyMesh == null || goldenClockMinuteMesh == null)
             {
                 bodyMeshFilter.mesh = LoadSillyMesh(itemFolder);
                 secondMeshFilter.mesh = LoadSillyMesh($"{itemFolder}Hand");
@@ -3284,7 +3288,7 @@ public class RegisterGoldScrap
                 minuteMeshFilter.mesh = goldenClockMinuteMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp2");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid1");
@@ -3300,7 +3304,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject2;
-                if (Config.replaceSFX.Value || sharedSFXclockTick == null || sharedSFXclockTock == null || sharedSFXapplause == null || sharedSFXoldBirdOff == null || sharedSFXremoteClick == null || sharedSFXsnareBuildUp == null || sharedSFXmenuCancel == null)
+                if (Configs.replaceSFX.Value || sharedSFXclockTick == null || sharedSFXclockTock == null || sharedSFXapplause == null || sharedSFXoldBirdOff == null || sharedSFXremoteClick == null || sharedSFXsnareBuildUp == null || sharedSFXmenuCancel == null)
                 {
                     itemScript.tickSFX = LoadReplaceSFX("BeepSFX");
                     itemScript.tockSFX = LoadReplaceSFX("BoopSFX");
@@ -3322,7 +3326,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3359,7 +3363,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldmineMesh == null)
+            if (Configs.sillyScrap.Value || goldmineMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -3368,7 +3372,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldmineMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectMid1");
@@ -3381,7 +3385,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXshovelPickUp;
                 itemName.dropSFX = sharedSFXdropMetalObject2;
-                if (Config.replaceEnemySFX.Value || sharedSFXlandmineTrigger == null || sharedSFXlandmineBeep == null || sharedSFXlandmineOn == null || sharedSFXlandmineOff == null)
+                if (Configs.replaceEnemySFX.Value || sharedSFXlandmineTrigger == null || sharedSFXlandmineBeep == null || sharedSFXlandmineOn == null || sharedSFXlandmineOff == null)
                 {
                     itemScript.triggerClip = LoadReplaceSFX($"{itemFolder}TriggerSFX");
                     itemScript.beepClip = LoadReplaceSFX($"{itemFolder}BeepSFX");
@@ -3397,7 +3401,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3418,7 +3422,7 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool()
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 itemName.toolTips[2] = "";
@@ -3456,7 +3460,7 @@ public class RegisterGoldScrap
         public static void SetAssets()
         {
             //Mesh
-            if (Config.sillyScrap.Value || goldenGrenadeBodyMesh == null || goldenGrenadePinMesh == null)
+            if (Configs.sillyScrap.Value || goldenGrenadeBodyMesh == null || goldenGrenadePinMesh == null)
             {
                 bodyMesh.mesh = LoadSillyMesh(itemFolder);
                 pinMesh.mesh = null;
@@ -3471,7 +3475,7 @@ public class RegisterGoldScrap
                 pinMeshAlt.mesh = null;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.grabSFX = LoadSillySFX("FlashlightGrab");
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
@@ -3482,7 +3486,7 @@ public class RegisterGoldScrap
             {
                 itemName.grabSFX = sharedSFXflashlightGrab;
                 itemName.dropSFX = sharedSFXdropMetalObject1;
-                if (Config.replaceSFX.Value || sharedSFXgrenadeExplode == null || sharedSFXgrenadePullPin == null)
+                if (Configs.replaceSFX.Value || sharedSFXgrenadeExplode == null || sharedSFXgrenadePullPin == null)
                 {
                     itemScript.explodeSFX = LoadReplaceSFX("ExplosionSFX");
                     itemScript.pullPinSFX = LoadReplaceSFX("ExplosionAnticipationSFX");
@@ -3494,7 +3498,7 @@ public class RegisterGoldScrap
                 }
             }
             //Icon
-            if (Config.sillyScrap.Value || sharedItemIconGrenade == null)
+            if (Configs.sillyScrap.Value || sharedItemIconGrenade == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3521,12 +3525,12 @@ public class RegisterGoldScrap
             pinMesh.mesh = null;
             bodyMeshAlt.mesh = null;
             pinMeshAlt.mesh = null;
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 itemScript.TimeToExplode = 0.18f;
                 itemScript.playerAnimation = "PullGrenadePin2";
-                if (Config.sillyScrap.Value)
+                if (Configs.sillyScrap.Value)
                 {
                     bodyMesh.mesh = LoadSillyMesh(itemFolder);
                     itemName.grabSFX = LoadSillySFX("FlashlightGrab");
@@ -3547,7 +3551,7 @@ public class RegisterGoldScrap
                     {
                         bodyMesh.mesh = LoadSillyMesh(itemFolder);
                     }
-                    if (Config.replaceSFX.Value || sharedSFXgrenadePullPinAlt == null || sharedSFXgrenadeExplode == null)
+                    if (Configs.replaceSFX.Value || sharedSFXgrenadePullPinAlt == null || sharedSFXgrenadeExplode == null)
                     {
                         itemScript.pullPinSFX = LoadReplaceSFX("ExplosionAnticipationSFXShort");
                         itemScript.explodeSFX = LoadReplaceSFX("ExplosionSFX");
@@ -3565,7 +3569,7 @@ public class RegisterGoldScrap
                 itemName.isConductiveMetal = true;
                 itemScript.TimeToExplode = 2.25f;
                 itemScript.playerAnimation = "PullGrenadePin";
-                if (Config.sillyScrap.Value)
+                if (Configs.sillyScrap.Value)
                 {
                     bodyMesh.mesh = LoadSillyMesh(itemFolder);
                     itemName.grabSFX = LoadSillySFX("FlashlightGrab");
@@ -3585,7 +3589,7 @@ public class RegisterGoldScrap
                     {
                         bodyMesh.mesh = LoadSillyMesh(itemFolder);
                     }
-                    if (Config.replaceSFX.Value || sharedSFXgrenadePullPin == null || sharedSFXgrenadeExplode == null)
+                    if (Configs.replaceSFX.Value || sharedSFXgrenadePullPin == null || sharedSFXgrenadeExplode == null)
                     {
                         itemScript.pullPinSFX = LoadReplaceSFX("ExplosionAnticipationSFX");
                         itemScript.explodeSFX = LoadReplaceSFX("ExplosionSFX");
@@ -3628,7 +3632,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldBeaconMesh == null)
+            if (Configs.sillyScrap.Value || goldBeaconMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
             }
@@ -3637,7 +3641,7 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldBeaconMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy3");
             }
@@ -3646,7 +3650,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject2;
             }
             //Icon
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3682,7 +3686,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemMeshFilter.mesh = LoadGoldStoreMesh($"Silly{itemFolder}");
                 itemName.restingRotation.Set(0.0f, 0.0f, 0.0f);
@@ -3690,7 +3694,7 @@ public class RegisterGoldScrap
                 itemName.positionOffset.Set(0f, 0.08f, 0f);
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
             }
@@ -3699,7 +3703,7 @@ public class RegisterGoldScrap
                 itemName.dropSFX = sharedSFXdropMetalObject1;
             }
             //ItemIcon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3725,7 +3729,7 @@ public class RegisterGoldScrap
             itemName.grabSFX = sharedSFXshovelPickUp;
             itemName.dropSFX = sharedSFXdropMetalObject3;
             //ItemIcon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3751,7 +3755,7 @@ public class RegisterGoldScrap
             itemName.grabSFX = sharedSFXshovelPickUp;
             itemName.dropSFX = sharedSFXdropMetalObject1;
             //ItemIcon
-            if (Config.sillyScrap.Value || sharedItemIconScrap == null)
+            if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
                 itemName.itemIcon = sillyItemIcon;
             }
@@ -3777,7 +3781,7 @@ public class RegisterGoldScrap
             //Sounds
             itemName.grabSFX = sharedSFXshovelPickUp;
             itemName.dropSFX = sharedSFXdropMetalObject1;
-            if (Config.replaceSFX.Value || sharedSFXladderFall == null || sharedSFXdropBell == null || sharedSFXmenuCancel == null || sharedSFXmenuConfirm == null || sharedSFXgunShoot == null)
+            if (Configs.replaceSFX.Value || sharedSFXladderFall == null || sharedSFXdropBell == null || sharedSFXmenuCancel == null || sharedSFXmenuConfirm == null || sharedSFXgunShoot == null)
             {
                 itemScript.activateClip = LoadReplaceSFX("GoldenHourglassActivateSFX");
                 itemScript.deactivateClip = LoadReplaceSFX("GoldenHourglassDeactivateSFX");
@@ -3842,7 +3846,7 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool()
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Golden Pickaxe...");
@@ -3866,7 +3870,7 @@ public class RegisterGoldScrap
         {
             MeshFilter itemMeshFilter = itemPrefab.transform.GetChild(0).GetComponent<MeshFilter>();
             //Mesh
-            if (Config.sillyScrap.Value || goldToiletMesh == null)
+            if (Configs.sillyScrap.Value || goldToiletMesh == null)
             {
                 itemMeshFilter.mesh = LoadGoldStoreMesh($"Silly{itemFolder}");
             }
@@ -3875,14 +3879,14 @@ public class RegisterGoldScrap
                 itemMeshFilter.mesh = goldToiletMesh;
             }
             //Sounds
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 itemScript.chargeAudio.clip = LoadSillySFX($"{itemFolder}Rumble");
                 itemScript.flushAudio.clip = LoadSillySFX($"{itemFolder}Flush");
             }
             else
             {
-                if (Config.replaceSFX.Value || sharedSFXladderFall == null || sharedSFXtoiletFlush == null)
+                if (Configs.replaceSFX.Value || sharedSFXladderFall == null || sharedSFXtoiletFlush == null)
                 {
                     itemScript.chargeAudio.clip = LoadReplaceSFX("ToiletChargeSFX");
                     itemScript.flushAudio.clip = LoadReplaceSFX("ToiletFlushSFX");
@@ -3912,7 +3916,7 @@ public class RegisterGoldScrap
         {
             //Sounds
             itemName.dropSFX = sharedSFXdropMetalObject1;
-            if (Config.replaceSFX.Value || sharedSFXtoiletFlush == null || sharedSFXapplause == null)
+            if (Configs.replaceSFX.Value || sharedSFXtoiletFlush == null || sharedSFXapplause == null)
             {
                 itemScript.teleportClip = LoadReplaceSFX("TicketNormalSFX");
                 itemScript.inverseClip = LoadReplaceSFX("TicketInverseSFX");
@@ -3940,7 +3944,7 @@ public class RegisterGoldScrap
             //Sounds
             itemName.grabSFX = sharedSFXshovelPickUp;
             itemName.dropSFX = sharedSFXdropMetalObject3;
-            if (Config.replaceSFX.Value || sharedSFXgunShoot == null || sharedSFXladderFall == null || sharedSFXapplause == null || sharedSFXdropBell == null)
+            if (Configs.replaceSFX.Value || sharedSFXgunShoot == null || sharedSFXladderFall == null || sharedSFXapplause == null || sharedSFXdropBell == null)
             {
                 itemScript.launchClip = LoadReplaceSFX("CrownFlySFX");
                 itemScript.landClip = LoadReplaceSFX("CrownLandSFX");
@@ -3968,7 +3972,7 @@ public class RegisterGoldScrap
         public static void SetUp()
         {
             //Sounds
-            if (Config.replaceSFX.Value || sharedSFXshovelHit0 == null || sharedSFXflashlightPocket == null || sharedSFXclockTick == null || sharedSFXclockTock == null || sharedSFXdropMetalObject3 == null || sharedSFXapplause == null || sharedSFXgrabShovel == null)
+            if (Configs.replaceSFX.Value || sharedSFXshovelHit0 == null || sharedSFXflashlightPocket == null || sharedSFXclockTick == null || sharedSFXclockTock == null || sharedSFXdropMetalObject3 == null || sharedSFXapplause == null || sharedSFXgrabShovel == null)
             {
                 itemScript.unlockClip = LoadReplaceSFX("SafeOpenNormalSFX");
                 itemScript.openingCreakClip = LoadReplaceSFX("SafeCreakSFX");
@@ -4057,7 +4061,7 @@ public class RegisterGoldScrap
             itemName.grabSFX = sharedSFXshovelPickUp;
             itemName.dropSFX = sharedSFXdropMetalObject2;
             itemName.pocketSFX = sharedSFXflashlightPocket;
-            if (Config.newSFX.Value || sharedSFXladderExtend == null || sharedSFXladderFall == null || sharedSFXgunShoot == null || sharedSFXshovelHit0 == null || sharedSFXshovelHit1 == null || sharedSFXmenuConfirm == null || sharedSFXmenuCancel == null || sharedSFXdropBell == null || sharedSFXflashlightPocket == null || sharedSFXapplause == null || sharedSFXshovelPickUp == null || sharedSFXbunnyHop == null)
+            if (Configs.newSFX.Value || sharedSFXladderExtend == null || sharedSFXladderFall == null || sharedSFXgunShoot == null || sharedSFXshovelHit0 == null || sharedSFXshovelHit1 == null || sharedSFXmenuConfirm == null || sharedSFXmenuCancel == null || sharedSFXdropBell == null || sharedSFXflashlightPocket == null || sharedSFXapplause == null || sharedSFXshovelPickUp == null || sharedSFXbunnyHop == null)
             {
                 itemScript.extendStartClip = LoadNewSFX("GoldenGloveExtendStart");
                 itemScript.extendingLoopClip = LoadNewSFX("GoldenGloveExtendLoop");
@@ -4093,7 +4097,7 @@ public class RegisterGoldScrap
 
         public static void RebalanceTool()
         {
-            if (Config.hostToolRebalance)
+            if (Configs.hostToolRebalance)
             {
                 itemName.isConductiveMetal = false;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Golden Glove...");

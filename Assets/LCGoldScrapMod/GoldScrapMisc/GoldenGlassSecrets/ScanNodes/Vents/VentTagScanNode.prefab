@@ -48,7 +48,7 @@ MonoBehaviour:
   maxRange: 15
   minRange: 1
   requiresLineOfSight: 1
-  headerText: Enemy Vent
+  headerText: Creature Vent
   subText: Not occupied
   scrapValue: 0
   creatureScanID: -1

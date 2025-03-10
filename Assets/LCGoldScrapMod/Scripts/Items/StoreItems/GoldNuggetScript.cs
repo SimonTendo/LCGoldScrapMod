@@ -16,6 +16,7 @@ public class GoldNuggetScript : GrabbableObject
     [Space(3f)]
     [Header("General")]
     public ItemTypes itemType;
+    public ItemData itemData;
 
     [Space(3f)]
     [Header("Gold Nugget")]
@@ -38,6 +39,11 @@ public class GoldNuggetScript : GrabbableObject
     public override void Start()
     {
         base.Start();
+        GoldScrapObject dataObject = GetComponent<GoldScrapObject>();
+        if (dataObject != null)
+        {
+            itemData = dataObject.data;
+        }
         if (IsServer)
         {
             switch (itemType)
@@ -74,9 +80,16 @@ public class GoldNuggetScript : GrabbableObject
     private void RollForNuggetMultiplier()
     {
         int daysLeft = TimeOfDay.Instance.daysUntilDeadline;
-        
-        int rolledValue = Random.Range((int)nuggetMinValueOverTime.Evaluate(daysLeft), (int)nuggetMaxValueOverTime.Evaluate(daysLeft));
-        Logger.LogDebug($"goldnugget #{NetworkObjectId} spawned, initial value: {rolledValue}");
+        float multiplierConfig = Configs.hostPriceMultiplier;
+        float multiplierSale = 1f;
+        Terminal terminalScript = FindAnyObjectByType<Terminal>();
+        if (terminalScript != null && itemData != null)
+        {
+            multiplierSale = (float)terminalScript.itemSalesPercentages[itemData.localBuyItemIndex] / 100f;
+        }
+        int randomValue = Random.Range((int)nuggetMinValueOverTime.Evaluate(daysLeft), (int)nuggetMaxValueOverTime.Evaluate(daysLeft));
+        int rolledValue = (int)((float)randomValue * multiplierConfig * multiplierSale);
+        Logger.LogDebug($"goldnugget #{NetworkObjectId} spawned, initial value: {rolledValue} (randomValue: {randomValue} | config: {multiplierConfig} | sale: {multiplierSale})");
 
         if (daysLeft > 3 || daysLeft < 0)
         {
@@ -88,7 +101,7 @@ public class GoldNuggetScript : GrabbableObject
             int chanceToMultiply = (int)nuggetChanceOverTime.Evaluate(daysLeft);
             if (RarityManager.CurrentlyGoldFever())
             {
-                chanceToMultiply *= RarityManager.instance.GetMultiplierByWeather(StartOfRound.Instance.currentLevelID);
+                chanceToMultiply *= RarityManager.instance.GetMultiplierByWeather();
             }
 
             if (!nuggetFreeBonusReceived || randomNr <= chanceToMultiply)
@@ -123,8 +136,9 @@ public class GoldNuggetScript : GrabbableObject
             if (RarityManager.CurrentlyGoldFever())
             {
                 orePreviousIncrease = oreMinIncrease;
-                oreStartingValue = 100 * RarityManager.instance.GetMultiplierByWeather(StartOfRound.Instance.currentLevelID);
+                oreStartingValue = 100 * RarityManager.instance.GetMultiplierByWeather();
             }
+            oreStartingValue = (int)((float)oreStartingValue * Configs.hostPriceMultiplier);
             SetGoldOreStartClientRpc(oreStartingValue);
         }
     }
@@ -154,6 +168,7 @@ public class GoldNuggetScript : GrabbableObject
                 Logger.LogDebug($"#{NetworkObjectId}: Bonus for quotas ({bonusQuotas}) rolled {oreBonus}");
                 newOreIncrease += oreBonus;
             }
+            newOreIncrease = (int)((float)newOreIncrease * Configs.hostPriceMultiplier);
             SetGoldOreIncreaseClientRpc(scrapValue + newOreIncrease);
             orePreviousIncrease = newOreIncrease;
         }

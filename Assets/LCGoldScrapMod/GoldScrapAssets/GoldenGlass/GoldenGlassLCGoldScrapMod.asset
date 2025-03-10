@@ -52,7 +52,7 @@ MonoBehaviour:
   saveItemVariable: 0
   isDefensiveWeapon: 0
   toolTips:
-  - 'Reveal : [Z]'
+  - 'Inspect : [Z]'
   verticalOffset: 0.05
   floorYOffset: -90
   allowDroppingAheadOfPlayer: 1

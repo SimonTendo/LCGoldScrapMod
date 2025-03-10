@@ -160,6 +160,7 @@ public class AssetsCollection
     //Miscellaneous
     public static Material defaultMaterialGold;
     public static Material defaultMaterialGoldTransparent;
+    public static Material defaultMaterialGoldEmmissive;
     public static Material defaultMaterialSilver;
     public static Material defaultMaterialBronze;
     public static GameObject jacobsLadderPrefab;
@@ -177,7 +178,8 @@ public class AssetsCollection
     public static void LoadEditorAssets()
     {
         defaultMaterialGold = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMat.mat");
-        defaultMaterialGoldTransparent = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldTransparentMat.mat");
+        defaultMaterialGoldTransparent = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatTransparent.mat");
+        defaultMaterialGoldEmmissive = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatEmmissive.mat");
         defaultMaterialSilver = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMat.mat");
         defaultMaterialBronze = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMat.mat");
         sillyItemIcon = Plugin.CustomGoldScrapAssets.LoadAsset<Sprite>("Assets/LCGoldScrapMod/GoldScrapVisuals/Sprites/GoldScrapItemIconPlaceholder.png");
@@ -1823,7 +1825,7 @@ public class AssetsCollection
         }
 
         //GoldenBoots
-        GameObject[] allGameObjectsOnStart = Object.FindObjectsOfType<GameObject>();
+        GameObject[] allGameObjectsOnStart = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         foreach (GameObject gObject in allGameObjectsOnStart)
         {
             if (gObject.name != null && gObject.name == "Circle.004")

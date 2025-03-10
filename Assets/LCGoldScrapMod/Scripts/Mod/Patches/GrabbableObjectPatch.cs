@@ -8,11 +8,11 @@ public class GrabbableObjectPatch
     [HarmonyPatch(typeof(GrabbableObject), "DiscardItem")]
     public class NewGrabbableObjectDiscard
     {
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         public static void InitializeDropStop(GrabbableObject __instance)
         {
             GoldScrapObject dropStop = __instance.gameObject.GetComponent<GoldScrapObject>();
-            if (dropStop != null)
+            if (dropStop != null && (__instance.playerHeldBy == null || __instance.playerHeldBy == GameNetworkManager.Instance.localPlayerController))
             {
                 dropStop.StartDropStop();
             }
@@ -48,7 +48,7 @@ public class GrabbableObjectPatch
         [HarmonyPrefix]
         public static void NormalBellSoundRandomPitch(AnimatedItem __instance)
         {
-            if (__instance.gameObject.name == "GoldenBellPrefab(Clone)" && !Config.sillyScrap.Value && !Config.replaceSFX.Value && AssetsCollection.sharedSFXdropBell != null)
+            if (__instance.gameObject.name == "GoldenBellPrefab(Clone)" && !Configs.sillyScrap.Value && !Configs.replaceSFX.Value && AssetsCollection.sharedSFXdropBell != null)
             {
                 __instance.itemAudio.pitch = Random.Range(0.66f, 1.33f);
             }
@@ -75,7 +75,7 @@ public class GrabbableObjectPatch
                 __instance.creatureVoice.PlayOneShot(clipToPlay);
                 WalkieTalkie.TransmitOneShotAudio(__instance.creatureVoice, clipToPlay);
 
-                foreach (HoarderBugAI bug in Object.FindObjectsOfType<HoarderBugAI>())
+                foreach (HoarderBugAI bug in Object.FindObjectsByType<HoarderBugAI>(FindObjectsSortMode.None))
                 {
                     Plugin.Logger.LogDebug($"setting #{bug.NetworkObjectId}'s annoyance DOWN");
                     PrivateAccesser.SetPrivateValue<float>(bug, "annoyanceMeter").SetValue(bug, -9999f);
@@ -134,7 +134,7 @@ public class GrabbableObjectPatch
         [HarmonyPostfix, HarmonyPatch("RefreshGrabbableObjectsInMapList")]
         public static void DontGetNewItemsWithCuddlyGold()
         {
-            foreach (HoarderBugAI bug in Object.FindObjectsOfType<HoarderBugAI>())
+            foreach (HoarderBugAI bug in Object.FindObjectsByType<HoarderBugAI>(FindObjectsSortMode.None))
             {
                 if (GetBugHoldingCuddlyGold(bug) != null && bug.angryTimer <= 0 && bug.enemyHP == 3)
                 {
@@ -156,11 +156,11 @@ public class GrabbableObjectPatch
 
         private static AudioClip GetGrabCuddlyGoldSFX()
         {
-            if (Config.sillyScrap.Value)
+            if (Configs.sillyScrap.Value)
             {
                 return AssetsCollection.LoadSillySFX("CuddlyGoldGrab");
             }
-            if (Config.replaceEnemySFX.Value || AssetsCollection.sharedSFXapplause == null)
+            if (Configs.replaceEnemySFX.Value || AssetsCollection.sharedSFXapplause == null)
             {
                 return AssetsCollection.LoadReplaceSFX("GrabCuddlyGold");
             }

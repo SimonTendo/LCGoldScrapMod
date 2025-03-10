@@ -139,7 +139,7 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Config.hostToolRebalance && !broughtToShip && !choseLocalPlayer)
+        if (!Configs.hostToolRebalance && !broughtToShip && !choseLocalPlayer)
         {
             meshToToggle.mesh = loadedMesh;
             materialToToggle.material = AssetsCollection.defaultMaterialGoldTransparent;

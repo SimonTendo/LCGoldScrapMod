@@ -3,13 +3,15 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "LCGoldScrapMod/ItemData", order = 0)]
 public class ItemData : ScriptableObject
 {
+    [Header("General")]
+    [Tooltip("The folder name used to access this item/furniture with for setting up all the mod's data.\nMust match exactly, and cannot contain spaces.")]
+    public string folderName = "FolderName";
+
     [Header("Item")]
     [Tooltip("The LCGoldScrapMod itemProperties the game will read from on the host.")]
     public Item itemProperties;
     [Tooltip("If true, it will be registered to levels and its itemProperties' weight, max-, and minValues will be put through the configMultipliers.\nIf false, only weight will be multiplied by its configMultiplier.")]
     public bool isScrap = true;
-    [Tooltip("If true, its value will not be counted when collected in levels and when sold on the Company desk.")]
-    public bool isStoreItem = false;
 
     [Space(3f)]
     [Header("Defaults")]
@@ -35,12 +37,36 @@ public class ItemData : ScriptableObject
     [Tooltip("The vanilla levels where this gold scrap can appear.\nTakes a calculation of 'Default Rarity + Custom Change' into account.")]
     public GoldScrapLevels[] levelsToAddCustom;
 
+    [Space(3f)]
+    [Header("Store")]
+    [Tooltip("If true, its value will not be counted when collected in levels and when sold on the Company desk.")]
+    public bool isStoreItem = false;
+    [Tooltip("The intended default price not yet taking modifiers such as sales or configs into account.\nSet to -1 to not have this value be read during set-up.")]
+    public int storeDefaultPrice = 100;
+    [Tooltip("The cap that determines for how much this item or furniture can go be marked off during a Gold Fever sale.\nSet to -1 to have the Weather Multipliers take over.")]
+    public int maxFeverSalePercentage = 90;
+    [Tooltip("The text to display in case this item/furniture can no longer be bought, either thanks to already being unlocked in StartOfRound or having a negative price.")]
+    public string alreadyPurchasedText = null;
+    [Tooltip("The TerminalNodes for furniture containing the itemCost to modify in case of sales or configs.")]
+    public TerminalNode[] storeTerminalNodes = new TerminalNode[2];
+    [Tooltip("The UnlockableItem to be added to the list of StartOfRound unlockables.")]
+    public UnlockableItem unlockableProperties;
+
+
 
 
     [Space(3f)]
-    [Header("Host values")]
+    [Header("Local host values")]
+    [HideInInspector]
+    public int localItemsListIndex = -1;
     [HideInInspector]
     public int localMaxValue = 0;
     [HideInInspector]
     public int localMinValue = 0;
+    [HideInInspector]
+    public int localStorePrice = 0;
+    [HideInInspector]
+    public int localBuyItemIndex = -1;
+    [HideInInspector]
+    public int localUnlockableID = -1;
 }

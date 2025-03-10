@@ -7,6 +7,7 @@ public class GoldScrapObject : MonoBehaviour
     private static ManualLogSource Logger = Plugin.Logger;
 
     public GrabbableObject item;
+    public ItemData data;
 
     //DropStop
     private float dropStopTimer;
@@ -15,6 +16,7 @@ public class GoldScrapObject : MonoBehaviour
     private float powerMultiplier = 2.25f;
     private float repeatDropTimeframe = 1.5f;
     private float maxWaitTimer = 3.5f;
+    private float inStepsOf = 0.1f;
 
     void Start()
     {
@@ -46,9 +48,27 @@ public class GoldScrapObject : MonoBehaviour
 
     private IEnumerator DisableGrab()
     {
+        float timer = dropStopTimer;
         item.grabbable = false;
-        item.customGrabTooltip = " ";
-        yield return new WaitForSeconds(dropStopTimer);
+        while (timer > 0)
+        {
+            string charge = null;
+            for (int i = 0; i < 100; i += 10)
+            {
+                float percentage = 100 * timer / dropStopTimer;
+                if (i < percentage)
+                {
+                    charge += "|";
+                }
+                else
+                {
+                    charge += " ";
+                }
+            }
+            item.customGrabTooltip = $"[{charge}]";
+            timer -= inStepsOf;
+            yield return new WaitForSeconds(inStepsOf);
+        }
         item.grabbable = true;
         item.customGrabTooltip = null;
     }

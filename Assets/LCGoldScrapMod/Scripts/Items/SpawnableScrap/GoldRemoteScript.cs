@@ -26,7 +26,7 @@ public class GoldRemoteScript : GrabbableObject
 
     private void ToggleFacilityLights()
     {
-        if (!Config.hostToolRebalance)
+        if (!Configs.hostToolRebalance)
         {
             if (!IsServer)
             {

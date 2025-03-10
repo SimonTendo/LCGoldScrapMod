@@ -40,7 +40,7 @@ public class GoldmineTrigger : MonoBehaviour
             {
                 return;
             }
-            foreach (GoldmineTrigger goldmineTrigger in FindObjectsOfType<GoldmineTrigger>())
+            foreach (GoldmineTrigger goldmineTrigger in FindObjectsByType<GoldmineTrigger>(FindObjectsSortMode.None))
             {
                 if (goldmineTrigger.mainScript.hasExploded || goldmineTrigger.mainScript.willExplodeImmediately || goldmineTrigger.mainScript.willExplodeOnDelay)
                 {

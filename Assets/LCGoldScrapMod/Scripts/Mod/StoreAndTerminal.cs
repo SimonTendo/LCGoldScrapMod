@@ -8,7 +8,7 @@ public class StoreAndTerminal
     private static ManualLogSource Logger = Plugin.Logger;
 
     public static TerminalNodesList allGoldScrapKeywords;
-    public static StringList allGoldStoreItemNames;
+    public static ItemData[] allGoldStoreItemData;
     public static Material defaultHelmetMaterial;
 
     public static List<int> allShipUnlockableIDs = new List<int>();
@@ -28,15 +28,14 @@ public class StoreAndTerminal
 
     public static AudioClip sharedSFXPlaceShipObject;
     public static TerminalKeyword keywordBuy;
-    public static TerminalKeyword keywordInfo;
     public static TerminalKeyword keywordConfirm;
     public static TerminalKeyword keywordRoute;
     public static CompatibleNoun compatibleNounDeny;
 
     public static void LoadEditorAssets()
     {
-        allGoldScrapKeywords = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNodesList>("Assets/LCGoldScrapMod/GoldScrapTerminal/AllGoldScrapKeywords.asset");
-        allGoldStoreItemNames = Plugin.CustomGoldScrapAssets.LoadAsset<StringList>("Assets/LCGoldScrapMod/GoldScrapShop/AllGoldStoreItemNames.asset");
+        allGoldScrapKeywords = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNodesList>("Assets/LCGoldScrapMod/GoldScrapTerminal/allGoldScrapKeywords.asset");
+        allGoldStoreItemData = Plugin.CustomGoldScrapAssets.LoadAsset<ItemDataList>("Assets/LCGoldScrapMod/GoldScrapShop/AllGoldStoreItemData.asset").allItemData;
         runtimeDiscoBallSongs = Plugin.CustomGoldScrapAssets.LoadAsset<AudioClipList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/RuntimeDiscoBallSongs.asset");
         catOGoldInfoStrings = Plugin.CustomGoldScrapAssets.LoadAsset<StringList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/CatOGold/CatOGoldInfo.asset");
         goldCrownBuyNode = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrown.asset");
@@ -58,6 +57,7 @@ public class StoreAndTerminal
 
     public static void SetBuyAndInfoTerminal(Terminal __instance)
     {
+        TerminalKeyword keywordInfo = null;
         foreach (TerminalKeyword keyword in __instance.terminalNodes.allKeywords)
         {
             if (keywordBuy != null && keywordInfo != null && keywordRoute != null)
@@ -90,19 +90,21 @@ public class StoreAndTerminal
 
         if (!otherMenu.displayText.Contains("LCGoldScrapMod"))
         {
-            //List<TerminalKeyword> originalAllKeywords = __instance.terminalNodes.allKeywords.ToList();
             List<CompatibleNoun> originalBuyCompatibleNouns = keywordBuy.compatibleNouns.ToList();
             List<CompatibleNoun> originalInfoCompatibleNouns = keywordInfo.compatibleNouns.ToList();
 
-            foreach (string itemName in allGoldStoreItemNames.allStrings)
+            foreach (ItemData itemData in allGoldStoreItemData)
             {
-                //originalAllKeywords.Add(GoldScrapShopKeyword(itemName));
+                if (itemData == null || string.IsNullOrEmpty(itemData.folderName))
+                {
+                    continue;
+                }
+                string itemName = itemData.folderName;
                 originalBuyCompatibleNouns.Add(GoldScrapShopCompatibleNoun(itemName));
                 originalInfoCompatibleNouns.Add(GoldScrapInfoCompatibleNoun(itemName));
             }
             originalBuyCompatibleNouns.Add(GoldScrapSpecialCompatibleNoun("GoldCrown", "Warning"));
 
-            //__instance.terminalNodes.allKeywords = originalAllKeywords.ToArray();
             keywordBuy.compatibleNouns = originalBuyCompatibleNouns.ToArray();
             keywordInfo.compatibleNouns = originalInfoCompatibleNouns.ToArray();
         }
@@ -168,13 +170,18 @@ public class StoreAndTerminal
         }
 
         allShipUnlockableIDs.Clear();
-        foreach (UnlockableItem item in Plugin.allGoldUnlockables)
+        foreach (ItemData itemData in allGoldStoreItemData)
         {
-            string itemName = item.shopSelectionNode.name.Remove(0, 13);
+            if (itemData == null || string.IsNullOrEmpty(itemData.unlockableProperties.unlockableName))
+            {
+                continue;
+            }
+            UnlockableItem item = itemData.unlockableProperties;
+            string itemName = itemData.folderName;
+            int itemID = __instance.unlockablesList.unlockables.Count;
             item.shopSelectionNode.terminalOptions[0].noun = keywordConfirm;
             item.shopSelectionNode.terminalOptions[1] = compatibleNounDeny;
             __instance.unlockablesList.unlockables.Add(item);
-            int itemID = __instance.unlockablesList.unlockables.Count - 1;
             item.shopSelectionNode.shipUnlockableID = itemID;
             item.shopSelectionNode.terminalOptions[0].result.shipUnlockableID = itemID;
 
@@ -221,6 +228,7 @@ public class StoreAndTerminal
                     break;
             }
 
+            itemData.localUnlockableID = itemID;
             allShipUnlockableIDs.Add(itemID);
             Logger.LogDebug($"Added {itemName} to unlockablesList with shipUnlockableID {itemID}");
         }
@@ -236,19 +244,25 @@ public class StoreAndTerminal
             Logger.LogWarning("Failed to find Terminal! Not adding LCGoldScrapMod items to store.");
             return;
         }
-        Item[] allGoldShopItems = Plugin.CustomGoldScrapAssets.LoadAsset<AllItemsList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopItemsList.asset").itemsList.ToArray();
         List<Item> originalBuyableItems = __instance.buyableItemsList.ToList();
         List<int> originalItemSalesPercentageList = __instance.itemSalesPercentages.ToList();
-        foreach (Item item in allGoldShopItems)
+        foreach (ItemData itemData in allGoldStoreItemData)
         {
-            string itemName = item.spawnPrefab.name.Remove(item.spawnPrefab.name.Length - 6);
+            if (itemData == null || itemData.itemProperties == null)
+            {
+                continue;
+            }
+            Item item = itemData.itemProperties;
+            string itemName = itemData.folderName;
             TerminalNode goldShopItemNode = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/" + itemName + "/GoldScrapShop" + itemName + ".asset");
             goldShopItemNode.terminalOptions[0].noun = keywordConfirm;
             goldShopItemNode.terminalOptions[1] = compatibleNounDeny;
             originalBuyableItems.Add(item);
             originalItemSalesPercentageList.Add(100);
-            goldShopItemNode.buyItemIndex = originalBuyableItems.Count - 1;
-            goldShopItemNode.terminalOptions[0].result.buyItemIndex = originalBuyableItems.Count - 1;
+            int itemIndex = originalBuyableItems.Count - 1;
+            goldShopItemNode.buyItemIndex = itemIndex;
+            goldShopItemNode.terminalOptions[0].result.buyItemIndex = itemIndex;
+            itemData.localBuyItemIndex = itemIndex;
             Logger.LogDebug($"Added {itemName} to buyableItemsList at buyItemIndex {goldShopItemNode.buyItemIndex}");
         }
         __instance.buyableItemsList = originalBuyableItems.ToArray();
@@ -257,22 +271,20 @@ public class StoreAndTerminal
 
     public static void LoadGoldStoreSuitJumpAudio()
     {
-        foreach (UnlockableItem item in Plugin.allGoldUnlockables)
+        foreach (ItemData item in allGoldStoreItemData)
         {
-            if (item.suitMaterial != null)
+            if (item == null || item.unlockableProperties == null)
             {
-                string itemName = item.shopSelectionNode.name.Remove(0, 13);
-                switch (itemName)
+                continue;
+            }
+            UnlockableItem unlockable = item.unlockableProperties;
+            if (unlockable.suitMaterial != null)
+            {
+                string itemName = unlockable.shopSelectionNode.name.Remove(0, 13);
+                string[] allJumpAudioItems = { "BronzeSuit", "SilverSuit", "GoldSuit" };
+                if (allJumpAudioItems.Contains(itemName))
                 {
-                    case "BronzeSuit":
-                        item.jumpAudio = AssetsCollection.LoadReplaceSFX(itemName);
-                        break;
-                    case "SilverSuit":
-                        item.jumpAudio = AssetsCollection.LoadReplaceSFX(itemName);
-                        break;
-                    case "GoldSuit":
-                        item.jumpAudio = AssetsCollection.LoadReplaceSFX(itemName);
-                        break;
+                    unlockable.jumpAudio = AssetsCollection.LoadReplaceSFX(itemName);
                 }
             }
         }

@@ -302,6 +302,12 @@ public class SafeBoxScript : NetworkBehaviour
         doorAnimator.SetTrigger("CloseFail");
     }
 
+    public void SetInteractableFromAnimation(string setBoolValue)
+    {
+        outsideTrigger.interactable = setBoolValue.ToLower() == "true";
+        Logger.LogDebug($"SetInteractableFromAnimation({setBoolValue}) on {name} #{NetworkObjectId} set outsideTrigger.interactable to {outsideTrigger.interactable}");
+    }
+
 
 
     //InsideTrigger
@@ -384,7 +390,7 @@ public class SafeBoxScript : NetworkBehaviour
     private GrabbableObject[] GetItemsInSafe()
     {
         List<GrabbableObject> itemsInBounds = new List<GrabbableObject>();
-        GrabbableObject[] allItems = FindObjectsOfType<GrabbableObject>();
+        GrabbableObject[] allItems = FindObjectsByType<GrabbableObject>(FindObjectsSortMode.None);
         foreach (GrabbableObject item in allItems)
         {
             if (item.deactivated || !item.isInShipRoom)

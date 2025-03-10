@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldenGrenadeData
   m_EditorClassIdentifier: 
+  folderName: GoldenGrenade
   itemProperties: {fileID: 11400000, guid: bc0bc078d1a6e85458c2105b450a5cbd, type: 2}
   isScrap: 1
   defaultWeight: 1.16
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 08000000
   customChange: 0
   levelsToAddCustom: 
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

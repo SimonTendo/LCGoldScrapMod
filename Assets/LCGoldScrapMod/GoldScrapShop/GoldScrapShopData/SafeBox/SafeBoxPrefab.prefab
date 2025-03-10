@@ -1326,8 +1326,8 @@ MonoBehaviour:
       m_Calls: []
   touchTrigger: 0
   triggerOnce: 0
-  interactCooldown: 1
-  cooldownTime: 2.5
+  interactCooldown: 0
+  cooldownTime: 0
   currentCooldownValue: 0
   disableTriggerMesh: 1
   RandomChanceTrigger: 0

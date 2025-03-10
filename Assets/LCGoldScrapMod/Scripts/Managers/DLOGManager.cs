@@ -111,8 +111,8 @@ public class DLOGManager : NetworkBehaviour
             return Random.Range(49, helpTextList.allStrings.Length);
         }
 
-        GoldScrapObject[] allGoldScrap = FindObjectsOfType<GoldScrapObject>();
-        EntranceTeleport[] allEntrances = FindObjectsOfType<EntranceTeleport>();
+        GoldScrapObject[] allGoldScrap = FindObjectsByType<GoldScrapObject>(FindObjectsSortMode.None);
+        EntranceTeleport[] allEntrances = FindObjectsByType<EntranceTeleport>(FindObjectsSortMode.None);
         string specialFlag = null;
 
         foreach (GoldScrapObject goldScrap in allGoldScrap)

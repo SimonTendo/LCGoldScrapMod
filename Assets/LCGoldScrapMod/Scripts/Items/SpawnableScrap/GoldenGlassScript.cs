@@ -14,6 +14,7 @@ public class GoldenGlassScript : GrabbableObject
     public AudioSource audio2D;
     public AudioClip beginRevealClip;
     public AudioClip endRevealClip;
+    public string inspectingTooltip;
     [Tooltip("The fewer reveals per frame, the better performance, but the slower things will appear/disappear on-screen when using the Glass.")]
     public int revealPerFrame;
 
@@ -78,9 +79,10 @@ public class GoldenGlassScript : GrabbableObject
 
         audio2D.Stop();
         audio2D.PlayOneShot(beginRevealClip);
+        UpdateControlTipManually();
         int revealedThisFrame = 0;
 
-        GoldScrapObject[] allGoldScrap = FindObjectsOfType<GoldScrapObject>();
+        GoldScrapObject[] allGoldScrap = FindObjectsByType<GoldScrapObject>(FindObjectsSortMode.None);
         foreach (GoldScrapObject goldScrap in allGoldScrap)
         {
             if (RarityManager.CurrentlyGoldFever() && goldScrap.item != null)
@@ -113,9 +115,10 @@ public class GoldenGlassScript : GrabbableObject
 
         audio2D.Stop();
         audio2D.PlayOneShot(endRevealClip);
+        UpdateControlTipManually(false);
         int revealedThisFrame = 0;
 
-        GoldScrapObject[] allGoldScrap = FindObjectsOfType<GoldScrapObject>();
+        GoldScrapObject[] allGoldScrap = FindObjectsByType<GoldScrapObject>(FindObjectsSortMode.None);
         foreach (GoldScrapObject goldScrap in allGoldScrap)
         {
             if ((StartOfRound.Instance.inShipPhase || RarityManager.CurrentlyGoldFever()) && goldScrap.item != null)
@@ -146,7 +149,7 @@ public class GoldenGlassScript : GrabbableObject
         {
             if (setTo && !item.isInShipRoom)
             {
-                scanNode.maxRange = Config.hostToolRebalance ? 128 : 256;
+                scanNode.maxRange = Configs.hostToolRebalance ? 128 : 256;
                 scanNode.requiresLineOfSight = false;
             }
             else if (!setTo)
@@ -155,5 +158,26 @@ public class GoldenGlassScript : GrabbableObject
                 scanNode.requiresLineOfSight = true;
             }
         }
+    }
+
+    private void UpdateControlTipManually(bool addTooltip = true)
+    {
+        for (int i = 0; i < HUDManager.Instance.controlTipLines.Length; i++)
+        {
+            string currentLine = HUDManager.Instance.controlTipLines[i].text;
+            if (addTooltip && string.IsNullOrEmpty(currentLine))
+            {
+                Logger.LogDebug($"Found line '{currentLine}' at [{i}] with bool {addTooltip}");
+                HUDManager.Instance.controlTipLines[i].text = inspectingTooltip;
+                return;
+            }
+            else if (!addTooltip && currentLine == inspectingTooltip)
+            {
+                Logger.LogDebug($"Found line '{currentLine}' at [{i}] with bool {addTooltip}");
+                HUDManager.Instance.controlTipLines[i].text = "";
+                return;
+            }
+        }
+        Logger.LogWarning($"UpdateControlTipManually({addTooltip}) did not find tooltip correctly");
     }
 }

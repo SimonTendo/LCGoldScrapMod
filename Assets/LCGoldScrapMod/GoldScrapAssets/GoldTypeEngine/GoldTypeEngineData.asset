@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8422cc18f7824e4dbec48a81b0f48dc, type: 3}
   m_Name: GoldTypeEngineData
   m_EditorClassIdentifier: 
+  folderName: GoldTypeEngine
   itemProperties: {fileID: 11400000, guid: 53ed4c31e3fb62f4a9382bc581a3acd4, type: 2}
   isScrap: 1
   defaultWeight: 1.22
@@ -23,5 +24,13 @@ MonoBehaviour:
   levelsToAddPlus: 04000000050000000a00000009000000
   customChange: -2
   levelsToAddCustom: 00000000010000000200000003000000
+  isStoreItem: 0
+  storeDefaultPrice: 100
+  storeTerminalNodes:
+  - {fileID: 0}
+  - {fileID: 0}
+  localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
+  localStorePrice: 0
+  localBuyItemIndex: -1

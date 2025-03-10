@@ -160,10 +160,11 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
-  revealPerFrame: 4
   audio2D: {fileID: 4776549151434798995}
   beginRevealClip: {fileID: 0}
   endRevealClip: {fileID: 0}
+  inspectingTooltip: 'Reveal : [RMB]'
+  revealPerFrame: 4
 --- !u!82 &4558530349130929435
 AudioSource:
   m_ObjectHideFlags: 0

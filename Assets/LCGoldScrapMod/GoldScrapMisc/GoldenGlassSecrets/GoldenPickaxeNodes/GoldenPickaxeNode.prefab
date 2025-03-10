@@ -135,6 +135,7 @@ MonoBehaviour:
   emptiedClip: {fileID: 0}
   allNodesEmptyJingle: {fileID: 0}
   scanNodeObject: {fileID: 5855456804192014553}
+  scanNodeScript: {fileID: 7482447042761342373}
 --- !u!82 &5164205623187427584
 AudioSource:
   m_ObjectHideFlags: 0
