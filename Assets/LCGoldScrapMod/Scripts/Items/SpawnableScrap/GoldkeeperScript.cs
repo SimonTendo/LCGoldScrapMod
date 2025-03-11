@@ -20,6 +20,7 @@ public class GoldkeeperScript : GrabbableObject, IGoldenGlassSecret
     {
         base.Start();
         navBlocker.carveOnlyStationary = true;
+        blockerRenderer.enabled = false;
     }
 
     public override void EquipItem()
