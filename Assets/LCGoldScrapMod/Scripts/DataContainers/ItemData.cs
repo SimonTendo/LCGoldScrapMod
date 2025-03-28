@@ -6,6 +6,10 @@ public class ItemData : ScriptableObject
     [Header("General")]
     [Tooltip("The folder name used to access this item/furniture with for setting up all the mod's data.\nMust match exactly, and cannot contain spaces.")]
     public string folderName = "FolderName";
+    [Tooltip("The display name to show on the Item's itemName and UnlockableItem's unlockableName.\nPrimarily used to reset to as a default value.")]
+    public string displayName = "Display Name";
+    [Tooltip("Determines what values for hostDateCase this item's prefab will be influences by.\n\n0: More common on New Year's. 2: More common on World Art Day. 3: Does not appear on Freedom Day. 5: More common on Halloween.")]
+    public int[] specialDateCases;
 
     [Header("Item")]
     [Tooltip("The LCGoldScrapMod itemProperties the game will read from on the host.")]

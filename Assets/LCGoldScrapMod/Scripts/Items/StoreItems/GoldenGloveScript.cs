@@ -132,10 +132,6 @@ public class GoldenGloveScript : GrabbableObject
         {
             GetLayers();
         }
-        if (Configs.hostToolRebalance)
-        {
-            RebalanceTool();
-        }
     }
 
     public override void Update()
@@ -1757,7 +1753,6 @@ public class GoldenGloveScript : GrabbableObject
 
             Logger.LogDebug($"{name} #{NetworkObjectId} using custom parameters!");
         }
-        /*
         else
         {
             //DEFAULT PARAMETERS (should match Unity editor values!)
@@ -1784,7 +1779,6 @@ public class GoldenGloveScript : GrabbableObject
             scissorsStunPlayers = 0.9f;
             scissorsStunHazards = 2.5f;
         }
-        */
     }
 
 

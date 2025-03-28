@@ -21,6 +21,8 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
     [Header("Audiovisual feedback")]
     public AudioSource reappearSource;
     public AudioClip reappearClip;
+    public Material appearMat;
+    public Material invisibleMat;
 
     public override void Start()
     {
@@ -33,12 +35,13 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
                 broughtToShip = true;
                 return;
             }
-            ChoosePlayer();
+            StartCoroutine(ChoosePlayer());
         }
     }
 
-    private void ChoosePlayer()
+    private IEnumerator ChoosePlayer()
     {
+        yield return new WaitForSeconds(1f);
         if (isInFactory && !isInShipRoom)
         {
             ChoosePlayerClientRpc((int)General.GetRandomPlayer().playerClientId);
@@ -55,14 +58,8 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
         }
         else
         {
-            StartCoroutine(ToggleOnDelay());
+            ToggleGirl(false);
         }
-    }
-
-    private IEnumerator ToggleOnDelay()
-    {
-        yield return new WaitUntil(() => loadedMesh != null);
-        ToggleGirl(false);
     }
 
     public override void OnHitGround()
@@ -83,26 +80,31 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
         }
     }
 
-    private void ToggleGirl(bool enabled)
+    private void ToggleGirl(bool enableGirl)
     {
-        meshToToggle.mesh = enabled ? loadedMesh : null;
-        audioToMute.volume = enabled ? 1 : 0;
+        meshToToggle.mesh = enableGirl ? loadedMesh : null;
+        audioToMute.volume = enableGirl ? 1 : 0;
         foreach (BoxCollider collider in propColliders)
         {
-            collider.enabled = enabled;
+            collider.enabled = enableGirl;
         }
-        if (!enabled && radarIcon != null)
+        if (enableGirl)
         {
-            Destroy(radarIcon.gameObject);
+            if (!StartOfRound.Instance.inShipPhase)
+            {
+                reappearSource.PlayOneShot(reappearClip);
+                Instantiate(AssetsCollection.poofParticle, transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
+            }
+            materialToToggle.material = appearMat;
+            General.InstantiateSparklesOnTransform(transform);
         }
-        if (enabled && !StartOfRound.Instance.inShipPhase)
+        else
         {
-            reappearSource.PlayOneShot(reappearClip);
-            Instantiate(AssetsCollection.poofParticle, transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
-        }
-        if (enabled)
-        {
-            materialToToggle.material = AssetsCollection.defaultMaterialGold;
+            if (radarIcon != null)
+            {
+                Destroy(radarIcon.gameObject);
+            }
+            General.DestroySparklesOnTransform(transform);
         }
     }
 
@@ -142,7 +144,7 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
         if (!Configs.hostToolRebalance && !broughtToShip && !choseLocalPlayer)
         {
             meshToToggle.mesh = loadedMesh;
-            materialToToggle.material = AssetsCollection.defaultMaterialGoldTransparent;
+            materialToToggle.material = invisibleMat;
         }
     }
 
@@ -151,7 +153,7 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
         if (!broughtToShip && !choseLocalPlayer)
         {
             meshToToggle.mesh = null;
-            materialToToggle.material = AssetsCollection.defaultMaterialGold;
+            materialToToggle.material = appearMat;
         }
     }
 }

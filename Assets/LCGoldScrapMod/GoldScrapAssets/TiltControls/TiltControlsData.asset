@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: TiltControlsData
   m_EditorClassIdentifier: 
   folderName: TiltControls
+  displayName: Tilt Controls
+  specialDateCases: 
   itemProperties: {fileID: 11400000, guid: 8f27409b353f40e49bc889c24ee484ff, type: 2}
   isScrap: 1
   defaultWeight: 1.18
@@ -26,11 +28,36 @@ MonoBehaviour:
   levelsToAddCustom: 0000000001000000
   isStoreItem: 0
   storeDefaultPrice: 100
+  maxFeverSalePercentage: 90
+  alreadyPurchasedText: 
   storeTerminalNodes:
   - {fileID: 0}
   - {fileID: 0}
+  unlockableProperties:
+    unlockableName: 
+    prefabObject: {fileID: 0}
+    unlockableType: 0
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 0
+    IsPlaceable: 0
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
   localItemsListIndex: -1
   localMaxValue: 0
   localMinValue: 0
   localStorePrice: 0
   localBuyItemIndex: -1
+  localUnlockableID: -1

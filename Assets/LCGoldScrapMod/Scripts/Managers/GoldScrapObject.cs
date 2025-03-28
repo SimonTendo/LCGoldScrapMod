@@ -21,20 +21,28 @@ public class GoldScrapObject : MonoBehaviour
     void Start()
     {
         item = GetComponent<GrabbableObject>();
-        if (item != null && item.gameObject.layer != 5)
+        if (gameObject.layer != 5)
         {
-            StartCoroutine(SetDropStopTimer());
+            StartCoroutine(SetConfigDependencies());
+        }
+    }
+
+    private IEnumerator SetConfigDependencies()
+    {
+        yield return new WaitUntil(() => Plugin.appliedHostConfigs);
+        if (item != null)
+        {
+            dropStopTimer = Mathf.Clamp(Mathf.Pow(item.itemProperties.weight - (weightBeforeIncreasing / 100f), powerMultiplier), 0, maxWaitTimer);
             if (!HoarderBugAI.grabbableObjectsInMap.Contains(item.gameObject))
             {
                 HoarderBugAI.grabbableObjectsInMap.Add(item.gameObject);
             }
         }
-    }
-
-    private IEnumerator SetDropStopTimer()
-    {
-        yield return new WaitUntil(() => Plugin.appliedHostConfigs);
-        dropStopTimer = Mathf.Clamp(Mathf.Pow(item.itemProperties.weight - (weightBeforeIncreasing / 100f), powerMultiplier), 0, maxWaitTimer);
+        if (Plugin.specialDateCase >= 0 && data != null)
+        {
+            Logger.LogDebug($"calling runtime change from {gameObject}");
+            RuntimeChanges.UpdatePrefabForSpecialDate(Plugin.specialDateCase, data, gameObject);
+        }
     }
 
     public void StartDropStop()

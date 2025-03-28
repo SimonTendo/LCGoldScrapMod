@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GoldTrophyData
   m_EditorClassIdentifier: 
   folderName: GoldTrophy
+  displayName: Gold Trophy
+  specialDateCases: 
   itemProperties: {fileID: 0}
   isScrap: 0
   defaultWeight: 1

@@ -49,18 +49,22 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cf176a4ee99176446aa979dad9bf52bc, type: 2}
   - {fileID: 11400000, guid: 1a7332fadb2e5df42a0f59b54e98c27f, type: 2}
   - {fileID: 11400000, guid: 8faaa187372a75440969c54ef052eff9, type: 2}
+  - {fileID: 11400000, guid: d75c1c1a36a18d54a904da30e0f4c043, type: 2}
   levelOfLog:
   - EmbrionLevel
   - ArtificeLevel
   - OffenseLevel
   - VowLevel
+  - DineLevel
   locationOfLog:
   - {x: -43.5, y: 18.35, z: -54}
   - {x: 93, y: 0.5, z: -180}
   - {x: 124.05, y: 10.6, z: -96.85}
   - {x: -88, y: -1.3, z: 137}
+  - {x: -219.2, y: 22, z: 11.6}
   rotationOfLog:
   - {x: 270, y: 30, z: 0}
   - {x: 0, y: 0, z: 0}
   - {x: 340, y: 290, z: 180}
+  - {x: 270, y: 270, z: 0}
   - {x: 270, y: 270, z: 0}

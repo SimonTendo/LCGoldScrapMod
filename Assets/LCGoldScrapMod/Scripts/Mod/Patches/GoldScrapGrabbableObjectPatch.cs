@@ -2,25 +2,8 @@ using UnityEngine;
 using HarmonyLib;
 using Unity.Netcode;
 
-public class GrabbableObjectPatch
+public class GoldScrapGrabbableObjectPatch
 {
-    //Initialize DropStop if on object
-    [HarmonyPatch(typeof(GrabbableObject), "DiscardItem")]
-    public class NewGrabbableObjectDiscard
-    {
-        [HarmonyPrefix]
-        public static void InitializeDropStop(GrabbableObject __instance)
-        {
-            GoldScrapObject dropStop = __instance.gameObject.GetComponent<GoldScrapObject>();
-            if (dropStop != null && (__instance.playerHeldBy == null || __instance.playerHeldBy == GameNetworkManager.Instance.localPlayerController))
-            {
-                dropStop.StartDropStop();
-            }
-        }
-    }
-
-
-
     //Reactive the GoldenGrenade
     [HarmonyPatch(typeof(StunGrenadeItem), "ExplodeStunGrenade")]
     public class NewStunGrenadeExplode
@@ -28,7 +11,7 @@ public class GrabbableObjectPatch
         [HarmonyPostfix]
         public static void ReactivateGoldenGrenade(StunGrenadeItem __instance)
         {
-            if (__instance.itemProperties != null && __instance.itemProperties == RegisterGoldScrap.GoldenGrenade.itemName)
+            if (__instance.itemProperties != null && __instance.itemProperties == RegisterGoldScrap.GoldenGrenade.itemData.itemProperties)
             {
                 __instance.hasExploded = false;
                 __instance.itemUsedUp = false;
@@ -57,14 +40,41 @@ public class GrabbableObjectPatch
 
 
 
+    //Initialize DropStop if on object
+    //Turn the sparkleParticle off if the GrabbableObject gets destroyed
+    [HarmonyPatch(typeof(GrabbableObject))]
+    public class NewGrabbableObject
+    {
+        [HarmonyPrefix, HarmonyPatch("DiscardItem")]
+        public static void InitializeDropStop(GrabbableObject __instance)
+        {
+            GoldScrapObject dropStop = __instance.gameObject.GetComponent<GoldScrapObject>();
+            if (dropStop != null && (__instance.playerHeldBy == null || __instance.playerHeldBy == GameNetworkManager.Instance.localPlayerController))
+            {
+                dropStop.StartDropStop();
+            }
+        }
+
+        [HarmonyPostfix, HarmonyPatch("DestroyObjectInHand")]
+        public static void TurnOffVisualsOnDestroy(GrabbableObject __instance)
+        {
+            if (__instance.GetComponent<GoldScrapObject>() != null)
+            {
+                General.DestroySparklesOnTransform(__instance.transform);
+            }
+        }
+    }
+
+
+
     //Cuddly Gold functionality: audiovisual on grab, prevent drop, and not get angry
     [HarmonyPatch(typeof(HoarderBugAI))]
-    public class NewHoarderBugGrabItem
+    public class NewHoarderBug
     {
         [HarmonyPostfix, HarmonyPatch("GrabItem")]
         public static void CheckGrabCuddlyGold(HoarderBugAI __instance, NetworkObject item)
         {
-            if (__instance.enemyHP == 3 && __instance.heldItem != null && __instance.heldItem.itemGrabbableObject != null && __instance.heldItem.itemGrabbableObject.itemProperties == RegisterGoldScrap.CuddlyGold.itemName)
+            if (__instance.enemyHP == 3 && __instance.heldItem != null && __instance.heldItem.itemGrabbableObject != null && __instance.heldItem.itemGrabbableObject.itemProperties == RegisterGoldScrap.CuddlyGold.itemData.itemProperties)
             {
                 Plugin.Logger.LogDebug($"{__instance.name} #{__instance.NetworkObjectId} got CuddlyGold!!");
 
@@ -147,7 +157,7 @@ public class GrabbableObjectPatch
 
         private static HoarderBugAI GetBugHoldingCuddlyGold(HoarderBugAI bug)
         {
-            if (bug.heldItem != null && bug.heldItem.itemGrabbableObject != null && bug.heldItem.itemGrabbableObject.itemProperties == RegisterGoldScrap.CuddlyGold.itemName)
+            if (bug.heldItem != null && bug.heldItem.itemGrabbableObject != null && bug.heldItem.itemGrabbableObject.itemProperties == RegisterGoldScrap.CuddlyGold.itemData.itemProperties)
             {
                 return bug;
             }

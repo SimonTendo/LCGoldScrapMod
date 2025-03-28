@@ -26,14 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1194321908906383422}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.1, y: 0.7, z: -0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6926210422036464673}
+  m_Children: []
   m_Father: {fileID: 6298105900941307699}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!65 &7088557650342870515
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -53,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3, y: 1, z: 1.5}
-  m_Center: {x: -0.1, y: 0, z: 0}
+  m_Size: {x: 1.5, y: 1, z: 0.3}
+  m_Center: {x: 0.25, y: 0, z: 0}
 --- !u!114 &7276438099601106429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,13 +379,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frame: {fileID: 5701443639779225337}
   defaultBadge: {fileID: 1659205627087373438}
-  goldMedal: {fileID: 1194321908906383422}
-  silverMedal: {fileID: 0}
-  bronzeMedal: {fileID: 0}
-  medalContainer: {fileID: 3839020562352723385, guid: 3858a94d9d31bda4d92a8ba3cc7ae8c0,
+  medalContainers:
+  - {fileID: 0}
+  - {fileID: 1194321908906383422}
+  - {fileID: 0}
+  - {fileID: 0}
+  medalChestContainer: {fileID: 3839020562352723385, guid: 3858a94d9d31bda4d92a8ba3cc7ae8c0,
     type: 3}
-  goldMedalPrefab: {fileID: 7777757696016018982, guid: 212d7bed17920ce4283f09c620805a65,
-    type: 3}
+  medalPrefabs:
+  - {fileID: 0}
+  - {fileID: 7777757696016018982, guid: 212d7bed17920ce4283f09c620805a65, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
   shipPlacement: {fileID: 1828921399546475904}
 --- !u!114 &-563916229328253959
 MonoBehaviour:
@@ -426,6 +430,7 @@ MonoBehaviour:
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
   overrideOffset: 1
+  unlockableID: -1
 --- !u!1 &5701443639779225337
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,87 +549,3 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7482934377554469001}
   m_Mesh: {fileID: 7225943970222034307, guid: a8045857e00b60e4a8867451c5ab98e1, type: 3}
---- !u!1001 &3935462160804327504
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 6112993932158458942}
-    m_Modifications:
-    - target: {fileID: 1643641496250826989, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7777757696016018982, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_Name
-      value: GoldMedalPrefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 7777757696016018982, guid: 212d7bed17920ce4283f09c620805a65,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 212d7bed17920ce4283f09c620805a65, type: 3}
---- !u!4 &6926210422036464673 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6233903641651852401, guid: 212d7bed17920ce4283f09c620805a65,
-    type: 3}
-  m_PrefabInstance: {fileID: 3935462160804327504}
-  m_PrefabAsset: {fileID: 0}

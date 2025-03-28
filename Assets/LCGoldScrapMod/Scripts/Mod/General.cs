@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,12 +41,13 @@ public class General
                 continue;
             }
             GameObject foundHelmetLight = FindHelmetLights(player.gameObject);
+            GameObject jacobsLadderPrefab = Plugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapAssets/JacobsLadder/JacobsLadderHelmetLight.prefab");
             if (foundHelmetLight == null || jacobsLadderPrefab == null)
             {
                 Logger.LogError($"failed to AddJacobsLadderToHelmetLights for player {player} (foundHelmetLight? {foundHelmetLight != null})");
                 return;
             }
-            GameObject JacobsLadderHelmetLights = Object.Instantiate(jacobsLadderPrefab, foundHelmetLight.transform, false);
+            GameObject JacobsLadderHelmetLights = UnityEngine.Object.Instantiate(jacobsLadderPrefab, foundHelmetLight.transform, false);
             List<Light> HelmetLights = player.allHelmetLights.ToList();
             jacobsLadderFlashlightID = HelmetLights.Count; 
             HelmetLights.Add(JacobsLadderHelmetLights.GetComponent<Light>());
@@ -107,7 +109,7 @@ public class General
         //As a failsafe, check to see if the current planet has any gold scrap that is not in the ship
         if (checkScene)
         {
-            foreach (GoldScrapObject goldScrap in Object.FindObjectsByType<GoldScrapObject>(FindObjectsSortMode.None))
+            foreach (GoldScrapObject goldScrap in UnityEngine.Object.FindObjectsByType<GoldScrapObject>(FindObjectsSortMode.None))
             {
                 if (goldScrap.item != null && !goldScrap.item.isInShipRoom)
                 {
@@ -160,9 +162,9 @@ public class General
 
     public static void AddMetalObjectsRuntime(GrabbableObject item)
     {
-        if (StartOfRound.Instance.currentLevel != null && StartOfRound.Instance.currentLevel.currentWeather == LevelWeatherType.Stormy)
+        if (StartOfRound.Instance != null && StartOfRound.Instance.currentLevel != null && StartOfRound.Instance.currentLevel.currentWeather == LevelWeatherType.Stormy)
         {
-            StormyWeather stormyWeatherInstance = Object.FindObjectOfType<StormyWeather>(false);
+            StormyWeather stormyWeatherInstance = UnityEngine.Object.FindAnyObjectByType<StormyWeather>();
             if (stormyWeatherInstance != null)
             {
                 PrivateAccesser.GetPrivateField<List<GrabbableObject>>(stormyWeatherInstance, "metalObjects").Add(item);
@@ -181,7 +183,22 @@ public class General
                 activePlayers.Add(player);
             }
         }
-        return activePlayers[Random.Range(0, activePlayers.Count)];
+        return activePlayers[UnityEngine.Random.Range(0, activePlayers.Count)];
+    }
+
+    public static int GetRandomLevelID(bool checkAccessible = true)
+    {
+        int randomID = UnityEngine.Random.Range(0, StartOfRound.Instance.levels.Length);
+        if (checkAccessible)
+        {
+            int attempts = 0;
+            while (attempts < 10 && !IsMoonAccessible(randomID))
+            {
+                randomID = UnityEngine.Random.Range(0, StartOfRound.Instance.levels.Length);
+                attempts++;
+            }
+        }
+        return randomID;
     }
 
     public static float GetClosestCollision(Vector3 position, Vector3 direction, float maxDistance)
@@ -197,67 +214,67 @@ public class General
     {
         Logger.LogDebug($"started SyncUponJoin() with playerID at index [{playerID}]");
 
-        foreach (GoldenGirlScript goldenGirlScript in Object.FindObjectsByType<GoldenGirlScript>(FindObjectsSortMode.None))
+        foreach (GoldenGirlScript goldenGirlScript in UnityEngine.Object.FindObjectsByType<GoldenGirlScript>(FindObjectsSortMode.None))
         {
             goldenGirlScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldPerfumeScript goldPerfumeScript in Object.FindObjectsByType<GoldPerfumeScript>(FindObjectsSortMode.None))
+        foreach (GoldPerfumeScript goldPerfumeScript in UnityEngine.Object.FindObjectsByType<GoldPerfumeScript>(FindObjectsSortMode.None))
         {
             goldPerfumeScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (JackInTheGoldScript jackInTheGoldScript in Object.FindObjectsByType<JackInTheGoldScript>(FindObjectsSortMode.None))
+        foreach (JackInTheGoldScript jackInTheGoldScript in UnityEngine.Object.FindObjectsByType<JackInTheGoldScript>(FindObjectsSortMode.None))
         {
             jackInTheGoldScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldBirdScript goldBirdScript in Object.FindObjectsByType<GoldBirdScript>(FindObjectsSortMode.None))
+        foreach (GoldBirdScript goldBirdScript in UnityEngine.Object.FindObjectsByType<GoldBirdScript>(FindObjectsSortMode.None))
         {
             goldBirdScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldenClockScript goldenClockScript in Object.FindObjectsByType<GoldenClockScript>(FindObjectsSortMode.None))
+        foreach (GoldenClockScript goldenClockScript in UnityEngine.Object.FindObjectsByType<GoldenClockScript>(FindObjectsSortMode.None))
         {
             goldenClockScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldmineScript goldmineScript in Object.FindObjectsByType<GoldmineScript>(FindObjectsSortMode.None))
+        foreach (GoldmineScript goldmineScript in UnityEngine.Object.FindObjectsByType<GoldmineScript>(FindObjectsSortMode.None))
         {
             goldmineScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldenHourglassScript goldenHourglassScript in Object.FindObjectsByType<GoldenHourglassScript>(FindObjectsSortMode.None))
+        foreach (GoldenHourglassScript goldenHourglassScript in UnityEngine.Object.FindObjectsByType<GoldenHourglassScript>(FindObjectsSortMode.None))
         {
             goldenHourglassScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldenPickaxeScript goldenPickaxeScript in Object.FindObjectsByType<GoldenPickaxeScript>(FindObjectsSortMode.None))
+        foreach (GoldenPickaxeScript goldenPickaxeScript in UnityEngine.Object.FindObjectsByType<GoldenPickaxeScript>(FindObjectsSortMode.None))
         {
             goldenPickaxeScript.SyncDurabilityServerRpc(false, -1, playerID);
         }
 
-        foreach (GoldkeeperScript goldkeeperScript in Object.FindObjectsByType<GoldkeeperScript>(FindObjectsSortMode.None))
+        foreach (GoldkeeperScript goldkeeperScript in UnityEngine.Object.FindObjectsByType<GoldkeeperScript>(FindObjectsSortMode.None))
         {
             goldkeeperScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (CrownScript crownScript in Object.FindObjectsByType<CrownScript>(FindObjectsSortMode.None))
+        foreach (CrownScript crownScript in UnityEngine.Object.FindObjectsByType<CrownScript>(FindObjectsSortMode.None))
         {
             crownScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (SafeBoxScript safeBoxScript in Object.FindObjectsByType<SafeBoxScript>(FindObjectsSortMode.None))
+        foreach (SafeBoxScript safeBoxScript in UnityEngine.Object.FindObjectsByType<SafeBoxScript>(FindObjectsSortMode.None))
         {
             safeBoxScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldfatherClockScript goldfatherClockScript in Object.FindObjectsByType<GoldfatherClockScript>(FindObjectsSortMode.None))
+        foreach (GoldfatherClockScript goldfatherClockScript in UnityEngine.Object.FindObjectsByType<GoldfatherClockScript>(FindObjectsSortMode.None))
         {
             goldfatherClockScript.SyncUponJoinServerRpc(playerID);
         }
 
-        foreach (GoldenGloveScript goldenGloveScript in Object.FindObjectsByType<GoldenGloveScript>(FindObjectsSortMode.None))
+        foreach (GoldenGloveScript goldenGloveScript in UnityEngine.Object.FindObjectsByType<GoldenGloveScript>(FindObjectsSortMode.None))
         {
             goldenGloveScript.SyncUponJoinServerRpc(playerID);
         }
@@ -395,5 +412,159 @@ public class General
         {
             HUDManager.Instance.itemSlotIcons[itemSlot].enabled = false;
         }
+    }
+
+    public static void InstantiateSparklesOnTransform(Transform instantiateOn)
+    {
+        if (Plugin.specialDateCase != 6 || instantiateOn == null || sparkleParticle == null)
+        {
+            return;
+        }
+        Transform sparkles = instantiateOn.Find("SparkleGold(Clone)");
+        if (sparkles == null)
+        {
+            Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} instantiating sparkles on {instantiateOn.name}");
+            UnityEngine.Object.Instantiate(sparkleParticle, instantiateOn, false);
+        }
+    }
+
+    public static void DestroySparklesOnTransform(Transform destroyFrom)
+    {
+        if (destroyFrom == null)
+        {
+            return;
+        }
+        Transform sparkles = destroyFrom.Find("SparkleGold(Clone)");
+        if (sparkles != null)
+        {
+            Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} destroying {sparkles.name} on {destroyFrom.name}");
+            UnityEngine.Object.Destroy(sparkles.gameObject);
+        }
+    }
+
+    public static void GetSpecialDateCase()
+    {
+        int month = DateTime.Now.Month;
+        int day = DateTime.Now.Day;
+        int dayOfYear = DateTime.Now.DayOfYear;
+        Logger.LogDebug($"starting GetSpecialDateCase() with: month {month} | day {day} |  dayOfYear {dayOfYear}");
+        int setTo = ConvertSpecialDateCase(Configs.dateCaseCode.Value);
+
+        if (setTo == -1)
+        {
+            //0: New Year's (fireworks)
+            if (dayOfYear == 1 || (month == 12 && day == 31))
+            {
+                setTo = 0;
+            }
+            //1: April Fools (materials anything but gold)
+            else if (month == 4 && day == 1)
+            {
+                setTo = 1;
+            }
+            //2: World Art Day (more expensive, heavy, and late-game items <- custom set in ItemData's)
+            else if ((month == 4 && day == 15) || (month == 7 && day == 8))
+            {
+                setTo = 2;
+            }
+            //3: Freedom Day (no monster scrap but rest higher value)
+            else if ((month == 5 && day == 5) || (month == 7 && day == 4))
+            {
+                setTo = 3;
+            }
+            //4: Gold Days (materials nothing but gold, more gold, gold more valuable, lower prices)
+            else if ((month == 3 && day == 28) || (month == 9 && day == 2) || (month == 12 && day == 13) || dayOfYear == 79)
+            {
+                setTo = 4;
+            }
+            //5: Halloween (more monster scrap with higher value)
+            else if (month == 10 && day >= 23 && day <= 31)
+            {
+                setTo = 5;
+            }
+            //6: Christmas & Valentine's (sparkles)
+            else if ((month == 12 && day >= 24 && day <= 26) || (month == 2 && day == 14))
+            {
+                setTo = 6;
+            }
+        }
+
+        Plugin.localDateCase = setTo;
+        Logger.LogDebug($"GetSpecialDateCase() set local to: {Plugin.localDateCase}");
+    }
+
+    public static int ConvertSpecialDateCase(string code)
+    {
+        switch (code)
+        {
+            default:
+                return -1;
+            //Disable all specialDateCases
+            case "-1":
+                return -99;
+            //New Year's
+            case "2024":
+                return 0;
+            //April Fools
+            case "8561":
+                return 1;
+            //World Art Day
+            case "1798":
+                return 2;
+            //Freedom Day
+            case "4045":
+                return 3;
+            //Gold Day
+            case "0328":
+                return 4;
+            //Halloween
+            case "6613":
+                return 5;
+            //Christmas
+            case "9753":
+                return 6;
+        }  
+    }
+
+    public static string ConvertSpecialDateCase(int result)
+    {
+        switch (result)
+        {
+            default:
+                return "0000";
+            case 0:
+                return "2024";
+            case 1:
+                return "8561";
+            case 2:
+                return "1798";
+            case 3:
+                return "4045";
+            case 4:
+                return "0328";
+            case 5:
+                return "6613";
+            case 6:
+                return "9753";
+        }
+    }
+
+    public static bool ItemHasMatchingDateCase(ItemData item, int matchCase = -1)
+    {
+        if (matchCase == -1)
+        {
+            matchCase = Plugin.specialDateCase;
+        }
+        if (item.specialDateCases != null && item.specialDateCases.Length > 0)
+        {
+            for (int h = 0; h < item.specialDateCases.Length; h++)
+            {
+                if (item.specialDateCases[h] == matchCase)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

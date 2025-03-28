@@ -105,7 +105,7 @@ public class RarityManager : NetworkBehaviour
 
     private void SucceededGoldFeverCheck()
     {
-        int levelID = GetRandomLevelID();
+        int levelID = General.GetRandomLevelID();
         if (daysUntilNextFever <= 1 && TimeOfDay.Instance.daysUntilDeadline == 1 && daysUntilNextFever != -1)
         {
             for (int i = 0; i < StartOfRound.Instance.levels.Length; i++)
@@ -118,7 +118,7 @@ public class RarityManager : NetworkBehaviour
             }
             SetGoldFeverForLevel(levelID, -1, true);
         }
-        else if (!General.DoesMoonHaveGoldScrap(levelID, false) && General.IsMoonAccessible(levelID))
+        else if (!General.DoesMoonHaveGoldScrap(levelID, false))
         {
             Logger.LogDebug($"SALES: rolled randomLevelID: {levelID}");
             SetGoldFeverForLevel(levelID, -1, true);
@@ -129,11 +129,6 @@ public class RarityManager : NetworkBehaviour
             SetGoldFeverForLevel(levelID, GetMultiplierByWeather(levelID));
         }
         daysUntilNextFever = RollForDaysToNextFever();
-    }
-
-    private int GetRandomLevelID()
-    {
-        return Random.Range(0, StartOfRound.Instance.levels.Length);
     }
 
     public int GetMultiplierByWeather(int currentLevelID = -1)
@@ -368,19 +363,31 @@ public class RarityManager : NetworkBehaviour
 
 
     //Reusable runtime rarity changes
-    public static void SetRarityForLevel(int levelID, int multiplier = -1)
+    public static void SetRarityForLevel(int levelID, int multiplier = -1, bool printDebug = true)
     {
         if (levelID < 0 || levelID >= StartOfRound.Instance.levels.Length)
         {
             return;
         }
         SelectableLevel level = StartOfRound.Instance.levels[levelID];
+        if (level == null || level.spawnableScrap == null || level.spawnableScrap.Count < 1)
+        {
+            return;
+        }
         for (int i = 0; i < level.spawnableScrap.Count; i++)
         {
             SpawnableItemWithRarity scrapData = level.spawnableScrap[i];
+            if (scrapData == null || scrapData.spawnableItem == null)
+            {
+                continue;
+            }
             for (int j = 0; j < Plugin.allGoldGrabbableObjects.Length; j++)
             {
                 ItemData itemData = Plugin.allGoldGrabbableObjects[j];
+                if (itemData == null || itemData.itemProperties == null)
+                {
+                    continue;
+                }
                 if (scrapData.spawnableItem == itemData.itemProperties)
                 {
                     if (multiplier != -1)
@@ -389,12 +396,34 @@ public class RarityManager : NetworkBehaviour
                     }
                     else
                     {
-                        scrapData.rarity = (int)CalculateDefaultRarityWithConfig(GetThisLevelsDefaultRarity(itemData, levelID));
+                        scrapData.rarity = CalculateRarity(itemData, level);
                     }
-                    Logger.LogDebug($"set ItemWithRarity for item {scrapData.spawnableItem.itemName} on level '{level.name}' with ID [{levelID}] to rarity {scrapData.rarity}");
+                    if (printDebug) Logger.LogDebug($"set ItemWithRarity for item {scrapData.spawnableItem.itemName} on level '{level.name}' with ID [{levelID}] to rarity {scrapData.rarity}");
                 }
             }
         }
+    }
+
+    public static int CalculateRarity(ItemData itemData, SelectableLevel forLevel)
+    {
+        if (itemData == null || forLevel == null)
+        {
+            return 1;
+        }
+        float rarity = 1f;
+        float difference = 0f;
+        if (forLevel.levelID <= Plugin.suspectedLevelListLength)
+        {
+            rarity = CalculateDefaultRarityWithConfig(itemData.defaultRarity);
+            difference = CalculateRarityDifferenceModifier(GetThisLevelsDifferenceModifier(itemData, forLevel.levelID), itemData);
+        }
+        else
+        {
+            rarity = Configs.moddedMoonRarity.Value;
+        }
+        float dateCaseMultiplier = CalculateDateCaseMultiplier(itemData);
+        int toReturn = (int)((rarity + difference) * dateCaseMultiplier);
+        return Mathf.Max(1, toReturn);
     }
 
     public static float CalculateDefaultRarityWithConfig(int rarityToMultiply)
@@ -402,43 +431,76 @@ public class RarityManager : NetworkBehaviour
         return rarityToMultiply / 3f * Configs.rarityMultiplier.Value;
     }
 
-    private static int GetThisLevelsDefaultRarity(ItemData thisItem, int levelID)
+    public static float CalculateRarityDifferenceModifier(int minusPlusOrCustom, ItemData itemData = null)
     {
-        if (levelID <= Plugin.suspectedLevelListLength)
+        switch (minusPlusOrCustom)
         {
-            string thisLevel = StartOfRound.Instance.levels[levelID].name;
-            string levelName = thisLevel.Remove(thisLevel.Length - 5, 5);
-            foreach (GoldScrapLevels levelToAddMinus in thisItem.levelsToAddMinus)
-            {
-                if (levelToAddMinus.ToString().Equals(levelName))
+            default:
+                return 0f;
+            case 0:
+                return -0.34f / Configs.rarityMultiplier.Value;
+            case 1:
+                return 0.67f * Configs.rarityMultiplier.Value;
+            case 2:
+                if (itemData == null)
                 {
-                    return thisItem.defaultRarity - 1;
+                    return 0f;
                 }
-            }
-            foreach (GoldScrapLevels levelToAddDefault in thisItem.levelsToAddDefault)
+                return itemData.customChange > 0 ? itemData.customChange / 3f * Configs.rarityMultiplier.Value : itemData.customChange * 3f / Configs.rarityMultiplier.Value;
+        }
+    }
+
+    private static int GetThisLevelsDifferenceModifier(ItemData item, int levelID)
+    {
+        if (item == null || levelID < 0 || levelID > Plugin.suspectedLevelListLength)
+        {
+            return -1;
+        }
+        string thisLevel = StartOfRound.Instance.levels[levelID].name;
+        string levelName = thisLevel.Remove(thisLevel.Length - 5, 5);
+        foreach (GoldScrapLevels levelToAddMinus in item.levelsToAddMinus)
+        {
+            if (levelToAddMinus.ToString().Equals(levelName))
             {
-                if (levelToAddDefault.ToString().Equals(levelName))
-                {
-                    return thisItem.defaultRarity;
-                }
-            }
-            foreach (GoldScrapLevels levelToAddPlus in thisItem.levelsToAddPlus)
-            {
-                if (levelToAddPlus.ToString().Equals(levelName))
-                {
-                    return thisItem.defaultRarity + 2;
-                }
-            }
-            foreach (GoldScrapLevels levelToAddCustom in thisItem.levelsToAddCustom)
-            {
-                if (levelToAddCustom.ToString().Equals(levelName))
-                {
-                    return thisItem.defaultRarity + thisItem.customChange;
-                }
+                return 0;
             }
         }
-        Logger.LogError($"RarityManager did not find level with ID {levelID} for item {thisItem.name}");
-        return 1;
+        foreach (GoldScrapLevels levelToAddPlus in item.levelsToAddPlus)
+        {
+            if (levelToAddPlus.ToString().Equals(levelName))
+            {
+                return 1;
+            }
+        }
+        foreach (GoldScrapLevels levelToAddCustom in item.levelsToAddCustom)
+        {
+            if (levelToAddCustom.ToString().Equals(levelName))
+            {
+                return 2;
+            }
+        }
+        return -1;
+    }
+
+    private static float CalculateDateCaseMultiplier(ItemData itemData)
+    {
+        switch (Plugin.specialDateCase)
+        {
+            default:
+                return 1.0f;
+            case 0:
+                return General.ItemHasMatchingDateCase(itemData) ? 7.7f : 0.9f;
+            case 1:
+                return 1.2f;
+            case 2:
+                return General.ItemHasMatchingDateCase(itemData) ? 2.0f : 1.0f;
+            case 3:
+                return General.ItemHasMatchingDateCase(itemData) ? 0.1f : 1.0f;
+            case 4:
+                return 1.5f;
+            case 5:
+                return General.ItemHasMatchingDateCase(itemData) ? 3.3f : 1.0f;
+        }
     }
 
 

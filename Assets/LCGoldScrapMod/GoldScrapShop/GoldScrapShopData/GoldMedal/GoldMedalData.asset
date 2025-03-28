@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GoldMedalData
   m_EditorClassIdentifier: 
   folderName: GoldMedal
+  displayName: Gold Medal
+  specialDateCases: 
   itemProperties: {fileID: 0}
   isScrap: 0
   defaultWeight: 1
@@ -33,7 +35,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 60645e9e31e5fc246b1c46f9b481ae1b, type: 2}
   unlockableProperties:
     unlockableName: Gold Medal
-    prefabObject: {fileID: 0}
+    prefabObject: {fileID: 7777757696016018982, guid: 212d7bed17920ce4283f09c620805a65,
+      type: 3}
     unlockableType: -1
     shopSelectionNode: {fileID: 11400000, guid: ef5bd1adcc882c44d81a020a07fb3301,
       type: 2}

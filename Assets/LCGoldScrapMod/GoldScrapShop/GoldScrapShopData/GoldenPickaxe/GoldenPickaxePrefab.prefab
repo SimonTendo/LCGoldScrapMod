@@ -267,6 +267,12 @@ MonoBehaviour:
   breakClip: {fileID: 0}
   scanNodeObject: {fileID: 127784354100216990}
   scanNodeScript: {fileID: 1676180388237128275}
+  normalMats:
+  - {fileID: 2100000, guid: 224b374f0fd1ae241a0605a34058979f, type: 2}
+  - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
+  feverMats:
+  - {fileID: 2100000, guid: 0e39137b48c32fb4b85e555cb19e51ce, type: 2}
+  - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
   critClip: {fileID: 0}
   nodeScript: {fileID: 8137001311216170993, guid: 874948e50fd128745a01295cc282f409,
     type: 3}

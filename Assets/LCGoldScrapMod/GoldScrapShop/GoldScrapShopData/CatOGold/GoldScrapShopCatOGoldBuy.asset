@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
   m_Name: GoldScrapShopCatOGoldBuy
   m_EditorClassIdentifier: 
-  displayText: 'Ordered the Cat o'' Gold! Your new balance is [playerCredits].
+  displayText: 'Ordered the Cat o Gold! Your new balance is [playerCredits].
 
     Press
     [B] to rearrange objects in your ship and [V] to confirm.

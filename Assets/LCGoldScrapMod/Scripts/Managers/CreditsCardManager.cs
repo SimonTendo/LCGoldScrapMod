@@ -26,6 +26,14 @@ public class CreditsCardManager : NetworkBehaviour
 
     void Start()
     {
+        for (int i = 0; i < previousCredits.Length; i++)
+        {
+            if (previousCredits[i] <= 0)
+            {
+                previousCredits[i] = -1;
+            }
+            Logger.LogDebug($"[{i}]: {previousCredits[i]}");
+        }
         StartCoroutine(WaitForHostToBePicked());
     }
 
@@ -50,7 +58,7 @@ public class CreditsCardManager : NetworkBehaviour
     {
         if (playerID == -1 || playerID == (int)StartOfRound.Instance.localPlayerController.playerClientId)
         {
-            if (value < -1) value = -1;
+            if (value <= 0) value = -1;
             creditsCardItem.itemProperties.creditsWorth = value;
             Logger.LogDebug($"set buying rate to {creditsCardItem.itemProperties.creditsWorth}");
         }
@@ -58,7 +66,7 @@ public class CreditsCardManager : NetworkBehaviour
 
     public static void SetPreviousCredits()
     {
-        Terminal terminalScript = FindObjectOfType<Terminal>();
+        Terminal terminalScript = FindAnyObjectByType<Terminal>();
         int currentSave = GameNetworkManager.Instance.saveFileNum;
         int overtimeIndex = currentSave + 3;
         if (terminalScript == null || currentSave < 0 || currentSave >= previousCredits.Length)
@@ -71,7 +79,11 @@ public class CreditsCardManager : NetworkBehaviour
         {
             Logger.LogDebug($"overtime: {previousCredits[overtimeIndex]}");
             valueToSet += previousCredits[overtimeIndex];
-            previousCredits[overtimeIndex] = 0;
+            previousCredits[overtimeIndex] = -1;
+        }
+        if (valueToSet <= 0)
+        {
+            valueToSet = -1;
         }
         Logger.LogDebug($"setting previousCredits for file {currentSave} to ${valueToSet}");
         previousCredits[currentSave] = valueToSet;
@@ -83,9 +95,9 @@ public class CreditsCardManager : NetworkBehaviour
     }
 
     private IEnumerator RerollSalesPercentage(bool guaranteeSale)
-    {
+    {   
         yield return new WaitUntil(() => !StartOfRound.Instance.shipIsLeaving);
-        if (creditsCardItem.itemProperties.creditsWorth >= 0)
+        if (creditsCardItem.itemProperties.creditsWorth > 0)
         {
             int price = 100;
             if (guaranteeSale || Random.Range(0, 4) == 0)
@@ -118,7 +130,7 @@ public class CreditsCardManager : NetworkBehaviour
                 tempCardValue = 0;
                 return toReturn;
             }
-            Terminal terminalScript = FindObjectOfType<Terminal>();
+            Terminal terminalScript = FindAnyObjectByType<Terminal>();
             if (terminalScript != null)
             {
                 Logger.LogDebug($"CreditsCardManager: invalid TEMP CARD VALUE, returning LOGS & BESTIARY");
@@ -137,7 +149,7 @@ public class CreditsCardManager : NetworkBehaviour
     {
         if (playerID == -1 || playerID == (int)StartOfRound.Instance.localPlayerController.playerClientId)
         {
-            Terminal terminalScript = FindObjectOfType<Terminal>();
+            Terminal terminalScript = FindAnyObjectByType<Terminal>();
             if (terminalScript != null)
             {
                 terminalScript.itemSalesPercentages[creditsCardNodeBuy.buyItemIndex] = newSalesValue;
@@ -162,10 +174,10 @@ public class CreditsCardManager : NetworkBehaviour
         {
             for (int i = 0; i < previousCredits.Length; i++)
             {
-                if (previousCredits[i] > 0)
+                if (previousCredits[i] >= 0)
                 {
                     tempCardValue = previousCredits[i];
-                    previousCredits[i] = 0;
+                    previousCredits[i] = -1;
                     break;
                 }
             }
@@ -181,7 +193,7 @@ public class CreditsCardManager : NetworkBehaviour
     private void TakeCreditsCardOutOfRotationClientRpc()
     {
         creditsCardItem.itemProperties.creditsWorth = -1;
-        Terminal terminalScript = FindObjectOfType<Terminal>();
+        Terminal terminalScript = FindAnyObjectByType<Terminal>();
         if (terminalScript != null)
         {
             terminalScript.itemSalesPercentages[creditsCardNodeBuy.buyItemIndex] = 100;
@@ -193,7 +205,7 @@ public class CreditsCardManager : NetworkBehaviour
     public void SyncUponJoinServerRpc(int playerID)
     {
         SetBuyingRateClientRpc(creditsCardItem.itemProperties.creditsWorth, playerID);
-        Terminal terminalScript = FindObjectOfType<Terminal>();
+        Terminal terminalScript = FindAnyObjectByType<Terminal>();
         if (terminalScript != null)
         {
             SetNewSalesClientRpc(terminalScript.itemSalesPercentages[creditsCardNodeBuy.buyItemIndex], playerID);

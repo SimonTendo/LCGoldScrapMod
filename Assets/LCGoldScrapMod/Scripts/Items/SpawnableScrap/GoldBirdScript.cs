@@ -44,7 +44,7 @@ public class GoldBirdScript : GrabbableObject
         }
         else
         {
-            scanNode.headerText = "Gold Bird (Dormant)";
+            scanNode.headerText += " (Dormant)";
         }
     }
 

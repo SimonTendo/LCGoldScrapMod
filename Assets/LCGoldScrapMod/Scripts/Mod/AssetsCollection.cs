@@ -162,13 +162,17 @@ public class AssetsCollection
     public static Material defaultMaterialGoldTransparent;
     public static Material defaultMaterialGoldEmmissive;
     public static Material defaultMaterialSilver;
+    public static Material defaultMaterialSilverTransparent;
+    public static Material defaultMaterialSilverEmmissive;
     public static Material defaultMaterialBronze;
-    public static GameObject jacobsLadderPrefab;
+    public static Material defaultMaterialBronzeTransparent;
+    public static Material defaultMaterialBronzeEmmissive;
     public static int jacobsLadderFlashlightID;
     public static ArtOfGoldMaterials artOfGoldMaterials;
     public static GameObject discoBallStaticPrefab;
     public static GameObject poofParticle;
     public static GameObject flashbangParticle;
+    public static GameObject sparkleParticle;
     public static AnimationCurve grenadeFallCurve;
     public static AnimationCurve grenadeVerticalFallCurve;
     public static AnimationCurve grenadeVerticalFallCurveNoBounce;
@@ -181,10 +185,14 @@ public class AssetsCollection
         defaultMaterialGoldTransparent = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatTransparent.mat");
         defaultMaterialGoldEmmissive = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatEmmissive.mat");
         defaultMaterialSilver = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMat.mat");
+        defaultMaterialSilverTransparent = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMatTransparent.mat");
+        defaultMaterialSilverEmmissive = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMatEmmissive.mat");
         defaultMaterialBronze = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMat.mat");
+        defaultMaterialBronzeTransparent = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMatTransparent.mat");
+        defaultMaterialBronzeEmmissive = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMatEmmissive.mat");
         sillyItemIcon = Plugin.CustomGoldScrapAssets.LoadAsset<Sprite>("Assets/LCGoldScrapMod/GoldScrapVisuals/Sprites/GoldScrapItemIconPlaceholder.png");
         artOfGoldMaterials = Plugin.CustomGoldScrapAssets.LoadAsset<ArtOfGoldMaterials>("Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/ArtOfGoldMaterials.asset");
-        jacobsLadderPrefab = Plugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapAssets/JacobsLadder/JacobsLadderHelmetLight.prefab");
+        sparkleParticle = Plugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapMisc/SpecialDateCase/SparkleGold.prefab");
     }
 
     public static void GetItemAssets(StartOfRound __instance)

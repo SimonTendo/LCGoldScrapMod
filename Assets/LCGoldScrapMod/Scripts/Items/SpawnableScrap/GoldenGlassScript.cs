@@ -144,6 +144,10 @@ public class GoldenGlassScript : GrabbableObject
 
     private void SetAllItemsScanNodes(GrabbableObject item, bool setTo)
     {
+        if (item == null)
+        {
+            return;
+        }
         ScanNodeProperties scanNode = item.gameObject.GetComponentInChildren<ScanNodeProperties>();
         if (scanNode != null)
         {

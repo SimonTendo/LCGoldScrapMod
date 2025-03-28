@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GoldenThroneData
   m_EditorClassIdentifier: 
   folderName: GoldenThrone
+  displayName: Golden Throne
+  specialDateCases: 
   itemProperties: {fileID: 0}
   isScrap: 0
   defaultWeight: 1

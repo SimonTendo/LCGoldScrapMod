@@ -172,7 +172,7 @@ public class StoreAndTerminal
         allShipUnlockableIDs.Clear();
         foreach (ItemData itemData in allGoldStoreItemData)
         {
-            if (itemData == null || string.IsNullOrEmpty(itemData.unlockableProperties.unlockableName))
+            if (itemData == null || itemData.unlockableProperties == null || string.IsNullOrEmpty(itemData.unlockableProperties.unlockableName))
             {
                 continue;
             }
@@ -185,18 +185,23 @@ public class StoreAndTerminal
             item.shopSelectionNode.shipUnlockableID = itemID;
             item.shopSelectionNode.terminalOptions[0].result.shipUnlockableID = itemID;
 
-            if (item.IsPlaceable)
+            if (item.prefabObject != null)
             {
-                PlaceableShipObject placeableObject = item.prefabObject.GetComponentInChildren<PlaceableShipObject>();
-                if (placeableObject != null)
+                item.prefabObject.AddComponent<GoldScrapObject>().data = itemData;
+                item.prefabObject.AddComponent<GoldStoreItem>();
+                if (item.IsPlaceable)
                 {
-                    placeableObject.unlockableID = itemID;
-                    placeableObject.placeObjectSFX = sharedSFXPlaceShipObject;
-                }
-                AutoParentToShip parentToShip = item.prefabObject.GetComponentInChildren<AutoParentToShip>();
-                if (parentToShip != null)
-                {
-                    parentToShip.unlockableID = itemID;
+                    PlaceableShipObject placeableObject = item.prefabObject.GetComponentInChildren<PlaceableShipObject>();
+                    if (placeableObject != null)
+                    {
+                        placeableObject.unlockableID = itemID;
+                        placeableObject.placeObjectSFX = sharedSFXPlaceShipObject;
+                    }
+                    AutoParentToShip parentToShip = item.prefabObject.GetComponentInChildren<AutoParentToShip>();
+                    if (parentToShip != null)
+                    {
+                        parentToShip.unlockableID = itemID;
+                    }
                 }
             }
 
@@ -238,7 +243,7 @@ public class StoreAndTerminal
 
     public static void AddGoldItemsToShop()
     {
-        Terminal __instance = Object.FindObjectOfType<Terminal>();
+        Terminal __instance = Object.FindAnyObjectByType<Terminal>();
         if (__instance == null)
         {
             Logger.LogWarning("Failed to find Terminal! Not adding LCGoldScrapMod items to store.");

@@ -66,8 +66,6 @@ public class RegisterGoldScrap
         GoldenGrenade.SetUp();
         GoldBeacon.SetUp();
 
-        Configs.SetCustomGoldScrapValues();
-
         //GoldStore
         GoldNugget.SetUp();
         GoldOre.SetUp();
@@ -84,37 +82,30 @@ public class RegisterGoldScrap
         alreadyAddedGoldScrapOnAwake = true;
     }
 
-    private static void RegisterGoldScrapVanilla(ItemData itemData, float customRarity)
+    private static void RegisterGoldScrapVanilla(ItemData itemData)
     {
-        float minusLoss = -0.34f / Configs.rarityMultiplier.Value;
-        float plusGain = 0.67f * Configs.rarityMultiplier.Value;
-        float customChange = itemData.customChange > 0 ? itemData.customChange / 3f * Configs.rarityMultiplier.Value : itemData.customChange * 3f / Configs.rarityMultiplier.Value;
-
         foreach (SelectableLevel level in StartOfRound.Instance.levels)
         {
             foreach (GoldScrapLevels selectedLevel in itemData.levelsToAddMinus)
             {
-                AddSpawnableScrapToLevel(itemData.itemProperties, customRarity, level, selectedLevel, minusLoss);
+                AddSpawnableScrapToLevel(itemData.itemProperties, level, selectedLevel);
             }
-
             foreach (GoldScrapLevels selectedLevel in itemData.levelsToAddDefault)
             {
-                AddSpawnableScrapToLevel(itemData.itemProperties, customRarity, level, selectedLevel);
+                AddSpawnableScrapToLevel(itemData.itemProperties, level, selectedLevel);
             }
-
             foreach (GoldScrapLevels selectedLevel in itemData.levelsToAddPlus)
             {
-                AddSpawnableScrapToLevel(itemData.itemProperties, customRarity, level, selectedLevel, plusGain);
+                AddSpawnableScrapToLevel(itemData.itemProperties, level, selectedLevel);
             }
-
             foreach (GoldScrapLevels selectedLevel in itemData.levelsToAddCustom)
             {
-                AddSpawnableScrapToLevel(itemData.itemProperties, customRarity, level, selectedLevel, customChange);
+                AddSpawnableScrapToLevel(itemData.itemProperties, level, selectedLevel);
             }
         }
     }
 
-    private static void AddSpawnableScrapToLevel(Item itemName, float itemRarity, SelectableLevel level, GoldScrapLevels selectedLevel, float difference = 0)
+    private static void AddSpawnableScrapToLevel(Item item, SelectableLevel level, GoldScrapLevels selectedLevel)
     {
         string selectedLevelName = selectedLevel.ToString();
         if (!Configs.IsLevelSelected(selectedLevelName)) return;
@@ -122,9 +113,8 @@ public class RegisterGoldScrap
         if (level.name == selectedLevelFull)
         {
             SpawnableItemWithRarity GoldScrapWithRarity = new SpawnableItemWithRarity();
-            GoldScrapWithRarity.spawnableItem = itemName;
-            GoldScrapWithRarity.rarity = (int)(itemRarity + difference);
-            if (GoldScrapWithRarity.rarity < 1) GoldScrapWithRarity.rarity = 1;
+            GoldScrapWithRarity.spawnableItem = item;
+            GoldScrapWithRarity.rarity = 1;
             level.spawnableScrap.Add(GoldScrapWithRarity);
         }
     }
@@ -133,16 +123,16 @@ public class RegisterGoldScrap
     {
         foreach (SelectableLevel level in StartOfRound.Instance.levels)
         {
-            foreach (ItemData itemName in allGoldGrabbableObjects)
+            foreach (ItemData itemData in allGoldGrabbableObjects)
             {
-                if (itemName == null || itemName.itemProperties == null || itemName.isStoreItem)
+                if (itemData == null || itemData.itemProperties == null || itemData.isStoreItem)
                 {
                     continue;
                 }
                 if (level.levelID > suspectedLevelListLength && StoreAndTerminal.GetMoonTravelCost(level.levelID) >= Configs.moddedMoonCost.Value)
                 {
                     SpawnableItemWithRarity GoldScrapWithRarity = new SpawnableItemWithRarity();
-                    GoldScrapWithRarity.spawnableItem = itemName.itemProperties;
+                    GoldScrapWithRarity.spawnableItem = itemData.itemProperties;
                     GoldScrapWithRarity.rarity = Configs.moddedMoonRarity.Value;
                     level.spawnableScrap.Add(GoldScrapWithRarity);
                 }
@@ -161,18 +151,15 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldBolt";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
-            GameObject itemPrefab = itemName.spawnPrefab;
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
             if (Configs.sillyScrap.Value || goldBoltMesh == null)
@@ -186,29 +173,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight1");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -218,19 +204,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenAirhorn";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static NoisemakerProp itemScript = itemPrefab.GetComponent<NoisemakerProp>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            NoisemakerProp itemScript = itemPrefab.GetComponent<NoisemakerProp>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenAirhornMesh == null)
             {
@@ -243,8 +227,8 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("FlashlightGrab");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("FlashlightGrab");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight1");
                 itemScript.noiseSFX[0] = LoadSillySFX("Airhorn");
                 itemScript.noiseSFXFar[0] = LoadSillySFX("AirhornFar");
                 itemScript.useCooldown = 2f;
@@ -255,8 +239,8 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.grabSFX = sharedSFXflashlightGrab;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXflashlightGrab;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
                 if (Configs.replaceSFX.Value || sharedSFXairhornNoise == null || sharedSFXairhornFarNoise == null)
                 {
                     itemScript.noiseSFX[0] = LoadReplaceSFX("AirhornSFX");
@@ -281,18 +265,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -302,16 +285,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenEggbeater";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -326,29 +307,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp2");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp2");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid3");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -358,44 +338,41 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "TalkativeGoldBar";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
-            //Mesh
+            AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>();//Mesh
             if (Configs.sillyScrap.Value || talkativeGoldBarMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.rotationOffset.Set(120.0f, -4.2f, -462.81f);
-                itemName.positionOffset.Set(0.15f, 0.16f, -0.08f);
+                itemData.itemProperties.rotationOffset.Set(120.0f, -4.2f, -462.81f);
+                itemData.itemProperties.positionOffset.Set(0.15f, 0.16f, -0.08f);
             }
             else
             {
                 itemMeshFilter.mesh = talkativeGoldBarMesh;
-                itemName.rotationOffset.Set(145.0f, -4.2f, -462.81f);
-                itemName.positionOffset.Set(0.11f, 0.15f, -0.04f);
+                itemData.itemProperties.rotationOffset.Set(145.0f, -4.2f, -462.81f);
+                itemData.itemProperties.positionOffset.Set(0.11f, 0.15f, -0.04f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("FlashlightGrab");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight2");
+                itemData.itemProperties.grabSFX = LoadSillySFX("FlashlightGrab");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight2");
                 itemScript.grabAudio = LoadSillySFX("OldPhone");
                 itemScript.noiseLoudness = 0.5f;
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
                 if (Configs.replaceSFX.Value || sharedSFXoldPhoneNoise == null)
                 {
                     itemScript.grabAudio = LoadReplaceSFX("OldPhoneSFX");
@@ -410,18 +387,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -431,17 +407,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldRegister";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static NoisemakerProp itemScript = itemPrefab.GetComponent<NoisemakerProp>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             GameObject goldRegisterMain = itemPrefab.transform.GetChild(1).gameObject;
             GameObject goldRegisterCrank = itemPrefab.transform.GetChild(2).GetChild(0).gameObject;
@@ -449,6 +422,7 @@ public class RegisterGoldScrap
             MeshFilter mainMeshFilter = goldRegisterMain.GetComponent<MeshFilter>();
             MeshFilter crankMeshFilter = goldRegisterCrank.GetComponent<MeshFilter>();
             MeshFilter drawerMeshFilter = goldRegisterDrawer.GetComponent<MeshFilter>();
+            NoisemakerProp itemScript = itemPrefab.GetComponent<NoisemakerProp>();
             //Mesh
             if (Configs.sillyScrap.Value || goldRegisterMainMesh == null || goldRegisterCrankMesh == null || goldRegisterDrawerMesh == null)
             {
@@ -463,8 +437,8 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy2");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectHeavy2");
                 itemScript.noiseSFX[0] = LoadSillySFX("CashRegister");
                 itemScript.useCooldown = 1.5f;
                 itemScript.maxLoudness = 1f;
@@ -474,8 +448,8 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
                 if (Configs.replaceSFX.Value || sharedSFXcashRegisterNoise == null)
                 {
                     itemScript.noiseSFX[0] = LoadReplaceSFX("CashRegisterSFX");
@@ -498,18 +472,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -519,57 +492,54 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenBoots";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenBootsMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.restingRotation.Set(-90.0f, 0.0f, 90.0f);
-                itemName.positionOffset.Set(-0.2f, -0.2f, 0.2f);
+                itemData.itemProperties.restingRotation.Set(-90.0f, 0.0f, 90.0f);
+                itemData.itemProperties.positionOffset.Set(-0.2f, -0.2f, 0.2f);
             }
             else
             {
                 itemMeshFilter.mesh = goldenBootsMesh;
-                itemName.restingRotation.Set(-90f, 0.0f, 0.0f);
-                itemName.positionOffset.Set(0.1f, -0.1f, 0.15f);
+                itemData.itemProperties.restingRotation.Set(-90f, 0.0f, 0.0f);
+                itemData.itemProperties.positionOffset.Set(0.1f, -0.1f, 0.15f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
-                itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"Grab{itemFolder}");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"Drop{itemFolder}");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -579,19 +549,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenHorn";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static NoisemakerProp itemScript = itemPrefab.GetComponent<NoisemakerProp>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            NoisemakerProp itemScript = itemPrefab.GetComponent<NoisemakerProp>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenHornMesh == null)
             {
@@ -604,8 +572,8 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("FlashlightGrab");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("FlashlightGrab");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid3");
                 itemScript.noiseSFX[0] = LoadSillySFX("Clownhorn");
                 itemScript.noiseSFXFar[0] = LoadSillySFX("ClownhornFar");
                 itemScript.useCooldown = 0.75f;
@@ -616,8 +584,8 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.grabSFX = sharedSFXflashlightGrab;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXflashlightGrab;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
                 if (Configs.replaceSFX.Value || sharedSFXclownhornNoise == null || sharedSFXclownhornFarNoise == null)
                 {
                     itemScript.noiseSFX[0] = LoadReplaceSFX("ClownhornSFX");
@@ -642,18 +610,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -663,19 +630,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "PurifiedMask";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static HauntedMaskItem itemScript = itemPrefab.GetComponent<HauntedMaskItem>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            HauntedMaskItem itemScript = itemPrefab.GetComponent<HauntedMaskItem>(); 
             itemScript.maskIsHaunted = false;
             //Mesh
             if (Configs.sillyScrap.Value || purifiedMaskMesh == null)
@@ -689,29 +654,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
-                itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"Grab{itemFolder}");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"Drop{itemFolder}");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -721,16 +685,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldAxle";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -745,29 +707,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectHeavy1");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -777,57 +738,54 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldJug";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
             if (Configs.sillyScrap.Value || goldJugMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.rotationOffset.Set(190f, 20f, 0.0f);
-                itemName.positionOffset.Set(0.2f, 0.08f, 0.2f);
+                itemData.itemProperties.rotationOffset.Set(190f, 20f, 0.0f);
+                itemData.itemProperties.positionOffset.Set(0.2f, 0.08f, 0.2f);
             }
             else
             {
                 itemMeshFilter.mesh = goldJugMesh;
-                itemName.rotationOffset.Set(180f, 17.52f, 0.0f);
-                itemName.positionOffset.Set(-0.1f, 0.08f, 0.21f);
+                itemData.itemProperties.rotationOffset.Set(180f, 17.52f, 0.0f);
+                itemData.itemProperties.positionOffset.Set(-0.1f, 0.08f, 0.21f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
-                itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"Grab{itemFolder}");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"Drop{itemFolder}");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -837,79 +795,81 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenBell";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenBellMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.rotationOffset.Set(0.0f, 100.0f, -29.2f);
+                itemData.itemProperties.rotationOffset.Set(0.0f, 100.0f, -29.2f);
             }
             else
             {
                 itemMeshFilter.mesh = goldenBellMesh;
-                itemName.rotationOffset.Set(29.5f, 98f, -29.2f);
+                itemData.itemProperties.rotationOffset.Set(29.5f, 98f, -29.2f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
-                itemName.dropSFX = LoadSillySFX("DropBell");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropBell");
                 itemScript.dropAudio = LoadSillySFX("DropBell");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
                 if (Configs.replaceSFX.Value || sharedSFXdropBell == null)
                 {
-                    itemName.dropSFX = LoadReplaceSFX("BellSFX");
+                    itemData.itemProperties.dropSFX = LoadReplaceSFX("BellSFX");
                     itemScript.dropAudio = LoadReplaceSFX("BellSFX");
                 }
                 else
                 {
-                    itemName.dropSFX = sharedSFXdropBell;
+                    itemData.itemProperties.dropSFX = sharedSFXdropBell;
                     itemScript.dropAudio = sharedSFXdropBell;
                 }
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
-        public static void RebalanceTool()
+        public static void RebalanceTool(GameObject itemPrefab = null)
         {
+            if (itemPrefab == null)
+            {
+                itemPrefab = itemData.itemProperties.spawnPrefab;
+            }
+            AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>(); 
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
+                itemData.itemProperties.isConductiveMetal = false;
                 itemScript.noiseRange = 128;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Golden Bell...");
             }
             else
             {
-                itemName.isConductiveMetal = true;
+                itemData.itemProperties.isConductiveMetal = true;
                 itemScript.noiseRange = 64;
             }
         }
@@ -921,19 +881,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenGlass";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldenGlassScript itemScript = itemPrefab.GetComponent<GoldenGlassScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            GoldenGlassScript itemScript = itemPrefab.GetComponent<GoldenGlassScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenGlassMesh == null)
             {
@@ -946,15 +904,15 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight3");
                 itemScript.beginRevealClip = LoadSillySFX($"{itemFolder}BeginReveal");
                 itemScript.endRevealClip = LoadSillySFX($"{itemFolder}EndReveal");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
                 if (Configs.replaceSFX.Value || sharedSFXmenuConfirm == null ||  sharedSFXmenuCancel == null)
                 {
                     itemScript.beginRevealClip = LoadReplaceSFX($"{itemFolder}BeginSFX");   
@@ -969,32 +927,35 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
-        public static void RebalanceTool()
+        public static void RebalanceTool(GameObject itemPrefab = null)
         {
+            if (itemPrefab == null)
+            {
+                itemPrefab = itemData.itemProperties.spawnPrefab;
+            }
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
+                itemData.itemProperties.isConductiveMetal = false;
                 Material[] newMats = { defaultMaterialGold, defaultMaterialGold };
                 itemPrefab.GetComponent<MeshRenderer>().materials = newMats;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Golden Glass...");
             }
             else
             {
-                itemName.isConductiveMetal = true;
+                itemData.itemProperties.isConductiveMetal = true;
                 Material[] newMatsAlt = { defaultMaterialGold, defaultMaterialGoldTransparent };
                 itemPrefab.GetComponent<MeshRenderer>().materials = newMatsAlt;
             }
@@ -1007,16 +968,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldMug";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -1031,29 +990,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp2");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp2");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight1");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1063,16 +1021,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenFlask";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -1087,29 +1043,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("GrabBottle");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("GrabBottle");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight3");
             }
             else
             {
-                itemName.grabSFX = sharedSFXgrabBottle;
-                itemName.dropSFX = sharedSFXdropGlass1;
+                itemData.itemProperties.grabSFX = sharedSFXgrabBottle;
+                itemData.itemProperties.dropSFX = sharedSFXdropGlass1;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1119,66 +1074,63 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "DuckOfGold";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>();
             //Mesh
             if (Configs.sillyScrap.Value || duckOfGoldMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.rotationOffset.Set(0.0f, 90.0f, 17.16f);
-                itemName.positionOffset.Set(0.06f, 0.1f, -0.15f);
+                itemData.itemProperties.rotationOffset.Set(0.0f, 90.0f, 17.16f);
+                itemData.itemProperties.positionOffset.Set(0.06f, 0.1f, -0.15f);
             }
             else
             {
                 itemMeshFilter.mesh = duckOfGoldMesh;
-                itemName.rotationOffset.Set(0.0f, 90.0f, 17.16f);
-                itemName.positionOffset.Set(0.06f, 0.19f, -0.03f);
+                itemData.itemProperties.rotationOffset.Set(0.0f, 90.0f, 17.16f);
+                itemData.itemProperties.positionOffset.Set(0.06f, 0.19f, -0.03f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("GrabDuck");
-                itemName.dropSFX = LoadSillySFX("DropDuck");
+                itemData.itemProperties.grabSFX = LoadSillySFX("GrabDuck");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropDuck");
                 itemScript.dropAudio = LoadSillySFX("DropDuck");
             }
             else if (Configs.replaceSFX.Value || sharedSFXgrabDuck == null || sharedSFXdropDuck == null)
             {
-                itemName.grabSFX = LoadReplaceSFX("DuckSFX");
-                itemName.dropSFX = LoadReplaceSFX("DropSFX");
+                itemData.itemProperties.grabSFX = LoadReplaceSFX("DuckSFX");
+                itemData.itemProperties.dropSFX = LoadReplaceSFX("DropSFX");
                 itemScript.dropAudio = LoadReplaceSFX("DropSFX");
             }
             else
             {
-                itemName.grabSFX = sharedSFXgrabDuck;
-                itemName.dropSFX = sharedSFXdropDuck;
+                itemData.itemProperties.grabSFX = sharedSFXgrabDuck;
+                itemData.itemProperties.dropSFX = sharedSFXdropDuck;
                 itemScript.dropAudio = sharedSFXgrabDuck;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1188,37 +1140,35 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldSign";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static Shovel itemScript = itemPrefab.GetComponent<Shovel>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            Shovel itemScript = itemPrefab.GetComponent<Shovel>();
             //Mesh
             if (Configs.sillyScrap.Value || goldSignMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.restingRotation.Set(0.0f, 0.0f, 168.0f);
-                itemName.positionOffset.Set(-0.07f, -0.05f, 0.2f);
+                itemData.itemProperties.restingRotation.Set(0.0f, 0.0f, 168.0f);
+                itemData.itemProperties.positionOffset.Set(-0.07f, -0.05f, 0.2f);
             }
             else
             {
                 itemMeshFilter.mesh = goldSignMesh;
-                itemName.restingRotation.Set(0.0f, 90.0f, -90.0f);
-                itemName.positionOffset.Set(-0.04f, -0.1f, 0.22f);
+                itemData.itemProperties.restingRotation.Set(0.0f, 90.0f, -90.0f);
+                itemData.itemProperties.positionOffset.Set(-0.04f, -0.1f, 0.22f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid1");
                 itemScript.hitSFX[0] = LoadSillySFX("ShovelHit1");
                 itemScript.hitSFX[1] = LoadSillySFX("ShovelHit2");
                 itemScript.reelUp = LoadSillySFX("ShovelReel");
@@ -1226,8 +1176,8 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
                 if (Configs.replaceSFX.Value || sharedSFXshovelHit0 == null || sharedSFXshovelHit1 == null || sharedSFXshovelReel == null || sharedSFXshovelSwing == null)
                 {
                     itemScript.hitSFX[0] = LoadReplaceSFX("SignHit0");
@@ -1246,26 +1196,29 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
-        public static void RebalanceTool(float hostWeightMultiplier)
+        public static void RebalanceTool(GameObject itemPrefab = null)
         {
+            if (itemPrefab == null)
+            {
+                itemPrefab = itemData.itemProperties.spawnPrefab;
+            }
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
-                itemName.weight = Configs.CalculateWeightCustom(1.4f, hostWeightMultiplier);
+                itemData.itemProperties.isConductiveMetal = false;
+                itemData.itemProperties.weight = Configs.CalculateWeightCustom(1.4f, Configs.hostWeightMultiplier);
                 if (!Configs.sillyScrap.Value && goldSignMeshAlt != null)
                 {
                     itemPrefab.GetComponent<MeshFilter>().mesh = goldSignMeshAlt;
@@ -1278,8 +1231,8 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.isConductiveMetal = true;
-                itemName.weight = Configs.CalculateWeightCustom(itemData.defaultWeight, hostWeightMultiplier);
+                itemData.itemProperties.isConductiveMetal = true;
+                itemData.itemProperties.weight = Configs.CalculateWeightCustom(itemData.defaultWeight, Configs.hostWeightMultiplier);
                 if (!Configs.sillyScrap.Value && goldSignMesh != null)
                 {
                     itemPrefab.GetComponent<MeshFilter>().mesh = goldSignMesh;
@@ -1298,57 +1251,54 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldPuzzle";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
             if (Configs.sillyScrap.Value || goldPuzzleMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.positionOffset.Set(0.0f, 0.1f, -0.33f);
+                itemData.itemProperties.positionOffset.Set(0.0f, 0.1f, -0.33f);
             }
             else
             {
                 itemMeshFilter.mesh = goldPuzzleMesh;
-                itemName.positionOffset.Set(0.0f, 0.0f, 0.0f);
+                itemData.itemProperties.positionOffset.Set(0.0f, 0.0f, 0.0f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
-                itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
-                itemName.pocketSFX = LoadSillySFX($"Pocket{itemFolder}");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"Grab{itemFolder}");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"Drop{itemFolder}");
+                itemData.itemProperties.pocketSFX = LoadSillySFX($"Pocket{itemFolder}");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
-                itemName.pocketSFX = null;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.pocketSFX = null;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1358,19 +1308,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "ComedyGold";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static WhoopieCushionItem itemScript = itemPrefab.GetComponent<WhoopieCushionItem>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            WhoopieCushionItem itemScript = itemPrefab.GetComponent<WhoopieCushionItem>();
             //Mesh
             if (Configs.sillyScrap.Value || comedyGoldMesh == null)
             {
@@ -1383,7 +1331,7 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight1");
                 itemScript.fartAudios[0] = LoadSillySFX("Fart1");
                 itemScript.fartAudios[1] = LoadSillySFX("Fart2");
                 itemScript.fartAudios[2] = LoadSillySFX("Fart3");
@@ -1391,7 +1339,7 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
                 if (Configs.replaceSFX.Value || sharedSFXwhoopieCushionNoise0 == null || sharedSFXwhoopieCushionNoise1 == null || sharedSFXwhoopieCushionNoise2 == null || sharedSFXwhoopieCushionNoise3 == null)
                 {
                     itemScript.fartAudios[0] = LoadReplaceSFX("FartSFX1");
@@ -1410,11 +1358,11 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
             //v60 Compatibility
             GameObject TriggerPrefab = itemPrefab.transform.Find("Trigger").gameObject;
@@ -1430,8 +1378,7 @@ public class RegisterGoldScrap
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
         private static void SetWhoopieCushionV60(GameObject triggerPrefab, GameObject itemPrefab)
@@ -1468,16 +1415,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "CookieGoldPan";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -1492,29 +1437,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid3");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropThinMetal;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropThinMetal;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1524,57 +1468,54 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GolderBar";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
             if (Configs.sillyScrap.Value || golderBarMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.rotationOffset.Set(0.0f, 0.0f, 280.0f);
-                itemName.positionOffset.Set(0.15f, 0.09f, 0.025f);
+                itemData.itemProperties.rotationOffset.Set(0.0f, 0.0f, 280.0f);
+                itemData.itemProperties.positionOffset.Set(0.15f, 0.09f, 0.025f);
             }
             else
             {
                 itemMeshFilter.mesh = golderBarMesh;
-                itemName.rotationOffset.Set(-2.43f, 128.71f, -330.4f);
-                itemName.positionOffset.Set(0.04f, 0.15f, -0.09f);
+                itemData.itemProperties.rotationOffset.Set(-2.43f, 128.71f, -330.4f);
+                itemData.itemProperties.positionOffset.Set(0.04f, 0.15f, -0.09f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
-                itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"Grab{itemFolder}");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"Drop{itemFolder}");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1584,16 +1525,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "CuddlyGold";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -1608,31 +1547,30 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
-                itemName.pocketSFX = LoadSillySFX($"{itemFolder}Pocket");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.pocketSFX = LoadSillySFX($"{itemFolder}Pocket");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
-                itemName.pocketSFX = null;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.pocketSFX = null;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1642,16 +1580,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenGrunt";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -1666,29 +1602,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1698,16 +1633,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "Goldkeeper";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -1722,29 +1655,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1754,20 +1686,18 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldSpring";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldSpringScript itemScript = itemPrefab.GetComponent<GoldSpringScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             MeshFilter HeadMeshFilter = itemPrefab.transform.GetChild(1).GetComponent<MeshFilter>();
+            GoldSpringScript itemScript = itemPrefab.GetComponent<GoldSpringScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldSpringMesh == null || goldSpringHeadMesh == null)
             {
@@ -1781,15 +1711,15 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
                 itemScript.stopClip = LoadSillySFX($"{itemFolder}Stop");
                 itemScript.goClip = LoadSillySFX($"{itemFolder}Go");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
                 if (Configs.replaceEnemySFX.Value || sharedSFXspringHardClip == null || sharedSFXspringSoftClip == null)
                 {
                     itemScript.stopClip = LoadReplaceSFX($"{itemFolder}Stop");
@@ -1804,18 +1734,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1825,57 +1754,54 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "Marigold";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
             if (Configs.sillyScrap.Value || marigoldMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.rotationOffset.Set(-40.0f, 160.0f, 285.0f);
-                itemName.positionOffset.Set(-0.5f, -0.1f, 0.25f);
+                itemData.itemProperties.rotationOffset.Set(-40.0f, 160.0f, 285.0f);
+                itemData.itemProperties.positionOffset.Set(-0.5f, -0.1f, 0.25f);
             }
             else
             {
                 itemMeshFilter.mesh = marigoldMesh;
-                itemName.rotationOffset.Set(-30.0f, 210.0f, 250.0f);
-                itemName.positionOffset.Set(0.2f, -0.15f, 0.525f);
+                itemData.itemProperties.rotationOffset.Set(-30.0f, 210.0f, 250.0f);
+                itemData.itemProperties.positionOffset.Set(0.2f, -0.15f, 0.525f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -1885,19 +1811,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenGuardian";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldenGuardianScript itemScript = itemPrefab.GetComponent<GoldenGuardianScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            GoldenGuardianScript itemScript = itemPrefab.GetComponent<GoldenGuardianScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenGuardianMesh == null)
             {
@@ -1910,15 +1834,15 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
                 itemScript.buildUpClip = LoadSillySFX($"{itemFolder}BuildUp");
                 itemScript.explodeClip = LoadSillySFX($"{itemFolder}Explode");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
                 if (Configs.replaceEnemySFX.Value || sharedSFXnutcrackerAim == null || sharedSFXgunShoot == null)
                 {
                     itemScript.buildUpClip = LoadReplaceSFX($"{itemFolder}BuildUp");
@@ -1933,11 +1857,11 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
             //Misc
             itemScript.stunGrenadeExplosion = flashbangParticle;
@@ -1945,20 +1869,19 @@ public class RegisterGoldScrap
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
         public static void RebalanceTool()
         {
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
+                itemData.itemProperties.isConductiveMetal = false;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Golden Guardian...");
             }
             else
             {
-                itemName.isConductiveMetal = true;
+                itemData.itemProperties.isConductiveMetal = true;
             }
         }
     }
@@ -1969,16 +1892,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldTypeEngine";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -1993,29 +1914,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
-                itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"Grab{itemFolder}");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"Drop{itemFolder}");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -2025,16 +1945,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "TiltControls";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -2049,29 +1967,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"Grab{itemFolder}");
-                itemName.dropSFX = LoadSillySFX($"Drop{itemFolder}");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"Grab{itemFolder}");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"Drop{itemFolder}");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
             }
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
         
@@ -2081,21 +1998,19 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "JacobsLadder";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static FlashlightItem itemScript = itemPrefab.GetComponent<FlashlightItem>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.transform.GetChild(1).GetComponent<MeshFilter>();
             GameObject JacobsLadderLight = itemPrefab.transform.GetChild(2).gameObject;
             GameObject JacobsLadderGlow = itemPrefab.transform.GetChild(3).gameObject;
+            FlashlightItem itemScript = itemPrefab.GetComponent<FlashlightItem>();
             itemScript.flashlightBulb = JacobsLadderLight.GetComponent<Light>();
             itemScript.flashlightBulbGlow = JacobsLadderGlow.GetComponent<Light>();
             itemScript.flashlightBulb.intensity = 400;
@@ -2119,9 +2034,9 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("FlashlightGrab");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
-                itemName.pocketSFX = LoadSillySFX("FlashlightPocket");
+                itemData.itemProperties.grabSFX = LoadSillySFX("FlashlightGrab");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight3");
+                itemData.itemProperties.pocketSFX = LoadSillySFX("FlashlightPocket");
                 itemScript.outOfBatteriesClip = LoadSillySFX("FlashlightOut");
                 itemScript.flashlightFlicker = LoadSillySFX("FlashlightFlicker");
                 itemScript.flashlightClips[0] = LoadSillySFX("FlashlightClick1");
@@ -2129,9 +2044,9 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.grabSFX = sharedSFXflashlightGrab;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
-                itemName.pocketSFX = sharedSFXflashlightPocket;
+                itemData.itemProperties.grabSFX = sharedSFXflashlightGrab;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.pocketSFX = sharedSFXflashlightPocket;
                 if (Configs.replaceSFX.Value || sharedSFXflashlightOut == null || sharedSFXflashlightFlicker == null || sharedSFXflashlightClip == null)
                 {
                     itemScript.outOfBatteriesClip = LoadReplaceSFX("FlashlightOutSFX");
@@ -2150,32 +2065,31 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconFlashlight == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconFlashlight;
+                itemData.itemProperties.itemIcon = sharedItemIconFlashlight;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
         public static void RebalanceTool()
         {
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
-                itemName.batteryUsage = 150;
+                itemData.itemProperties.isConductiveMetal = false;
+                itemData.itemProperties.batteryUsage = 150;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Jacob's Ladder...");
             }
             else
             {
-                itemName.isConductiveMetal = true;
-                itemName.batteryUsage = 210;
+                itemData.itemProperties.isConductiveMetal = true;
+                itemData.itemProperties.batteryUsage = 210;
             }
         }
     }
@@ -2186,49 +2100,47 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldToyRobot";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GameObject RightArm = itemPrefab.transform.GetChild(1).gameObject;
-        public static GameObject LeftArm = itemPrefab.transform.GetChild(2).gameObject;
-        public static AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        private static void SetAssets()
+        private static void SetAssets(GameObject itemPrefab)
         {
+            GameObject rightArm = itemPrefab.transform.GetChild(1).gameObject;
+            GameObject leftArm = itemPrefab.transform.GetChild(2).gameObject; 
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
-            MeshFilter RightArmMeshFilter = RightArm.GetComponent<MeshFilter>();
-            MeshFilter LeftArmMeshFilter = LeftArm.GetComponent<MeshFilter>();
+            MeshFilter rightArmMeshFilter = rightArm.GetComponent<MeshFilter>();
+            MeshFilter leftArmMeshFilter = leftArm.GetComponent<MeshFilter>();
+            AnimatedItem itemScript = itemPrefab.GetComponent<AnimatedItem>();
             //Mesh
             if (Configs.sillyScrap.Value || goldToyRobotMainMesh == null || goldToyRobotMainMesh == null || goldToyRobotLeftMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.rotationOffset.Set(-10.0f, 89.46f, 110.0f);
-                itemName.positionOffset.Set(-0.15f, 0.12f, -0.4f);
+                itemData.itemProperties.rotationOffset.Set(-10.0f, 89.46f, 110.0f);
+                itemData.itemProperties.positionOffset.Set(-0.15f, 0.12f, -0.4f);
             }
             else
             {
                 itemMeshFilter.mesh = goldToyRobotMainMesh;
-                RightArmMeshFilter.mesh = goldToyRobotRightMesh;
-                LeftArmMeshFilter.mesh = goldToyRobotLeftMesh;
-                itemName.rotationOffset.Set(8.0f, 89.46f, 110.0f);
-                itemName.positionOffset.Set(0.0f, 0.09f, -0.15f);
+                rightArmMeshFilter.mesh = goldToyRobotRightMesh;
+                leftArmMeshFilter.mesh = goldToyRobotLeftMesh;
+                itemData.itemProperties.rotationOffset.Set(8.0f, 89.46f, 110.0f);
+                itemData.itemProperties.positionOffset.Set(0.0f, 0.09f, -0.15f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid2");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid2");
                 itemScript.grabAudio = LoadSillySFX("RobotToyCheer");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
                 if (Configs.replaceSFX.Value || sharedSFXrobotToyCheer == null)
                 {
                     itemScript.grabAudio = LoadReplaceSFX("ToyRobotSFX");
@@ -2241,18 +2153,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         private static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2262,55 +2173,52 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "TatteredGoldSheet";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
             if (Configs.sillyScrap.Value || tatteredGoldSheetMesh == null || tatteredGoldSheetAltMesh == null)
             {
                 itemMeshFilter.mesh = LoadSillyMesh(itemFolder);
-                itemName.meshVariants[0] = LoadSillyMesh(itemFolder);
-                itemName.meshVariants[1] = LoadSillyMesh($"{itemFolder}Alt");
+                itemData.itemProperties.meshVariants[0] = LoadSillyMesh(itemFolder);
+                itemData.itemProperties.meshVariants[1] = LoadSillyMesh($"{itemFolder}Alt");
             }
             else
             {
                 itemMeshFilter.mesh = tatteredGoldSheetMesh;
-                itemName.meshVariants[0] = tatteredGoldSheetMesh;
-                itemName.meshVariants[1] = tatteredGoldSheetAltMesh;
+                itemData.itemProperties.meshVariants[0] = tatteredGoldSheetMesh;
+                itemData.itemProperties.meshVariants[1] = tatteredGoldSheetAltMesh;
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid3");
             }
             else
             {
-                itemName.dropSFX = sharedSFXdropThinMetal;
+                itemData.itemProperties.dropSFX = sharedSFXdropThinMetal;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2320,19 +2228,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenGirl";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldenGirlScript itemScript = itemPrefab.GetComponent<GoldenGirlScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            GoldenGirlScript itemScript = itemPrefab.GetComponent<GoldenGirlScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenGirlMesh == null)
             {
@@ -2345,12 +2251,12 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight2");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight2");
                 itemScript.reappearClip = LoadSillySFX($"{itemFolder}Appear");
             }
             else
             {
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
                 if (Configs.replaceEnemySFX.Value || sharedSFXgirlLaugh == null)
                 {
                     itemScript.reappearClip = LoadReplaceSFX($"{itemFolder}SFX");
@@ -2363,18 +2269,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2384,16 +2289,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldPan";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -2408,29 +2311,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid1");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2440,16 +2342,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "ArtOfGold";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             MeshFilter frameMeshFilter = itemPrefab.transform.GetChild(1).gameObject.GetComponent<MeshFilter>();
@@ -2467,38 +2367,37 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectHeavy1");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
             //Artwork
             if (Configs.sillyScrap.Value)
             {
-                itemName.materialVariants = artOfGoldMaterials.allSillyArtwork.ToArray();
+                itemData.itemProperties.materialVariants = artOfGoldMaterials.allSillyArtwork.ToArray();
             }
             else
             {
-                itemName.materialVariants = artOfGoldMaterials.allArtwork.ToArray();
+                itemData.itemProperties.materialVariants = artOfGoldMaterials.allArtwork.ToArray();
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2508,16 +2407,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldPerfume";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -2532,29 +2429,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp2");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp2");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight1");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2564,16 +2460,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "EarlGold";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -2588,29 +2482,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight3");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropThinMetal;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropThinMetal;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity); 
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2620,16 +2513,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "ExtremelyGoldenCup";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -2644,27 +2535,26 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight3");
             }
             else
             {
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2674,16 +2564,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldFishProp";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -2698,27 +2586,26 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight2");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight2");
             }
             else
             {
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2728,16 +2615,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "Goldfish";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -2752,27 +2637,26 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
             }
             else
             {
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2782,19 +2666,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldRemote";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldRemoteScript itemScript = itemPrefab.GetComponent<GoldRemoteScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            GoldRemoteScript itemScript = itemPrefab.GetComponent<GoldRemoteScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldRemoteMesh == null)
             {
@@ -2807,14 +2689,14 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight3");
                 itemScript.remoteAudio.clip = LoadSillySFX($"{itemFolder}Click");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
                 if (Configs.replaceSFX.Value || sharedSFXremoteClick == null)
                 {
                     itemScript.remoteAudio.clip = LoadReplaceSFX($"{itemFolder}SFX");
@@ -2827,31 +2709,35 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
-        public static void RebalanceTool()
+        public static void RebalanceTool(GameObject itemPrefab = null)
         {
+            if (itemPrefab == null)
+            {
+                itemPrefab = itemData.itemProperties.spawnPrefab;
+            }
+            GoldRemoteScript itemScript = itemPrefab.GetComponent<GoldRemoteScript>(); 
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
+                itemData.itemProperties.isConductiveMetal = false;
                 itemScript.useCooldown = 1.5f;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Gold Remote...");
             }
             else
             {
-                itemName.isConductiveMetal = true;
+                itemData.itemProperties.isConductiveMetal = true;
                 itemScript.useCooldown = 0f;
             }
         }
@@ -2863,16 +2749,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "JarOfGoldPickles";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter jarMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             MeshFilter pickleMeshFilter = itemPrefab.transform.GetChild(0).GetComponent<MeshFilter>();
@@ -2890,29 +2774,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("GrabBottle");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("GrabBottle");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight3");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropGlass1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropGlass1;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2922,16 +2805,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenVision";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -2946,29 +2827,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -2978,16 +2858,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldRing";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
@@ -3002,29 +2880,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -3034,16 +2911,14 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenRetriever";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter bodyMeshFilter = itemPrefab.transform.GetChild(1).GetChild(0).GetComponent<MeshFilter>();
             MeshFilter topMeshFilter = itemPrefab.transform.GetChild(1).GetChild(1).GetComponent<MeshFilter>();
@@ -3064,29 +2939,28 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX($"{itemFolder}Grab");
-                itemName.dropSFX = LoadSillySFX($"{itemFolder}Drop");
+                itemData.itemProperties.grabSFX = LoadSillySFX($"{itemFolder}Grab");
+                itemData.itemProperties.dropSFX = LoadSillySFX($"{itemFolder}Drop");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -3096,23 +2970,21 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "JackInTheGold";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static JackInTheGoldScript itemScript = itemPrefab.GetComponent<JackInTheGoldScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter bodyMeshFilter = itemPrefab.transform.GetChild(1).GetChild(0).GetComponent<MeshFilter>();
             MeshFilter lidMeshFilter = itemPrefab.transform.GetChild(1).GetChild(1).GetComponent<MeshFilter>();
             MeshFilter crankMeshFilter = itemPrefab.transform.GetChild(1).GetChild(2).GetComponent<MeshFilter>();
             MeshFilter upperJawMeshFilter = itemPrefab.transform.GetChild(1).GetChild(3).GetComponent<MeshFilter>();
             MeshFilter lowerJawMeshFilter = itemPrefab.transform.GetChild(1).GetChild(4).GetComponent<MeshFilter>();
+            JackInTheGoldScript itemScript = itemPrefab.GetComponent<JackInTheGoldScript>();
             //Mesh
             if (Configs.sillyScrap.Value || jackInTheGoldBodyMesh == null || jackInTheGoldLidMesh == null || jackInTheGoldCrankMesh == null || jackInTheGoldUpperJawMesh == null || jackInTheGoldLowerJawMesh == null)
             {
@@ -3133,15 +3005,15 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp3");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid2");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid2");
                 itemScript.pocketedThemeClip = LoadSillySFX($"{itemFolder}Song");
                 itemScript.explodeClip = LoadSillySFX($"{itemFolder}Pop");
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
                 if (Configs.replaceEnemySFX.Value || sharedSFXjesterTheme == null || sharedSFXjesterPop == null)
                 {
                     itemScript.pocketedThemeClip = LoadReplaceSFX($"{itemFolder}Theme");
@@ -3156,18 +3028,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -3177,19 +3048,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldBird";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldBirdScript itemScript = itemPrefab.GetComponent<GoldBirdScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.transform.GetChild(1).GetComponent<MeshFilter>();
+            GoldBirdScript itemScript = itemPrefab.GetComponent<GoldBirdScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldBirdMesh == null)
             {
@@ -3202,8 +3071,8 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectHeavy3");
                 itemScript.alarmClip = LoadSillySFX($"{itemFolder}Alarm");
                 itemScript.awakeClip = LoadSillySFX($"{itemFolder}Awake");
                 itemScript.lightOnClip = LoadSillySFX($"{itemFolder}On");
@@ -3212,8 +3081,8 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject3;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
                 if (Configs.replaceEnemySFX.Value || sharedSFXoldBirdAlarm == null || sharedSFXoldBirdWake == null || sharedSFXoldBirdOn == null || sharedSFXoldBirdOff == null || sharedSFXgunShoot == null)
                 {
                     itemScript.alarmClip = LoadReplaceSFX($"{itemFolder}Alarm");
@@ -3234,11 +3103,11 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
             //Lights
             itemScript.headlight.enabled = false;
@@ -3248,8 +3117,7 @@ public class RegisterGoldScrap
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -3259,21 +3127,19 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenClock";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldenClockScript itemScript = itemPrefab.GetComponent<GoldenClockScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter bodyMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             MeshFilter secondMeshFilter = itemPrefab.transform.GetChild(3).GetChild(0).GetComponent<MeshFilter>();
             MeshFilter minuteMeshFilter = itemPrefab.transform.GetChild(3).GetChild(1).GetComponent<MeshFilter>();
+            GoldenClockScript itemScript = itemPrefab.GetComponent<GoldenClockScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenClockBodyMesh == null || goldenClockMinuteMesh == null)
             {
@@ -3290,8 +3156,8 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp2");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp2");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid1");
                 itemScript.tickSFX = LoadSillySFX($"{itemFolder}Beep");
                 itemScript.tockSFX = LoadSillySFX($"{itemFolder}Boop");
                 itemScript.failClip = LoadSillySFX($"{itemFolder}Off");
@@ -3302,8 +3168,8 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
                 if (Configs.replaceSFX.Value || sharedSFXclockTick == null || sharedSFXclockTock == null || sharedSFXapplause == null || sharedSFXoldBirdOff == null || sharedSFXremoteClick == null || sharedSFXsnareBuildUp == null || sharedSFXmenuCancel == null)
                 {
                     itemScript.tickSFX = LoadReplaceSFX("BeepSFX");
@@ -3328,18 +3194,17 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -3349,19 +3214,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "Goldmine";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldmineScript itemScript = itemPrefab.GetComponent<GoldmineScript>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            GoldmineScript itemScript = itemPrefab.GetComponent<GoldmineScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldmineMesh == null)
             {
@@ -3374,8 +3237,8 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("ShovelPickUp1");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectMid1");
+                itemData.itemProperties.grabSFX = LoadSillySFX("ShovelPickUp1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectMid1");
                 itemScript.triggerClip = LoadSillySFX($"{itemFolder}Trigger");
                 itemScript.beepClip = LoadSillySFX($"{itemFolder}Beep");
                 itemScript.onClip = LoadSillySFX($"{itemFolder}On");
@@ -3383,8 +3246,8 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.grabSFX = sharedSFXshovelPickUp;
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
                 if (Configs.replaceEnemySFX.Value || sharedSFXlandmineTrigger == null || sharedSFXlandmineBeep == null || sharedSFXlandmineOn == null || sharedSFXlandmineOff == null)
                 {
                     itemScript.triggerClip = LoadReplaceSFX($"{itemFolder}TriggerSFX");
@@ -3403,11 +3266,11 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
             //Miscellaneous
             itemScript.triggerLight.shadows = LightShadows.Hard;
@@ -3416,22 +3279,21 @@ public class RegisterGoldScrap
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
         public static void RebalanceTool()
         {
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
-                itemName.toolTips[2] = "";
+                itemData.itemProperties.isConductiveMetal = false;
+                itemData.itemProperties.toolTips[2] = "";
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Goldmine...");
             }
             else
             {
-                itemName.isConductiveMetal = true;
-                itemName.toolTips[2] = "Toggle : [E]";
+                itemData.itemProperties.isConductiveMetal = true;
+                itemData.itemProperties.toolTips[2] = "Toggle : [E]";
             }
         }
     }
@@ -3442,23 +3304,20 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenGrenade";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static StunGrenadeItem itemScript = itemPrefab.GetComponent<StunGrenadeItem>();
-
-        private static MeshFilter bodyMesh = itemPrefab.transform.GetChild(2).GetComponent<MeshFilter>();
-        private static MeshFilter pinMesh = itemPrefab.transform.GetChild(2).GetChild(0).GetComponent<MeshFilter>();
-        private static MeshFilter bodyMeshAlt = itemPrefab.transform.GetChild(3).GetComponent<MeshFilter>();
-        private static MeshFilter pinMeshAlt = itemPrefab.transform.GetChild(3).GetChild(0).GetComponent<MeshFilter>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
+            MeshFilter bodyMesh = itemPrefab.transform.GetChild(2).GetComponent<MeshFilter>();
+            MeshFilter pinMesh = itemPrefab.transform.GetChild(2).GetChild(0).GetComponent<MeshFilter>();
+            MeshFilter bodyMeshAlt = itemPrefab.transform.GetChild(3).GetComponent<MeshFilter>();
+            MeshFilter pinMeshAlt = itemPrefab.transform.GetChild(3).GetChild(0).GetComponent<MeshFilter>();
+            StunGrenadeItem itemScript = itemPrefab.GetComponent<StunGrenadeItem>();
             //Mesh
             if (Configs.sillyScrap.Value || goldenGrenadeBodyMesh == null || goldenGrenadePinMesh == null)
             {
@@ -3477,15 +3336,15 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.grabSFX = LoadSillySFX("FlashlightGrab");
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight3");
+                itemData.itemProperties.grabSFX = LoadSillySFX("FlashlightGrab");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight3");
                 itemScript.explodeSFX = LoadSillySFX($"{itemFolder}Explode");
                 itemScript.pullPinSFX = LoadSillySFX($"{itemFolder}PullPin");
             }
             else
             {
-                itemName.grabSFX = sharedSFXflashlightGrab;
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.grabSFX = sharedSFXflashlightGrab;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
                 if (Configs.replaceSFX.Value || sharedSFXgrenadeExplode == null || sharedSFXgrenadePullPin == null)
                 {
                     itemScript.explodeSFX = LoadReplaceSFX("ExplosionSFX");
@@ -3500,11 +3359,11 @@ public class RegisterGoldScrap
             //Icon
             if (Configs.sillyScrap.Value || sharedItemIconGrenade == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconGrenade;
+                itemData.itemProperties.itemIcon = sharedItemIconGrenade;
             }
             //Miscellaneous
             itemScript.stunGrenadeExplosion = flashbangParticle;
@@ -3515,33 +3374,41 @@ public class RegisterGoldScrap
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
 
-        public static void RebalanceTool()
+        public static void RebalanceTool(GameObject itemPrefab = null)
         {
+            if (itemPrefab == null)
+            {
+                itemPrefab = itemData.itemProperties.spawnPrefab;
+            }
+            MeshFilter bodyMesh = itemPrefab.transform.GetChild(2).GetComponent<MeshFilter>();
+            MeshFilter pinMesh = itemPrefab.transform.GetChild(2).GetChild(0).GetComponent<MeshFilter>();
+            MeshFilter bodyMeshAlt = itemPrefab.transform.GetChild(3).GetComponent<MeshFilter>();
+            MeshFilter pinMeshAlt = itemPrefab.transform.GetChild(3).GetChild(0).GetComponent<MeshFilter>();
+            StunGrenadeItem itemScript = itemPrefab.GetComponent<StunGrenadeItem>(); 
             bodyMesh.mesh = null;
             pinMesh.mesh = null;
             bodyMeshAlt.mesh = null;
             pinMeshAlt.mesh = null;
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
+                itemData.itemProperties.isConductiveMetal = false;
                 itemScript.TimeToExplode = 0.18f;
                 itemScript.playerAnimation = "PullGrenadePin2";
                 if (Configs.sillyScrap.Value)
                 {
                     bodyMesh.mesh = LoadSillyMesh(itemFolder);
-                    itemName.grabSFX = LoadSillySFX("FlashlightGrab");
-                    itemName.itemIcon = sillyItemIcon;
+                    itemData.itemProperties.grabSFX = LoadSillySFX("FlashlightGrab");
+                    itemData.itemProperties.itemIcon = sillyItemIcon;
                     itemScript.pullPinSFX = LoadSillySFX($"{itemFolder}PullPin");
                     itemScript.explodeSFX = LoadSillySFX($"{itemFolder}Explode");
                 }
                 else
                 {
-                    itemName.grabSFX = sharedSFXgrabBottle;
-                    itemName.itemIcon = sharedItemIconScrap;
+                    itemData.itemProperties.grabSFX = sharedSFXgrabBottle;
+                    itemData.itemProperties.itemIcon = sharedItemIconScrap;
                     if (goldenGrenadeBodyMeshAlt != null && goldenGrenadePinMeshAlt != null)
                     {
                         bodyMeshAlt.mesh = goldenGrenadeBodyMeshAlt;
@@ -3566,20 +3433,20 @@ public class RegisterGoldScrap
             }
             else
             {
-                itemName.isConductiveMetal = true;
+                itemData.itemProperties.isConductiveMetal = true;
                 itemScript.TimeToExplode = 2.25f;
                 itemScript.playerAnimation = "PullGrenadePin";
                 if (Configs.sillyScrap.Value)
                 {
                     bodyMesh.mesh = LoadSillyMesh(itemFolder);
-                    itemName.grabSFX = LoadSillySFX("FlashlightGrab");
-                    itemName.itemIcon = sillyItemIcon;
+                    itemData.itemProperties.grabSFX = LoadSillySFX("FlashlightGrab");
+                    itemData.itemProperties.itemIcon = sillyItemIcon;
                     itemScript.pullPinSFX = LoadSillySFX($"{itemFolder}PullPin");
                     itemScript.explodeSFX = LoadSillySFX($"{itemFolder}Explode");
                 }
                 else
                 {
-                    itemName.grabSFX = sharedSFXflashlightGrab;
+                    itemData.itemProperties.grabSFX = sharedSFXflashlightGrab;
                     if (goldenGrenadeBodyMesh != null && goldenGrenadePinMesh != null)
                     {
                         bodyMesh.mesh = goldenGrenadeBodyMesh;
@@ -3601,11 +3468,11 @@ public class RegisterGoldScrap
                     }
                     if (sharedItemIconGrenade != null)
                     {
-                        itemName.itemIcon = sharedItemIconGrenade;
+                        itemData.itemProperties.itemIcon = sharedItemIconGrenade;
                     }
                     else
                     {
-                        itemName.itemIcon = sillyItemIcon;
+                        itemData.itemProperties.itemIcon = sillyItemIcon;
                     }
                 }
             }
@@ -3618,19 +3485,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldBeacon";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapAssets/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static Light itemLight = itemPrefab.transform.GetChild(1).GetComponent<Light>();
 
         public static void SetUp()
         {
-            SetAssets();
+            SetAssets(itemData.itemProperties.spawnPrefab);
             RegisterToLevel();
         }
 
-        public static void SetAssets()
+        public static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
+            Light itemLight = itemPrefab.transform.GetChild(1).GetComponent<Light>();
             //Mesh
             if (Configs.sillyScrap.Value || goldBeaconMesh == null)
             {
@@ -3643,20 +3508,20 @@ public class RegisterGoldScrap
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectHeavy3");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectHeavy3");
             }
             else
             {
-                itemName.dropSFX = sharedSFXdropMetalObject2;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
             }
             //Icon
             if (Configs.sillyScrap.Value)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
             //Light
             itemLight.intensity = 50;
@@ -3666,8 +3531,7 @@ public class RegisterGoldScrap
 
         public static void RegisterToLevel()
         {
-            float itemRarity = RarityManager.CalculateDefaultRarityWithConfig(itemData.defaultRarity);
-            RegisterGoldScrapVanilla(itemData, itemRarity);
+            RegisterGoldScrapVanilla(itemData);
         }
     }
 
@@ -3679,37 +3543,40 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldNugget";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
+        {
+            SetAssets(itemData.itemProperties.spawnPrefab);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
         {
             MeshFilter itemMeshFilter = itemPrefab.GetComponent<MeshFilter>();
             //Mesh
             if (Configs.sillyScrap.Value)
             {
                 itemMeshFilter.mesh = LoadGoldStoreMesh($"Silly{itemFolder}");
-                itemName.restingRotation.Set(0.0f, 0.0f, 0.0f);
-                itemName.rotationOffset.Set(10.0f, -90.0f, -90.0f);
-                itemName.positionOffset.Set(0f, 0.08f, 0f);
+                itemData.itemProperties.restingRotation.Set(0.0f, 0.0f, 0.0f);
+                itemData.itemProperties.rotationOffset.Set(10.0f, -90.0f, -90.0f);
+                itemData.itemProperties.positionOffset.Set(0f, 0.08f, 0f);
             }
             //Sounds
             if (Configs.sillyScrap.Value)
             {
-                itemName.dropSFX = LoadSillySFX("DropMetalObjectLight1");
+                itemData.itemProperties.dropSFX = LoadSillySFX("DropMetalObjectLight1");
             }
             else
             {
-                itemName.dropSFX = sharedSFXdropMetalObject1;
+                itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             }
             //ItemIcon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
     }
@@ -3720,22 +3587,25 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldOre";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
+            SetAssets();
+        }
+
+        private static void SetAssets()
+        {
             //Sounds
-            itemName.grabSFX = sharedSFXshovelPickUp;
-            itemName.dropSFX = sharedSFXdropMetalObject3;
+            itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+            itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             //ItemIcon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
     }
@@ -3746,22 +3616,25 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "CreditsCard";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
 
         public static void SetUp()
         {
+            SetAssets();
+        }
+
+        private static void SetAssets()
+        {
             //Sounds
-            itemName.grabSFX = sharedSFXshovelPickUp;
-            itemName.dropSFX = sharedSFXdropMetalObject1;
+            itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+            itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             //ItemIcon
             if (Configs.sillyScrap.Value || sharedItemIconScrap == null)
             {
-                itemName.itemIcon = sillyItemIcon;
+                itemData.itemProperties.itemIcon = sillyItemIcon;
             }
             else
             {
-                itemName.itemIcon = sharedItemIconScrap;
+                itemData.itemProperties.itemIcon = sharedItemIconScrap;
             }
         }
     }
@@ -3772,15 +3645,18 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenHourglass";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldenHourglassScript itemScript = itemPrefab.GetComponent<GoldenHourglassScript>();
 
         public static void SetUp()
         {
+            SetAssets(itemData.itemProperties.spawnPrefab);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
+        {
+            GoldenHourglassScript itemScript = itemPrefab.GetComponent<GoldenHourglassScript>();
             //Sounds
-            itemName.grabSFX = sharedSFXshovelPickUp;
-            itemName.dropSFX = sharedSFXdropMetalObject1;
+            itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+            itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             if (Configs.replaceSFX.Value || sharedSFXladderFall == null || sharedSFXdropBell == null || sharedSFXmenuCancel == null || sharedSFXmenuConfirm == null || sharedSFXgunShoot == null)
             {
                 itemScript.activateClip = LoadReplaceSFX("GoldenHourglassActivateSFX");
@@ -3806,17 +3682,20 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenPickaxe";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldenPickaxeScript itemScript = itemPrefab.GetComponent<GoldenPickaxeScript>();
-        public static GoldenPickaxeNode nodeScript = itemScript.nodeScript;
 
         public static void SetUp()
         {
+            SetAssets(itemData.itemProperties.spawnPrefab);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
+        {
+            GoldenPickaxeScript itemScript = itemPrefab.GetComponent<GoldenPickaxeScript>();
+            GoldenPickaxeNode nodeScript = itemScript.nodeScript;
             //Sounds
-            itemName.grabSFX = sharedSFXgrabShovel;
-            itemName.pocketSFX = sharedSFXshovelPocket;
-            itemName.dropSFX = sharedSFXdropMetalObject2;
+            itemData.itemProperties.grabSFX = sharedSFXgrabShovel;
+            itemData.itemProperties.pocketSFX = sharedSFXshovelPocket;
+            itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
             itemScript.reelUp = sharedSFXshovelReel;
             itemScript.swing = sharedSFXshovelSwing;
             AudioClip[] newHitSFX = new AudioClip[4];
@@ -3848,12 +3727,12 @@ public class RegisterGoldScrap
         {
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
+                itemData.itemProperties.isConductiveMetal = false;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Golden Pickaxe...");
             }
             else
             {
-                itemName.isConductiveMetal = true;
+                itemData.itemProperties.isConductiveMetal = true;
             }
         }
     }
@@ -3863,12 +3742,17 @@ public class RegisterGoldScrap
     public class GoldToilet
     {
         public static string itemFolder = "GoldToilet";
-        public static GameObject itemPrefab = CustomGoldScrapAssets.LoadAsset<GameObject>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Prefab.prefab");
-        public static GoldToiletScript itemScript = itemPrefab.transform.GetChild(2).GetComponent<GoldToiletScript>();
+        public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
 
         public static void SetUp()
         {
+            SetAssets(itemData.unlockableProperties.prefabObject);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
+        {
             MeshFilter itemMeshFilter = itemPrefab.transform.GetChild(0).GetComponent<MeshFilter>();
+            GoldToiletScript itemScript = itemPrefab.transform.GetChild(2).GetComponent<GoldToiletScript>();
             //Mesh
             if (Configs.sillyScrap.Value || goldToiletMesh == null)
             {
@@ -3908,14 +3792,17 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenTicket";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldenTicketScript itemScript = itemPrefab.GetComponent<GoldenTicketScript>();
 
         public static void SetUp()
         {
+            SetAssets(itemData.itemProperties.spawnPrefab);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
+        {
+            GoldenTicketScript itemScript = itemPrefab.GetComponent<GoldenTicketScript>();
             //Sounds
-            itemName.dropSFX = sharedSFXdropMetalObject1;
+            itemData.itemProperties.dropSFX = sharedSFXdropMetalObject1;
             if (Configs.replaceSFX.Value || sharedSFXtoiletFlush == null || sharedSFXapplause == null)
             {
                 itemScript.teleportClip = LoadReplaceSFX("TicketNormalSFX");
@@ -3935,15 +3822,18 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldCrown";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static CrownScript itemScript = itemPrefab.GetComponent<CrownScript>();
 
         public static void SetUp()
         {
+            SetAssets(itemData.itemProperties.spawnPrefab);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
+        {
+            CrownScript itemScript = itemPrefab.GetComponent<CrownScript>();
             //Sounds
-            itemName.grabSFX = sharedSFXshovelPickUp;
-            itemName.dropSFX = sharedSFXdropMetalObject3;
+            itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+            itemData.itemProperties.dropSFX = sharedSFXdropMetalObject3;
             if (Configs.replaceSFX.Value || sharedSFXgunShoot == null || sharedSFXladderFall == null || sharedSFXapplause == null || sharedSFXdropBell == null)
             {
                 itemScript.launchClip = LoadReplaceSFX("CrownFlySFX");
@@ -3966,11 +3856,16 @@ public class RegisterGoldScrap
     public class SafeBox
     {
         public static string itemFolder = "SafeBox";
-        public static GameObject itemPrefab = CustomGoldScrapAssets.LoadAsset<GameObject>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Prefab.prefab");
-        public static SafeBoxScript itemScript = itemPrefab.GetComponentInChildren<SafeBoxScript>();
+        public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
 
         public static void SetUp()
         {
+            SetAssets(itemData.unlockableProperties.prefabObject);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
+        {
+            SafeBoxScript itemScript = itemPrefab.GetComponentInChildren<SafeBoxScript>();
             //Sounds
             if (Configs.replaceSFX.Value || sharedSFXshovelHit0 == null || sharedSFXflashlightPocket == null || sharedSFXclockTick == null || sharedSFXclockTock == null || sharedSFXdropMetalObject3 == null || sharedSFXapplause == null || sharedSFXgrabShovel == null)
             {
@@ -4005,11 +3900,16 @@ public class RegisterGoldScrap
     public class GoldfatherClock
     {
         public static string itemFolder = "GoldfatherClock";
-        public static GameObject itemPrefab = CustomGoldScrapAssets.LoadAsset<GameObject>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Prefab.prefab");
-        public static GoldfatherClockScript itemScript = itemPrefab.GetComponent<GoldfatherClockScript>();
+        public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
 
         public static void SetUp()
         {
+            SetAssets(itemData.unlockableProperties.prefabObject);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
+        {
+            GoldfatherClockScript itemScript = itemPrefab.GetComponent<GoldfatherClockScript>();
             //Sounds
             itemScript.chimeRelaxing = LoadReplaceSFX("GoldfatherChime");
             itemScript.chimeStressful = LoadReplaceSFX("GoldfatherOpen");
@@ -4018,7 +3918,7 @@ public class RegisterGoldScrap
             itemScript.pendulumCrash = LoadReplaceSFX("GoldfatherCrash");
             itemScript.slamShut = LoadReplaceSFX("GoldfatherClose");
             AudioClip[] newTickSFX = new AudioClip[4];
-            for (int i = 0;  i < newTickSFX.Length; i++)
+            for (int i = 0; i < newTickSFX.Length; i++)
             {
                 newTickSFX[i] = LoadReplaceSFX($"GoldfatherTick{i}");
             }
@@ -4051,16 +3951,19 @@ public class RegisterGoldScrap
     {
         public static string itemFolder = "GoldenGlove";
         public static ItemData itemData = CustomGoldScrapAssets.LoadAsset<ItemData>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemFolder}/{itemFolder}Data.asset");
-        public static Item itemName = itemData.itemProperties;
-        public static GameObject itemPrefab = itemName.spawnPrefab;
-        public static GoldenGloveScript itemScript = itemPrefab.GetComponent<GoldenGloveScript>();
 
         public static void SetUp()
         {
+            SetAssets(itemData.itemProperties.spawnPrefab);
+        }
+
+        private static void SetAssets(GameObject itemPrefab)
+        {
+            GoldenGloveScript itemScript = itemPrefab.GetComponent<GoldenGloveScript>();
             //Sounds
-            itemName.grabSFX = sharedSFXshovelPickUp;
-            itemName.dropSFX = sharedSFXdropMetalObject2;
-            itemName.pocketSFX = sharedSFXflashlightPocket;
+            itemData.itemProperties.grabSFX = sharedSFXshovelPickUp;
+            itemData.itemProperties.dropSFX = sharedSFXdropMetalObject2;
+            itemData.itemProperties.pocketSFX = sharedSFXflashlightPocket;
             if (Configs.newSFX.Value || sharedSFXladderExtend == null || sharedSFXladderFall == null || sharedSFXgunShoot == null || sharedSFXshovelHit0 == null || sharedSFXshovelHit1 == null || sharedSFXmenuConfirm == null || sharedSFXmenuCancel == null || sharedSFXdropBell == null || sharedSFXflashlightPocket == null || sharedSFXapplause == null || sharedSFXshovelPickUp == null || sharedSFXbunnyHop == null)
             {
                 itemScript.extendStartClip = LoadNewSFX("GoldenGloveExtendStart");
@@ -4095,17 +3998,22 @@ public class RegisterGoldScrap
             }
         }
 
-        public static void RebalanceTool()
+        public static void RebalanceTool(GameObject itemPrefab = null)
         {
+            if (itemPrefab == null)
+            {
+                itemPrefab = itemData.itemProperties.spawnPrefab;
+            }
             if (Configs.hostToolRebalance)
             {
-                itemName.isConductiveMetal = false;
+                itemData.itemProperties.isConductiveMetal = false;
                 Plugin.Logger.LogInfo("Config [Other Tools Balance] is set to TRUE on the host. Rebalancing Golden Glove...");
             }
             else
             {
-                itemName.isConductiveMetal = true;
+                itemData.itemProperties.isConductiveMetal = true;
             }
+            itemPrefab.GetComponent<GoldenGloveScript>().RebalanceTool();
         }
     }
 }

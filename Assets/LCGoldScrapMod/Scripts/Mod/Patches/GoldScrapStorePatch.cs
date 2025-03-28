@@ -4,7 +4,7 @@ using GameNetcodeStuff;
 using BepInEx.Logging;
 using HarmonyLib;
 
-public class StorePatch
+public class GoldScrapStorePatch
 {
     private static ManualLogSource Logger = Plugin.Logger;
 
@@ -40,29 +40,46 @@ public class StorePatch
 
 
     //Switch HelmetMaterial to Bronze, Silver, or Gold if the switched-to suit is one of those
-    [HarmonyPatch(typeof(UnlockableSuit), "SwitchSuitForPlayer")]
+    [HarmonyPatch(typeof(UnlockableSuit))]
     public class NewUnlockableSuitSwitch
     {
-        [HarmonyPostfix]
-        public static void SwitchSuitForPlayerPostfix(ref PlayerControllerB player)
+        [HarmonyPostfix, HarmonyPatch("SwitchSuitForPlayer")]
+        public static void SwitchSuitForPlayerPostfix(PlayerControllerB player)
         {
-            if (StoreAndTerminal.defaultHelmetMaterial == null || player != GameNetworkManager.Instance.localPlayerController) return;
+            if (player == null || StoreAndTerminal.defaultHelmetMaterial == null) return;
+            bool putOnSuit = true;
+            int playerID = player.currentSuitID;
+            int goldID = StoreAndTerminal.goldSuitID;
+            int silverID = StoreAndTerminal.silverSuitID;
+            int bronzeID = StoreAndTerminal.bronzeSuitID;
+            if (playerID != bronzeID && playerID != silverID && playerID != goldID)
+            {
+                if (player == GameNetworkManager.Instance.localPlayerController)
+                {
+                    player.localVisor.GetChild(0).GetComponent<MeshRenderer>().material = StoreAndTerminal.defaultHelmetMaterial;
+                }
+                putOnSuit = false;
+            }
+            else if (player == GameNetworkManager.Instance.localPlayerController)
+            {
+                player.localVisor.GetChild(0).GetComponent<MeshRenderer>().material = StartOfRound.Instance.unlockablesList.unlockables[playerID].suitMaterial;
+            }
+            if (putOnSuit)
+            {
+                General.InstantiateSparklesOnTransform(player.lowerSpine);
+            }
+            else
+            {
+                General.DestroySparklesOnTransform(player.lowerSpine);
+            }
+        }
 
-            if (player.currentSuitID != StoreAndTerminal.bronzeSuitID && player.currentSuitID != StoreAndTerminal.silverSuitID && player.currentSuitID != StoreAndTerminal.goldSuitID)
+        [HarmonyPostfix, HarmonyPatch("SwitchSuitClientRpc")]
+        public static void SwitchSuitClientRpcPostfix(UnlockableSuit __instance)
+        {
+            if (__instance != null && (__instance.suitID == StoreAndTerminal.goldSuitID || __instance.suitID == StoreAndTerminal.silverSuitID || __instance.suitID == StoreAndTerminal.bronzeSuitID))
             {
-                GameNetworkManager.Instance.localPlayerController.localVisor.GetChild(0).GetComponent<MeshRenderer>().material = StoreAndTerminal.defaultHelmetMaterial;
-            }
-            else if (player.currentSuitID == StoreAndTerminal.bronzeSuitID)
-            {
-                GameNetworkManager.Instance.localPlayerController.localVisor.GetChild(0).GetComponent<MeshRenderer>().material = AssetsCollection.defaultMaterialBronze;
-            }
-            else if (player.currentSuitID == StoreAndTerminal.silverSuitID)
-            {
-                GameNetworkManager.Instance.localPlayerController.localVisor.GetChild(0).GetComponent<MeshRenderer>().material = AssetsCollection.defaultMaterialSilver;
-            }
-            else if (player.currentSuitID == StoreAndTerminal.goldSuitID)
-            {
-                GameNetworkManager.Instance.localPlayerController.localVisor.GetChild(0).GetComponent<MeshRenderer>().material = AssetsCollection.defaultMaterialGold;
+                General.InstantiateSparklesOnTransform(__instance.transform);
             }
         }
     }

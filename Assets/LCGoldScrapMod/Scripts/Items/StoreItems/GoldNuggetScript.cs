@@ -218,7 +218,7 @@ public class GoldNuggetScript : GrabbableObject
                 Logger.LogDebug($"could not load nextCardValue[{currentSave}], resetting all values");
                 for (int i = 0; i < CreditsCardManager.previousCredits.Length; i++)
                 {
-                    CreditsCardManager.previousCredits[i] = 0;
+                    CreditsCardManager.previousCredits[i] = -1;
                 }
                 CreditsCardManager.tempCardValue = 0;
                 for (int j = 0; j < CreditsCardManager.nextCardValue.Length; j++)
@@ -228,7 +228,7 @@ public class GoldNuggetScript : GrabbableObject
             }
             else
             {
-                CreditsCardManager.previousCredits[currentSave] = 0;
+                CreditsCardManager.previousCredits[currentSave] = -1;
                 CreditsCardManager.nextCardValue[currentSave] = 0;
                 Logger.LogDebug($"reset [{currentSave}] to: previous = {CreditsCardManager.previousCredits[currentSave]} && next = {CreditsCardManager.nextCardValue[currentSave]}");
             }

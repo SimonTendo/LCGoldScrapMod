@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: CatOGoldData
   m_EditorClassIdentifier: 
   folderName: CatOGold
+  displayName: Cat o Gold
+  specialDateCases: 
   itemProperties: {fileID: 0}
   isScrap: 0
   defaultWeight: 1

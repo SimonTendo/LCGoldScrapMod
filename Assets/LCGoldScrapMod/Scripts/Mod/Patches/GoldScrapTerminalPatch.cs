@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using HarmonyLib;
 
-public class TerminalPatch
+public class GoldScrapTerminalPatch
 {
     //Get the necessary Terminal keyword and Nodes, and add the goldscrap Help and Store upon loading the Terminal
     [HarmonyPatch(typeof(Terminal), "Awake")]
@@ -37,10 +37,44 @@ public class TerminalPatch
         [HarmonyPrefix]
         public static bool OnSubmitPrefix(Terminal __instance)
         {
-            string input = __instance.screenText.text.Substring(__instance.screenText.text.Length - __instance.textAdded);
-            if (!input.ToLower().Contains("gold"))
+            string input = __instance.screenText.text.Substring(__instance.screenText.text.Length - __instance.textAdded).ToLower();
+            if (!input.Contains("gold") && !input.Contains("silver") && !input.Contains("bronze"))
             {
                 return true;
+            }
+            switch (Plugin.specialDateCase)
+            {
+                case 1:
+                    if (input.Contains("bronze") || input.Contains("silver"))
+                    {
+                        input = RuntimeChanges.ReplaceGoldInName(input, Plugin.specialDateCase, getReverse: true).ToLower();
+                        if (input.Contains("hourglass") || input.Contains("glove") || input.Contains("pickaxe") || input.Contains("throne") || input.Contains("ticket"))
+                        {
+                            input = input.Replace("gold", "golden");
+                        }
+                        if (input.Contains("transparent "))
+                        {
+                            input = input.Replace("transparent ", "");
+                        }
+                        else if (input.Contains("neon "))
+                        {
+                            input = input.Replace("neon ", "");
+                        }
+                        Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} overwriting input to {input}");
+                    }
+                    break;
+                case 4:
+                    if (input.Contains("neon gold"))
+                    {
+                        input = input.Replace("neon gold", "bronze");
+                        Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} overwriting input to {input}");
+                    }
+                    else if (input.Contains("transparent gold"))
+                    {
+                        input = input.Replace("transparent gold", "silver");
+                        Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} overwriting input to {input}");
+                    }
+                    break;
             }
             foreach (TerminalKeyword goldScrapKeyword in StoreAndTerminal.allGoldScrapKeywords.allKeywords)
             {
@@ -49,15 +83,14 @@ public class TerminalPatch
                     Plugin.Logger.LogDebug($"intercepted input '{input}' with custom keyword {goldScrapKeyword.specialKeywordResult}");
                     string nodeName = goldScrapKeyword.name.Remove(goldScrapKeyword.name.Length - 7, 7).Remove(0, 13);
                     Plugin.Logger.LogDebug($"parsed name '{nodeName}'");
-                    string excess = input.Remove(0, goldScrapKeyword.word.Length).ToLower();
+                    string excess = input.Remove(0, goldScrapKeyword.word.Length);
                     Plugin.Logger.LogDebug($"found excess '{excess}'");
                     string amount = Regex.Match(excess, "\\d+").Value;
                     Plugin.Logger.LogDebug($"{amount}; null = {amount.Length == 0}");
+                    bool loadInfoNode = false;
                     if (excess.Contains("info"))
                     {
-                        TerminalNode nodeToLoad = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{nodeName}/GoldScrapShop{nodeName}Info.asset");
-                        LoadNodeCustom(__instance, nodeToLoad, true);
-                        return false;
+                        loadInfoNode = true;
                     }
                     else if (excess.Contains("buy") || amount.Length != 0)
                     {
@@ -69,11 +102,14 @@ public class TerminalPatch
                         {
                             __instance.playerDefinedAmount = 1;
                         }
-                        TerminalNode nodeToLoad = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{nodeName}/GoldScrapShop{nodeName}.asset");
-                        LoadNodeCustom(__instance, nodeToLoad, false);
+                    }
+                    string nameEnd = loadInfoNode ? "Info.asset" : ".asset";
+                    TerminalNode nodeToLoad = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{nodeName}/GoldScrapShop{nodeName}{nameEnd}");
+                    if (nodeToLoad != null)
+                    {
+                        LoadNodeCustom(__instance, nodeToLoad, loadInfoNode);
                         return false;
                     }
-                    __instance.playerDefinedAmount = 1;
                 }
             }
             return true;
@@ -171,13 +207,74 @@ public class TerminalPatch
         public static void TextPostProcessPostfix(Terminal __instance, ref string __result)
         {
             //Misc
-            if (__result.Contains("* Gold Nugget  //  Price: $") && !__result.Contains("Gold Store"))
+            if (__result.Contains("Welcome to the Company store."))
             {
-                __result = __result.Replace("* Gold Nugget  //  Price: $", "\nLCGoldScrapMod\nType GOLD STORE for more upgrades and cosmetics!\n* Gold Nugget  //  Price: $");
+                string nuggetColor = "Gold";
+                if (Plugin.specialDateCase == 1)
+                {
+                    foreach (ItemData nuggetData in StoreAndTerminal.allGoldStoreItemData)
+                    {
+                        if (nuggetData.folderName == "GoldNugget")
+                        {
+                            nuggetColor = nuggetData.localItemsListIndex % 2 == 0 ? "Silver" : "Bronze";
+                            Plugin.Logger.LogDebug($"searching for nuggetColor: {nuggetColor}");
+                            break;
+                        }
+                    }
+                }
+                if (__result.Contains($"* {nuggetColor} Nugget  //  Price: $") && !__result.Contains("Gold Store"))
+                {
+                    __result = __result.Replace($"* {nuggetColor} Nugget  //  Price: $", $"\nLCGoldScrapMod\nType GOLD STORE for more upgrades and cosmetics!\n* {nuggetColor} Nugget  //  Price: $");
+                }
             }
             if (__result.Contains("[goldScrapHostPlayer]"))
             {
                 __result = __result.Replace("[goldScrapHostPlayer]", StartOfRound.Instance.allPlayerScripts[0].playerUsername);
+            }
+            if (__result.Contains("[goldScrapDateCaseSecretQuestion]"))
+            {
+                if (Plugin.specialDateCase >= 0)
+                {
+                    __result = __result.Replace("[goldScrapDateCaseSecretQuestion]", "10) O Spirits of Gold, reveal your secrets to me!\n");
+                }
+                else
+                {
+                    __result = __result.Replace("[goldScrapDateCaseSecretQuestion]", "");
+                }
+            }
+            if (__result.Contains("[goldScrapDateCaseSecretCode]"))
+            {
+                string codeString = General.ConvertSpecialDateCase(Plugin.specialDateCase);
+                if (codeString == "0000")
+                {
+                    __result = __result.Replace("[goldScrapDateCaseSecretCode]", "The spirits have nothing to say to you, mortal.");
+                }
+                else
+                {
+                    __result = __result.Replace("[goldScrapDateCaseSecretCode]", $"Today's stars align to form {codeString}");
+                }
+            }
+            if ((Plugin.specialDateCase == 1 || Plugin.specialDateCase == 4) && (__result.Contains("You have requested to order") || __result.Contains("Ordered ")))
+            {
+                Plugin.Logger.LogDebug($"caught special node");
+                ItemData foundItem = null;
+                int foundIndex = -1;
+                for (int j = 0; j < StoreAndTerminal.allGoldStoreItemData.Length; j++)
+                {
+                    if (__result.Contains(StoreAndTerminal.allGoldStoreItemData[j].displayName))
+                    {
+                        foundItem = StoreAndTerminal.allGoldStoreItemData[j];
+                        foundIndex = StoreAndTerminal.allGoldStoreItemData[j].localUnlockableID != -1 ? StoreAndTerminal.allGoldStoreItemData[j].localUnlockableID : StoreAndTerminal.allGoldStoreItemData[j].localItemsListIndex;
+                        break;
+                    }
+                }
+                if (foundItem != null && foundIndex != -1)
+                {
+                    Plugin.Logger.LogDebug($"foundItem: {foundItem} | foundIndex: {foundIndex}");
+                    int indexOf = __result.IndexOf(foundItem.displayName);
+                    string substring = __result.Substring(indexOf);
+                    __result = __result.Substring(0, indexOf) + RuntimeChanges.ReplaceGoldInName(substring, Plugin.specialDateCase, foundIndex % 2 == 0, RuntimeChanges.DoesItemHaveAlts(foundItem, Plugin.specialDateCase), printDebug: false);
+                }
             }
 
 
@@ -202,7 +299,7 @@ public class TerminalPatch
                         numberString = numberString.Remove(numberString.Length - 1);
                         numberString = numberString.Remove(0, 1);
                         bool successfulInt = true;
-                        if (System.Int32.TryParse(numberString, out int parsedIndex))
+                        if (int.TryParse(numberString, out int parsedIndex))
                         {
                             if (parsedIndex < 0 || parsedIndex >= StoreAndTerminal.allGoldStoreItemData.Length)
                             {
@@ -214,7 +311,6 @@ public class TerminalPatch
                             Plugin.Logger.LogError($"FAILED PARSE!!!!!!!");
                             successfulInt = false;
                         }
-                        Plugin.Logger.LogInfo($"successfulInt? {successfulInt} | parsedIndex {parsedIndex}");
                         string textToWrite = buildingString;
                         if (successfulInt)
                         {
@@ -383,7 +479,7 @@ public class TerminalPatch
     {
         int sale = RarityManager.allItemPricePercentages[parsedIndex];
         float salesPercentage = (float)(sale / 100f);
-        Plugin.Logger.LogDebug($"sale of {100 - sale}");
+        Plugin.Logger.LogDebug($"parsedIndex: {parsedIndex} | sale of {100 - sale}");
         int displayPrice = 0;
         if (dataToWorkFrom.itemProperties != null)
         {

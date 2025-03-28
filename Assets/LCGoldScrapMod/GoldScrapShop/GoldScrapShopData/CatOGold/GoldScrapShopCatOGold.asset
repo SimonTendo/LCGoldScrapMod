@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
   m_Name: GoldScrapShopCatOGold
   m_EditorClassIdentifier: 
-  displayText: 'You have requested to order the Cat o'' Gold.
+  displayText: 'You have requested to order the Cat o Gold.
 
-    Total cost of
-    item: [totalCost].
+    Total cost of item:
+    [totalCost].
 
 
     Please CONFIRM or DENY.

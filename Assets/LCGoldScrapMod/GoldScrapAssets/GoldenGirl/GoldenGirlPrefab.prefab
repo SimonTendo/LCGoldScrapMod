@@ -143,6 +143,8 @@ MonoBehaviour:
   audioToMute: {fileID: 9162518087423659506}
   reappearSource: {fileID: 3398809424333134352}
   reappearClip: {fileID: 0}
+  appearMat: {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}
+  invisibleMat: {fileID: 2100000, guid: fdb79ead75e12e144a3a9a40c22aa973, type: 2}
 --- !u!65 &-234895672225138675
 BoxCollider:
   m_ObjectHideFlags: 0

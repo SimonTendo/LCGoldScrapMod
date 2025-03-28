@@ -143,7 +143,6 @@ public class GoldfatherClockScript : NetworkBehaviour
             Logger.LogDebug($"{weight.name}: local Y = {weight.transform.localPosition.y} & maxDrop Y = {weightStartingYs[i] - maxDropDistance}");
             if (weight.transform.localPosition.y > weightStartingYs[i] - maxDropDistance)
             {
-                Logger.LogDebug($"above bottom, adding to count");
                 list.Add(i);
             }
         }
@@ -152,7 +151,6 @@ public class GoldfatherClockScript : NetworkBehaviour
 
     private float GetRandomDropAmount(int weightNr)
     {
-        Logger.LogDebug($"checking for weight: {weightObjects[weightNr].name}");
         Transform thisWeight = weightObjects[weightNr].transform;
         float maxDropY = weightStartingYs[weightNr] - maxDropDistance;
         float thisWeightDistanceToMax = thisWeight.localPosition.y - maxDropY;
@@ -270,7 +268,20 @@ public class GoldfatherClockScript : NetworkBehaviour
             weightObjects[0].transform.localPosition = new Vector3(weightObjects[0].transform.localPosition.x, hostLeftY, weightObjects[0].transform.localPosition.z);
             weightObjects[1].transform.localPosition = new Vector3(weightObjects[1].transform.localPosition.x, hostMidY, weightObjects[1].transform.localPosition.z);
             weightObjects[2].transform.localPosition = new Vector3(weightObjects[2].transform.localPosition.x, hostRightY, weightObjects[2].transform.localPosition.z);
-            if (weightObjects[0].transform.localPosition.y == weightStartingYs[0] && weightObjects[1].transform.localPosition.y == weightStartingYs[1] && weightObjects[2].transform.localPosition.y == weightStartingYs[2])
+            int weightsLowered = 0;
+            for (int i = 0; i < weightObjects.Length; i++)
+            {
+                if (weightObjects[i].transform.localPosition.y == weightStartingYs[i] - maxDropDistance)
+                {
+                    weightObjects[i].GetComponent<InteractTrigger>().interactable = true;
+                    weightsLowered++;
+                }
+                else
+                {
+                    weightObjects[i].GetComponent<InteractTrigger>().interactable = false;
+                }
+            }
+            if (weightsLowered >= 3)
             {
                 StopClock();
             }

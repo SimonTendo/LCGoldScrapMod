@@ -4,14 +4,12 @@ using Unity.Netcode;
 using HarmonyLib;
 
 
-public class GameNetworkManagerPatch
+public class GoldScrapGameNetworkManagerPatch
 {
     //Spawn the NetworkObject used for Netcode patching, taken from the Lethal Company Modding Wiki
     [HarmonyPatch]
     public class NetworkObjectManager
     {
-        private static List<GameObject> _networkPrefabs = new List<GameObject>();
-
         [HarmonyPostfix, HarmonyPatch(typeof(GameNetworkManager), "Start")]
         public static void Init(GameNetworkManager __instance)
         {
@@ -25,7 +23,7 @@ public class GameNetworkManagerPatch
             //Register NetworkPrefabs of all miscellaneous gameObjects
             foreach (GameObject prefab in Plugin.allMiscNetworkPrefabs)
             {
-                if (prefab != null)
+                if (prefab != null && prefab.GetComponent<NetworkObject>())
                 {
                     NetworkManager.Singleton.AddNetworkPrefab(prefab);
                 }
@@ -34,7 +32,7 @@ public class GameNetworkManagerPatch
             //Register NetworkPrefabs of all Gold Scrap
             foreach (ItemData item in Plugin.allGoldGrabbableObjects)
             {
-                if (item != null && item.itemProperties != null && item.itemProperties.spawnPrefab != null)
+                if (item != null && item.itemProperties != null && item.itemProperties.spawnPrefab != null && item.itemProperties.spawnPrefab.GetComponent<NetworkObject>())
                 {
                     NetworkManager.Singleton.AddNetworkPrefab(item.itemProperties.spawnPrefab);
                 }
@@ -43,7 +41,7 @@ public class GameNetworkManagerPatch
             //Register NetworkPrefabs of all placeable GoldStore Unlockables
             foreach (ItemData unlockable in StoreAndTerminal.allGoldStoreItemData)
             {
-                if (unlockable != null && unlockable.unlockableProperties != null && unlockable.unlockableProperties.prefabObject != null)
+                if (unlockable != null && unlockable.unlockableProperties != null && unlockable.unlockableProperties.prefabObject != null && unlockable.unlockableProperties.prefabObject.GetComponent<NetworkObject>())
                 {
                     NetworkManager.Singleton.AddNetworkPrefab(unlockable.unlockableProperties.prefabObject);
                 }
@@ -52,7 +50,10 @@ public class GameNetworkManagerPatch
             //Register NetworkPrefabs of all StoryLogs
             foreach (GameObject item in LogManager.allLogPrefabs.allPrefabs)
             {
-                NetworkManager.Singleton.AddNetworkPrefab(item);
+                if (item != null && item.GetComponent<NetworkObject>())
+                {
+                    NetworkManager.Singleton.AddNetworkPrefab(item);
+                }
             }
         }
 
@@ -61,11 +62,12 @@ public class GameNetworkManagerPatch
         {
             if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
             {
-                GameObject networkHandlerHost = Object.Instantiate(networkPrefab, Plugin.SearchForObject("SimonTendoNetworkHandlers").transform, false);
-                networkHandlerHost.GetComponent<NetworkObject>().Spawn();
-
                 Transform goldScrapManager = new GameObject("LCGoldScrapMod").transform;
                 goldScrapManager.transform.SetParent(Plugin.SearchForObject("SimonTendoManagers", StartOfRound.Instance.gameObject.transform.parent).transform);
+
+                GameObject networkHandler = Object.Instantiate(networkPrefab);
+                networkHandler.transform.SetParent(goldScrapManager, false);
+                networkHandler.GetComponent<NetworkObject>().Spawn();
 
                 foreach (GameObject prefab in Plugin.allMiscNetworkPrefabs)
                 {
@@ -95,18 +97,8 @@ public class GameNetworkManagerPatch
                 Plugin.Logger.LogDebug("null or client, returning");
                 return;
             }
-            int saveNum = __instance.saveFileNum;
-            if (saveNum < 0 || saveNum >= CreditsCardManager.previousCredits.Length)
-            {
-                Plugin.Logger.LogInfo($"saveFileNum [{saveNum}] outside bounds of CreditsCardManager array; GoldScrapSaveData will not be saved");
-                return;
-            }
-            int overtimeNum = saveNum + 3;
-            if (CreditsCardManager.previousCredits[saveNum] != 0 || (overtimeNum >= 0 && overtimeNum < CreditsCardManager.previousCredits.Length && CreditsCardManager.previousCredits[overtimeNum] != 0))
-            {
-                GoldScrapSaveData.SaveData saveData = new GoldScrapSaveData.SaveData();
-                saveData.Save();
-            }
+            GoldScrapSaveData.SaveData saveData = new GoldScrapSaveData.SaveData();
+            saveData.Save();
         }
     }
 }

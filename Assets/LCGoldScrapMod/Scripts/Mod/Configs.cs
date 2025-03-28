@@ -7,6 +7,7 @@ public class Configs
     
     public static string selectedMoonsString;
     public static bool hostToolRebalance;
+    public static float hostWeightMultiplier;
     public static float hostPriceMultiplier;
 
     public static ConfigEntry<string> selectedLevels;
@@ -24,6 +25,7 @@ public class Configs
     public static ConfigEntry<bool> replaceEnemySFX;
     public static ConfigEntry<bool> fixScan;
     public static ConfigEntry<bool> sillyScrap;
+    public static ConfigEntry<string> dateCaseCode;
 
     public Configs(ConfigFile cfg)
     {
@@ -31,55 +33,55 @@ public class Configs
             "Customization",
             "Selected Moons",
             "All",
-            "Select every vanilla Lethal Company level you want gold scrap to be able to appear on.\nSelect moons by typing their full name, without the numbers (for example 'Experimentation Offense Dine'), or use 'All' or 'None'. Lobby host's values are used."
+            "Select every vanilla Lethal Company level you want gold scrap to be able to appear on. Select moons by typing their name as they appear in the terminal's moons page (for example 'Experimentation Offense Dine'), or use 'All' or 'None'.\nLobby host's values are used."
             );
         minValueMultiplier = cfg.Bind(
             "Customization",
             "Multiplier Minimum Value",
             2.5f,
-            "Set by how much gold scrap multiplies the lowest random value of its original item. Cannot be negative. Lobby host's values are used."
+            "Set by how much gold scrap multiplies the lowest random value of its original item.\nCannot be negative. Lobby host's values are used."
             );
         maxValueMultiplier = cfg.Bind(
             "Customization",
             "Multiplier Maximum Value",
             2f,
-            "Set by how much gold scrap multiplies the highest random value of its original item. Cannot be negative. Lobby host's values are used."
+            "Set by how much gold scrap multiplies the highest random value of its original item.\nCannot be negative. Lobby host's values are used."
             );
         rarityMultiplier = cfg.Bind(
             "Customization",
             "Multiplier Rarity",
             3f,
-            "Set the multiplier for the spawn chance of gold scrap on vanilla Lethal Company Moons. Cannot be 0 or negative. Lobby host's values are used."
+            "Set the multiplier for the spawn chance of gold scrap on vanilla Lethal Company Moons.\nCannot be 0 or negative. Lobby host's values are used."
             );
         weightMultiplier = cfg.Bind(
             "Customization",
             "Multiplier Weight",
             1.5f,
-            "Set the multiplier for the weight of gold scrap, most of which is the original item's weight multiplied by this amount. Cannot be negative. Lobby host's values are used."
+            "Set the multiplier for the weight of gold scrap, most of which is the original item's weight multiplied by this amount.\nCannot be negative. Lobby host's values are used."
             );
         priceMultiplier = cfg.Bind(
             "Customization",
             "Multiplier Price",
             1.0f,
-            "Set the multiplier for the prices of all items and furniture in the Gold Store. Cannot be negative. Lobby host's values are used."
+            "Set the multiplier for the prices of all items and furniture in the Gold Store.\nCannot be negative. Lobby host's values are used."
             );
         moddedMoonSpawn = cfg.Bind(
             "Modded Moons",
             "Modded Spawn Enabled",
             true,
-            "Set whether gold scrap can spawn on moons added through mods, or if it will only spawn on Lethal Company's vanilla moons. Lobby host's values are used."
+            "Set whether gold scrap can spawn on moons added through mods, or if it will only spawn on Lethal Company's vanilla moons.\nLobby host's values are used."
             );
         moddedMoonRarity = cfg.Bind(
             "Modded Moons",
             "Modded Spawn Rarity",
             1,
-            "Set how rare all gold scrap is on moons added through mods. Cannot be 0 or negative. Lobby host's values are used."
+            "Set how rare all gold scrap is on moons added through mods.\nCannot be 0 or negative. Lobby host's values are used."
             );
         moddedMoonCost = cfg.Bind(
             "Modded Moons",
             "Modded Minimum Cost",
             0,
-            "Set the travel cost that a moon added through mods needs to pass before gold scrap can spawn there. Lobby host's values are used."
+            "Set the travel cost that a moon added through mods needs to pass before gold scrap can spawn there.\nLobby host's values are used."
             );
         newSFX = cfg.Bind(
             "Other",
@@ -116,6 +118,12 @@ public class Configs
             "Other Silly Scrap",
             false,
             "Set whether gold scrap uses placeholder models and sounds, or switches to Lethal Company assets if loaded. Will overwrite [Other Sound Effects] and [Other Enemy Sounds]."
+            );
+        dateCaseCode = cfg.Bind(
+            "Other",
+            "Other Secret Code",
+            "0000",
+            "Set to -1 to disable this feature.\nLobby host's values are used."
             );
     }
 
@@ -277,10 +285,15 @@ public class Configs
         {
             Logger.LogInfo("Config [Other Tools Balance] is set to FALSE. Gold scrap with gameplay uses will function as intended, by getting struck by lightning with no other penalty.");
         }
-        //[Silly Scrap]
+        //[Other Silly Scrap]
         if (sillyScrap.Value)
         {
             Logger.LogInfo("Config [Other Silly Scrap] is set to TRUE. Loading silliness...");
+        }
+        //[Other Secret Code]
+        if (General.ConvertSpecialDateCase(dateCaseCode.Value) != -1)
+        {
+            Logger.LogDebug($"Config [Other Secret Code] is set to a value of {dateCaseCode.Value}");
         }
     }
 
@@ -324,21 +337,32 @@ public class Configs
         return true;
     }
 
-    public static void SetCustomGoldScrapValues()
+    public static void SetCustomGoldScrapValues(ItemData item)
     {
-        foreach (ItemData item in Plugin.allGoldGrabbableObjects)
+        item.localMinValue = (int)(item.defaultMinValue * minValueMultiplier.Value * GetDateCaseMultiplierValue(item));
+        item.itemProperties.minValue = item.localMinValue;
+        item.localMaxValue = (int)(item.defaultMaxValue * maxValueMultiplier.Value * GetDateCaseMultiplierValue(item));
+        item.itemProperties.maxValue = item.localMaxValue;
+        if (item.itemProperties.minValue > item.itemProperties.maxValue)
         {
-            if (item.isScrap)
-            {
-                item.localMinValue = (int)(item.defaultMinValue * minValueMultiplier.Value);
-                item.itemProperties.minValue = item.localMinValue;
-                item.localMaxValue = (int)(item.defaultMaxValue * maxValueMultiplier.Value);
-                item.itemProperties.maxValue = item.localMaxValue;
-                if (item.itemProperties.minValue > item.itemProperties.maxValue)
-                {
-                    item.itemProperties.maxValue = item.itemProperties.minValue;
-                }
-            }
+            item.itemProperties.maxValue = item.itemProperties.minValue;
+        }
+    }
+
+    private static float GetDateCaseMultiplierValue(ItemData item)
+    {
+        switch (Plugin.specialDateCase)
+        {
+            default:
+                return 1.0f;
+            case 1:
+                return 0.8f;
+            case 3:
+                return General.ItemHasMatchingDateCase(item, 5) ? 0.25f : 1.1f;
+            case 4:
+                return 1.5f;
+            case 5:
+                return General.ItemHasMatchingDateCase(item) ? 1.25f : 1.0f;
         }
     }
 
@@ -351,9 +375,10 @@ public class Configs
             {
                 continue;
             }
+            int thisItemPrice = (int)(item.storeDefaultPrice * multiplierHost * GetDateCaseMultiplierPrice());
             if (item.itemProperties != null)
             {
-                item.localStorePrice = (int)(item.storeDefaultPrice * multiplierHost);
+                item.localStorePrice = thisItemPrice;
                 item.itemProperties.creditsWorth = item.localStorePrice;
             }
             if (item.storeTerminalNodes != null)
@@ -364,10 +389,21 @@ public class Configs
                     {
                         continue;
                     }
-                    item.localStorePrice = (int)(item.storeDefaultPrice * multiplierHost);
+                    item.localStorePrice = thisItemPrice;
                     item.storeTerminalNodes[i].itemCost = item.localStorePrice;
                 }
             }
+        }
+    }
+
+    private static float GetDateCaseMultiplierPrice()
+    {
+        switch (Plugin.specialDateCase)
+        {
+            default:
+                return 1.0f;
+            case 4:
+                return 0.75f;
         }
     }
 

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GoldOreData
   m_EditorClassIdentifier: 
   folderName: GoldOre
+  displayName: Gold Ore
+  specialDateCases: 
   itemProperties: {fileID: 11400000, guid: ee086b40db9b992488202da20fcd5b8d, type: 2}
   isScrap: 0
   defaultWeight: 1.32

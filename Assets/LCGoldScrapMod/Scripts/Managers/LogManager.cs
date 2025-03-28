@@ -32,7 +32,7 @@ public class LogManager : MonoBehaviour
 
     private void AddStoryLogsToTerminal()
     {
-        Terminal terminalScript = FindObjectOfType<Terminal>();
+        Terminal terminalScript = FindAnyObjectByType<Terminal>();
         if (terminalScript == null)
         {
             return;
@@ -57,7 +57,7 @@ public class LogManager : MonoBehaviour
 
     public void SpawnLogs()
     {
-        Terminal terminalScript = FindObjectOfType<Terminal>();
+        Terminal terminalScript = FindAnyObjectByType<Terminal>();
         for (int i = 0; i < levelOfLog.Length; i++)
         {
             if (levelOfLog[i] == StartOfRound.Instance.currentLevel.name && CheckToSpawnLog(terminalScript, allLogs[i].storyLogFileID))
@@ -73,10 +73,26 @@ public class LogManager : MonoBehaviour
 
     public void DespawnCurrentLogs()
     {
+        if (currentSpawnedLogs == null || currentSpawnedLogs.Count == 0)
+        {
+            return;
+        }
         for (int i = currentSpawnedLogs.Count - 1; i >= 0; i--)
         {
-            Logger.LogDebug($"LogManager: trying to despawn {currentSpawnedLogs[i].name}");
-            currentSpawnedLogs[i].GetComponent<NetworkObject>().Despawn();
+            GameObject log = currentSpawnedLogs[i];
+            if (log == null)
+            {
+                Logger.LogWarning("found null Log in LogManager.DespawnCurrentLogs(), skipping");
+                continue;
+            }
+            Logger.LogDebug($"LogManager: trying to despawn {log}");
+            NetworkObject netObj = log.GetComponent<NetworkObject>();
+            if (netObj == null || !netObj.IsSpawned)
+            {
+                Logger.LogError("failed to find NetworkObject of log! skipping");
+                continue;
+            }
+            netObj.Despawn();
         }
         currentSpawnedLogs.Clear();
     }

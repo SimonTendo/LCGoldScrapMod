@@ -14,9 +14,12 @@ public class GoldenPickaxeScript : Shovel, IGoldenGlassSecret
     [Space(3f)]
     [Header("Durability")]
     public int durability = 50;
+    public float feverMultiplier = 2;
     public AudioClip breakClip;
     public GameObject scanNodeObject;
     public ScanNodeProperties scanNodeScript;
+    public Material[] normalMats;
+    public Material[] feverMats;
 
     [Space(3f)]
     [Header("Damage modifiers")]
@@ -41,14 +44,23 @@ public class GoldenPickaxeScript : Shovel, IGoldenGlassSecret
     {
         base.Start();
         scanNodeObject.SetActive(false);
+        StartCoroutine(CheckFeverOnDelay());
+        UpdateScanNodeDurability();
+    }
+
+    private IEnumerator CheckFeverOnDelay()
+    {
+        yield return new WaitUntil(() => Plugin.appliedHostConfigs);
+        yield return null;
+        bool useFeverMats = false;
         if (RarityManager.CurrentlyGoldFever())
         {
-            durability *= 2;
-            Material[] newMats = { AssetsCollection.defaultMaterialSilver, AssetsCollection.defaultMaterialGold };
-            GetComponent<MeshRenderer>().materials = newMats;
+            durability = (int)(durability * feverMultiplier);
+            useFeverMats = true;
             Logger.LogDebug($"Pickaxe #{NetworkObjectId} started during suspected GoldFever, doubled local durability to {durability}");
         }
-        UpdateScanNodeDurability();
+        Logger.LogDebug($"useFeverMats? {useFeverMats}");
+        GetComponent<MeshRenderer>().materials = useFeverMats ? feverMats : normalMats;
     }
 
     [HarmonyPatch(typeof(Shovel), "HitShovelClientRpc")]

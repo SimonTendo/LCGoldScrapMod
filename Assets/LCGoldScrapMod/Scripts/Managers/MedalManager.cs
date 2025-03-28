@@ -17,14 +17,12 @@ public class MedalManager : NetworkBehaviour
     [Header("On Frame")]
     public GameObject frame;
     public GameObject defaultBadge;
-    public GameObject goldMedal;
-    public GameObject silverMedal;
-    public GameObject bronzeMedal;
+    public GameObject[] medalContainers;
 
     [Space(3f)]
     [Header("On Player")]
-    public GameObject medalContainer;
-    public GameObject goldMedalPrefab;
+    public GameObject medalChestContainer;
+    public GameObject[] medalPrefabs;
 
     [Space(3f)]
     [Header("Misc")]
@@ -42,7 +40,7 @@ public class MedalManager : NetworkBehaviour
         Logger.LogDebug($"MedalManager Start() // length: {medalsWornBy.Length}");
         for (int i = 0; i < medalsWornBy.Length; i++)
         {
-            GameObject medalOnPlayer = Instantiate(medalContainer, StartOfRound.Instance.allPlayerScripts[i].playerBadgeMesh.transform, false);
+            GameObject medalOnPlayer = Instantiate(medalChestContainer, StartOfRound.Instance.allPlayerScripts[i].playerBadgeMesh.transform, false);
             medalOnPlayer.name += i;
         }
         ResetAllMedals();
@@ -78,21 +76,18 @@ public class MedalManager : NetworkBehaviour
     private void WearMedalOnPlayer(int playerID, int medalType, bool playChangeSFX = false)
     {
         Logger.LogDebug($"received medal of type: {medalType} on player at index: [{playerID}]");
-        if (playerID >= medalsWornBy.Length)
+        if (playerID < 0 || playerID >= medalsWornBy.Length)
         {
-            Logger.LogError($"tried setting medal on player out of array bounds [{playerID}], not executing WearMedalOnPlayer()!!");
+            Logger.LogError($"playerID [{playerID}], not executing WearMedalOnPlayer()!!");
+            return;
+        }
+        if (medalType < 0 || medalType >= medalPrefabs.Length)
+        {
+            Logger.LogError($"medalType [{playerID}], not executing WearMedalOnPlayer()!!");
             return;
         }
         medalsWornBy[playerID] = medalType;
         PlayerControllerB onPlayer = StartOfRound.Instance.allPlayerScripts[playerID];
-        if (onPlayer == StartOfRound.Instance.localPlayerController)
-        {
-            if (playChangeSFX)
-            {
-                onPlayer.movementAudio.PlayOneShot(StartOfRound.Instance.changeSuitSFX);
-            }
-            return;
-        }
         Transform medalContainerOnPlayer = onPlayer.playerBadgeMesh.gameObject.transform.Find($"LCGoldScrapModMedalContainer(Clone){playerID}");
         if (medalContainerOnPlayer == null)
         {
@@ -107,11 +102,15 @@ public class MedalManager : NetworkBehaviour
                 Destroy(medalContainerOnPlayer.GetChild(i).gameObject);
             }
         }
-        switch (medalType)
+        GameObject medalToInstantiate = medalPrefabs[medalType];
+        GameObject spawnedMedal = null;
+        if (medalToInstantiate != null)
         {
-            case 1:
-                Instantiate(goldMedalPrefab, medalContainerOnPlayer, false);
-                break;
+            spawnedMedal = Instantiate(medalToInstantiate, medalContainerOnPlayer, false);
+        }
+        if (onPlayer == GameNetworkManager.Instance.localPlayerController && spawnedMedal != null)
+        {
+            spawnedMedal.GetComponent<MeshRenderer>().enabled = false;
         }
         if (playChangeSFX)
         {
@@ -123,22 +122,43 @@ public class MedalManager : NetworkBehaviour
     {
         if (newUnlockableID == goldMedalID)
         {
-            SetMedalEnabled(goldMedal);
+            SetMedalEnabled(1);
         }
         /*else if (newUnlockableID == silverMedalID)
         {
-            SetMedalEnabled(silverMedal);
+            SetMedalEnabled(2);
         }
         else if (newUnlockableID == bronzeMedalID)
         {
-            SetMedalEnabled(bronzeMedal);
+            SetMedalEnabled(3);
         }*/
     }
 
-    private void SetMedalEnabled(GameObject medal, bool setTo = true)
+    private void SetMedalEnabled(int medalType, bool setTo = true)
     {
+        if (medalType < 0 || medalType >= medalContainers.Length)
+        {
+            Logger.LogWarning($"SetMedalEnabled(): medalType {medalType}");
+            return;
+        }
+        GameObject medal = medalContainers[medalType];
+        if (medal == null)
+        {
+            return;
+        }
         Logger.LogDebug($"setting {medal.name} Medal enabled to {setTo}");
-        medal.transform.GetChild(0).gameObject.SetActive(setTo);
+        if (setTo)
+        {
+            Instantiate(medalPrefabs[medalType], medal.transform, false);
+        }
+        else if (medal.transform.childCount > 0)
+        {
+            Transform instantiatedMedal = medal.transform.GetChild(0);
+            if (instantiatedMedal != null)
+            {
+                Destroy(instantiatedMedal.gameObject);
+            }
+        }
         medal.GetComponent<BoxCollider>().enabled = setTo;
         medal.GetComponent<InteractTrigger>().interactable = setTo;
         if (setTo)
@@ -159,9 +179,10 @@ public class MedalManager : NetworkBehaviour
             WearMedalOnPlayer(i, 0);
         }
         SetFrameDisabled();
-        SetMedalEnabled(goldMedal, false);
-        //SetMedalEnabled(silverMedal, false);
-        //SetMedalEnabled(bronzeMedal, false);
+        for (int j = 0; j < medalContainers.Length; j++)
+        {
+            SetMedalEnabled(j, false);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]

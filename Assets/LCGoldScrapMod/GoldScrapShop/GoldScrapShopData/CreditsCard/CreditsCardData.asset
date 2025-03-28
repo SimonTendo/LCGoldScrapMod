@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: CreditsCardData
   m_EditorClassIdentifier: 
   folderName: CreditsCard
+  displayName: Credits Card
+  specialDateCases: 
   itemProperties: {fileID: 11400000, guid: 6342944fee0860a49bae86229c6d800a, type: 2}
   isScrap: 0
   defaultWeight: 1

@@ -10,7 +10,7 @@ using HarmonyLib.Tools;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 
-[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.1.1")]
+[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.2.0")]
 [BepInDependency("LCSimonTendoPlaylistsMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("LethalConfig", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
@@ -32,6 +32,8 @@ public class Plugin : BaseUnityPlugin
     public static GameObject[] allMiscNetworkPrefabs;
     public static bool goldScrapSpawnEnabled = true;
     public static int suspectedLevelListLength = -1;
+    public static int localDateCase = -1;
+    public static int specialDateCase;
 
     //Compatibility
     public static bool v50Compatible = false;
@@ -58,8 +60,7 @@ public class Plugin : BaseUnityPlugin
             Logger.LogInfo("Loaded LCGoldScrapMod AssetBundle");
         }
 
-        Harmony harmony = new Harmony("LCGoldScrapMod");
-        harmony.PatchAll();
+        new Harmony("LCGoldScrapMod").PatchAll();
         HarmonyFileLog.Enabled = false;
         myConfig = new(Config); 
 
@@ -215,5 +216,6 @@ public class Plugin : BaseUnityPlugin
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.fixScan, true));
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.toolsRebalance, true));
         LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.sillyScrap, true));
+        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(Configs.dateCaseCode, true));
     }
 }

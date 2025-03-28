@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GoldToiletData
   m_EditorClassIdentifier: 
   folderName: GoldToilet
+  displayName: Gold Toilet
+  specialDateCases: 
   itemProperties: {fileID: 0}
   isScrap: 0
   defaultWeight: 1

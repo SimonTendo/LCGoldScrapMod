@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: BronzeSuitData
   m_EditorClassIdentifier: 
   folderName: BronzeSuit
+  displayName: Bronze Suit
+  specialDateCases: 
   itemProperties: {fileID: 0}
   isScrap: 0
   defaultWeight: 1

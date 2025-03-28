@@ -167,7 +167,7 @@ MonoBehaviour:
   dropAudio: {fileID: 0}
   loopGrabAudio: 0
   loopDropAudio: 0
-  chanceToTriggerAnimation: 0
+  chanceToTriggerAnimation: 100
   chanceToTriggerAlternateMesh: 0
   alternateMesh: {fileID: 0}
   noiseRange: 64

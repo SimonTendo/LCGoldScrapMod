@@ -567,7 +567,7 @@ public class CrownScript : GrabbableObject
         [HarmonyPostfix]
         public static void DamagePlayerPostfix(PlayerControllerB __instance)
         {
-            if (StartOfRound.Instance.connectedPlayersAmount == 0 && __instance.IsOwner && !__instance.isPlayerDead && __instance.AllowPlayerDeath() && FindObjectOfType<CrownScript>() != null)
+            if (StartOfRound.Instance.connectedPlayersAmount == 0 && __instance.IsOwner && !__instance.isPlayerDead && __instance.AllowPlayerDeath() && FindAnyObjectByType<CrownScript>() != null)
             {
                 foreach (CrownScript crown in FindObjectsByType<CrownScript>(FindObjectsSortMode.None))
                 {

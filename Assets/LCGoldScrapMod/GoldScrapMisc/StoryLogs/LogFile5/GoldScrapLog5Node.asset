@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
+  m_Name: GoldScrapLog5Node
+  m_EditorClassIdentifier: 
+  displayText: "StartGoldroutine(ScanLog(logNumber5));\n\n===\nSurely, it must be
+    the will of the spirits that a fortune-teller such as I finds herself working
+    hard labor, yet one cannot help but wonder if this is not some challenge imposed
+    onto me by fate. Thankfully, the spirits guide me and my fellow wandering souls
+    as we explore these confines of space, allowing us much prosperity indeed.\n\nThe
+    spirits even reveal to me constellations that hold the secrets of this universe's
+    ruling powers. Powers that celebrate joyous occassions and powers that reap this
+    world's bounties. Powers that form what we see and collect on our journeys, as
+    they try to guide us down paths of fortune or malice.\n\nAlas, it appears I have
+    no way of drawing upon these secrets for myself, so I shall take note of these
+    constellations for future generations, to allow them to learn from knowledge
+    of the past...\n\n\n\n\"When celebrating freedom, monsters are repelled,\nbut
+    in the week of death, they cannot be withheld.\n\nOn time's passage, the spirits
+    warn to combust,\n\rand at the honor of arts, fortune shall be robust.\n\nDays
+    of anniversaries, turn the world to gold,\nwhilst the day of jests, leaves that
+    story untold.\n\nBut the most loving occassions, reveal for free,\na constellation,
+    forming nine-seven-five-three...\"\n\n\n===\n\nPerformance: Above expectations\nConsequence:
+    Log secrets in help page\r\n\n"
+  terminalEvent: 
+  clearPreviousText: 1
+  maxCharactersToType: 35
+  buyItemIndex: -1
+  buyVehicleIndex: -1
+  isConfirmationNode: 0
+  buyRerouteToMoon: -1
+  displayPlanetInfo: -1
+  shipUnlockableID: -1
+  buyUnlockable: 0
+  returnFromStorage: 0
+  itemCost: 0
+  creatureFileID: -1
+  creatureName: Seer
+  storyLogFileID: -1
+  overrideOptions: 0
+  acceptAnything: 0
+  terminalOptions: []
+  playClip: {fileID: 0}
+  playSyncedClip: -1
+  displayTexture: {fileID: 0}
+  displayVideo: {fileID: 0}
+  loadImageSlowly: 0
+  persistentImage: 0

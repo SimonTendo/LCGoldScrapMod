@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GoldCrownData
   m_EditorClassIdentifier: 
   folderName: GoldCrown
+  displayName: Gold Crown
+  specialDateCases: 
   itemProperties: {fileID: 11400000, guid: 1b23c0baa42cfec40a57708389212642, type: 2}
   isScrap: 0
   defaultWeight: 1.19

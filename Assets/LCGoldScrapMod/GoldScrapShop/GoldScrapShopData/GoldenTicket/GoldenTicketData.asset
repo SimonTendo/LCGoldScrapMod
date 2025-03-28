@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GoldenTicketData
   m_EditorClassIdentifier: 
   folderName: GoldenTicket
+  displayName: Golden Ticket
+  specialDateCases: 
   itemProperties: {fileID: 11400000, guid: eb9be91015404a740960fa9d3814d6c2, type: 2}
   isScrap: 0
   defaultWeight: 1.04

@@ -424,7 +424,7 @@ public class SafeBoxScript : NetworkBehaviour
         {
             if (StartOfRound.Instance.allPlayersDead)
             {
-                SafeBoxScript safeBox = FindObjectOfType<SafeBoxScript>();
+                SafeBoxScript safeBox = FindAnyObjectByType<SafeBoxScript>();
                 if (safeBox != null && !safeBox.isOpen && __instance.GetComponent<GrabbableObject>() != null && __instance.GetComponent<RagdollGrabbableObject>() == null && __instance.transform.parent == safeBox.placeItemObject.parentTo.transform)
                 {
                     Logger.LogDebug($"!!!{__instance.gameObject.name} #{__instance.NetworkObjectId} NOT DESPAWNING IN {__instance.transform.parent.name}!!!");

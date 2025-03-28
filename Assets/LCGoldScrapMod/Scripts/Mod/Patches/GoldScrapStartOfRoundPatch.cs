@@ -3,7 +3,7 @@ using HarmonyLib;
 using GameNetcodeStuff;
 using Unity.Netcode;
 
-public class StartOfRoundPatch
+public class GoldScrapStartOfRoundPatch
 {
     //Add and register Gold Scrap right before it is loaded into the ship
     [HarmonyPatch(typeof(StartOfRound), "Awake")]
@@ -25,11 +25,14 @@ public class StartOfRoundPatch
                     break;
                 }
             }
+            RuntimeChanges.SetAllDefaultNames();
+            General.GetSpecialDateCase();
             General.AddJacobsLadderToHelmetLights();
             General.AddAllItemsToAllItemsListAwake();
             RegisterGoldScrap.SetAllItemsAwake();
 
             Configs.hostToolRebalance = false;
+            Plugin.specialDateCase = -1;
             Plugin.appliedHostConfigs = false;
         }
     }

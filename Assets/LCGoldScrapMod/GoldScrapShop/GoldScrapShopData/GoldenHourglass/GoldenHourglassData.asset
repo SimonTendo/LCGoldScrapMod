@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GoldenHourglassData
   m_EditorClassIdentifier: 
   folderName: GoldenHourglass
+  displayName: Golden Hourglass
+  specialDateCases: 
   itemProperties: {fileID: 11400000, guid: 7de827e0e41e3d746921d2c167e4b6d4, type: 2}
   isScrap: 0
   defaultWeight: 1
