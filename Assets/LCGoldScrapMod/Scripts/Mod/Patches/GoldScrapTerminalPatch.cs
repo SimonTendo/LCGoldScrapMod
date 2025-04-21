@@ -47,20 +47,27 @@ public class GoldScrapTerminalPatch
                 case 1:
                     if (input.Contains("bronze") || input.Contains("silver"))
                     {
-                        input = RuntimeChanges.ReplaceGoldInName(input, Plugin.specialDateCase, getReverse: true).ToLower();
-                        if (input.Contains("hourglass") || input.Contains("glove") || input.Contains("pickaxe") || input.Contains("throne") || input.Contains("ticket"))
+                        if (input == "bronze suit" || input == "silver suit" /*|| input == "bronze medal" || input == "silver medal" || input == "bronze trophy" || input == "silver trophy" || input == "bronze crown" || input == "silver crown"*/)
                         {
-                            input = input.Replace("gold", "golden");
+                            Plugin.Logger.LogDebug($"!!specialDateCase {Plugin.specialDateCase} caught exception input '{input}', leaving be");
                         }
-                        if (input.Contains("transparent "))
+                        else
                         {
-                            input = input.Replace("transparent ", "");
+                            input = RuntimeChanges.ReplaceGoldInName(input, Plugin.specialDateCase, getReverse: true).ToLower();
+                            if (input.Contains("hourglass") || input.Contains("glove") || input.Contains("pickaxe") || input.Contains("throne") || input.Contains("ticket"))
+                            {
+                                input = input.Replace("gold", "golden");
+                            }
+                            if (input.Contains("transparent "))
+                            {
+                                input = input.Replace("transparent ", "");
+                            }
+                            else if (input.Contains("neon "))
+                            {
+                                input = input.Replace("neon ", "");
+                            }
+                            Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} overwriting input to {input}");
                         }
-                        else if (input.Contains("neon "))
-                        {
-                            input = input.Replace("neon ", "");
-                        }
-                        Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} overwriting input to {input}");
                     }
                     break;
                 case 4:

@@ -10,7 +10,7 @@ using HarmonyLib.Tools;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 
-[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.2.0")]
+[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.2.2")]
 [BepInDependency("LCSimonTendoPlaylistsMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("LethalConfig", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin

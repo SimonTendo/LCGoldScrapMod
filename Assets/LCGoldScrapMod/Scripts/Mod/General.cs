@@ -446,19 +446,20 @@ public class General
     {
         int month = DateTime.Now.Month;
         int day = DateTime.Now.Day;
-        int dayOfYear = DateTime.Now.DayOfYear;
-        Logger.LogDebug($"starting GetSpecialDateCase() with: month {month} | day {day} |  dayOfYear {dayOfYear}");
+        int yearDay = DateTime.Now.DayOfYear;
+        int weekDay = (int)DateTime.Now.DayOfWeek;
+        Logger.LogDebug($"starting GetSpecialDateCase() with: month {month} | day {day} | yearDay {yearDay} | weekDay {weekDay}");
         int setTo = ConvertSpecialDateCase(Configs.dateCaseCode.Value);
 
         if (setTo == -1)
         {
             //0: New Year's (fireworks)
-            if (dayOfYear == 1 || (month == 12 && day == 31))
+            if (yearDay == 1 || (month == 12 && day == 31))
             {
                 setTo = 0;
             }
-            //1: April Fools (materials anything but gold)
-            else if (month == 4 && day == 1)
+            //1: April Fools and Friday The 13th (materials anything but gold)
+            else if ((month == 4 && day == 1) || (weekDay == 5 && day == 13))
             {
                 setTo = 1;
             }
@@ -473,7 +474,7 @@ public class General
                 setTo = 3;
             }
             //4: Gold Days (materials nothing but gold, more gold, gold more valuable, lower prices)
-            else if ((month == 3 && day == 28) || (month == 9 && day == 2) || (month == 12 && day == 13) || dayOfYear == 79)
+            else if ((month == 3 && day == 28) || (month == 9 && day == 2) || (month == 12 && day == 13) || yearDay == 79)
             {
                 setTo = 4;
             }

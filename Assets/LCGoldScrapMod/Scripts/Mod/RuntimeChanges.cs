@@ -83,7 +83,7 @@ public class RuntimeChanges
             {
                 continue;
             }
-            bool printDebug = Application.isEditor && Plugin.specialDateCase >= 0 && StartOfRound.Instance != null && StartOfRound.Instance.localPlayerController != null && StartOfRound.Instance.localPlayerController.isHostPlayerObject;
+            bool printDebug = Application.isEditor && Plugin.specialDateCase >= 0 && StartOfRound.Instance != null && StartOfRound.Instance.localPlayerController != null && StartOfRound.Instance.localPlayerController.isHostPlayerObject && GameNetworkManager.Instance != null && GameNetworkManager.Instance.disableSteam;
             if (printDebug)
             {
                 Plugin.Logger.LogInfo($"Setting up: {level.name}");
@@ -498,11 +498,17 @@ public class RuntimeChanges
                 {
                     for (int i = 0; i < catScript.matsNormal.Length; i++)
                     {
-                        catScript.matsNormal[i] = defaultMaterialGold;
+                        if (!catScript.matsNormal[i].name.StartsWith("GoldMat"))
+                        {
+                            catScript.matsNormal[i] = defaultMaterialGold;
+                        }
                     }
                     for (int j = 0; j < catScript.matsFever.Length; j++)
                     {
-                        catScript.matsFever[j] = defaultMaterialGold;
+                        if (!catScript.matsFever[j].name.StartsWith("GoldMat"))
+                        {
+                            catScript.matsFever[j] = defaultMaterialGold;
+                        }
                     }
                 }
                 if (pickaxeScript != null)
@@ -570,7 +576,7 @@ public class RuntimeChanges
                             break;
                     }
                 }
-                if (printDebug) Logger.LogDebug($"replaced to: {newName}");
+                if (printDebug) Logger.LogDebug($"replaced to: '{newName}'");
                 return newName;
             case 4:
                 if (newName == originalName) newName = originalName.Replace("Bronze", "Gold");
@@ -586,7 +592,7 @@ public class RuntimeChanges
                         newName = $"Neon {newName}";
                         break;
                 }
-                if (printDebug) Logger.LogDebug($"replaced to: {newName}");
+                if (printDebug) Logger.LogDebug($"replaced to: '{newName}'");
                 return newName;
         }
         return originalName;

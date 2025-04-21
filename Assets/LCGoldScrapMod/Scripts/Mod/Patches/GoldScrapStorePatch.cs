@@ -181,7 +181,7 @@ public class GoldScrapStorePatch
                 Logger.LogDebug("null, returning");
                 return;
             }
-            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindObjectOfType<SafeBoxScript>() != null)
+            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindAnyObjectByType<SafeBoxScript>() != null)
             {
                 Logger.LogDebug("storing SafeBox: Local");
                 UnlockableItem safeData = StartOfRound.Instance.unlockablesList.unlockables[placingObject.unlockableID];
@@ -196,13 +196,18 @@ public class GoldScrapStorePatch
                 Logger.LogDebug("false, returning");
                 return;
             }
+            if (networkObject == null)
+            {
+                Logger.LogDebug("still null, returning");
+                return;
+            }
             PlaceableShipObject placingObject = networkObject.gameObject.GetComponentInChildren<PlaceableShipObject>();
             if (placingObject == null)
             {
                 Logger.LogDebug("null, returning");
                 return;
             }
-            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindObjectOfType<SafeBoxScript>() != null)
+            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindAnyObjectByType<SafeBoxScript>() != null)
             {
                 Logger.LogDebug("storing SafeBox: Server");
                 UnlockableItem safeData = StartOfRound.Instance.unlockablesList.unlockables[placingObject.unlockableID];
@@ -212,14 +217,19 @@ public class GoldScrapStorePatch
         [HarmonyPrefix, HarmonyPatch("StoreShipObjectClientRpc")]
         public static void Client(NetworkObjectReference objectRef, int playerWhoStored)
         {
-            if (playerWhoStored == (int)GameNetworkManager.Instance.localPlayerController.playerClientId)
+            if (GameNetworkManager.Instance == null || GameNetworkManager.Instance.localPlayerController == null || playerWhoStored == (int)GameNetworkManager.Instance.localPlayerController.playerClientId)
             {
-                Logger.LogDebug("local, returning");
+                Logger.LogDebug("null or local, returning");
                 return;
             }
             if (!objectRef.TryGet(out var networkObject))
             {
                 Logger.LogDebug("false, returning");
+                return;
+            }
+            if (networkObject == null)
+            {
+                Logger.LogDebug("still null, returning");
                 return;
             }
             PlaceableShipObject placingObject = networkObject.gameObject.GetComponentInChildren<PlaceableShipObject>();
@@ -228,7 +238,7 @@ public class GoldScrapStorePatch
                 Logger.LogDebug("null, returning");
                 return;
             }
-            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindObjectOfType<SafeBoxScript>() != null)
+            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindAnyObjectByType<SafeBoxScript>() != null)
             {
                 Logger.LogDebug("storing SafeBox: Client");
                 UnlockableItem safeData = StartOfRound.Instance.unlockablesList.unlockables[placingObject.unlockableID];
