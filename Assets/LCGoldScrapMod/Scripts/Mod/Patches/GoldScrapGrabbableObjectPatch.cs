@@ -17,7 +17,7 @@ public class GoldScrapGrabbableObjectPatch
                 __instance.itemUsedUp = false;
                 __instance.pinPulled = false;
                 __instance.explodeTimer = 0;
-                PrivateAccesser.SetPrivateValue<Coroutine>(__instance, "pullPinCoroutine").SetValue(__instance, null);
+                GoldScrapPrivateAccesser.SetPrivateValue<Coroutine>(__instance, "pullPinCoroutine").SetValue(__instance, null);
             }
         }
     }
@@ -88,7 +88,7 @@ public class GoldScrapGrabbableObjectPatch
                 foreach (HoarderBugAI bug in Object.FindObjectsByType<HoarderBugAI>(FindObjectsSortMode.None))
                 {
                     Plugin.Logger.LogDebug($"setting #{bug.NetworkObjectId}'s annoyance DOWN");
-                    PrivateAccesser.SetPrivateValue<float>(bug, "annoyanceMeter").SetValue(bug, -9999f);
+                    GoldScrapPrivateAccesser.SetPrivateValue<float>(bug, "annoyanceMeter").SetValue(bug, -9999f);
                 }
 
                 if (HoarderBugAI.HoarderBugItems != null)

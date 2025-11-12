@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1406419267, guid: a951317de6f093d438f582917c0ce7a7, type: 3}
+  m_Script: {fileID: 11500000, guid: c5d5b7b2b1a6a0164e51af95a82c4502, type: 3}
   m_Name: AllGoldScrapKeywords
   m_EditorClassIdentifier: 
   specialNodes: []

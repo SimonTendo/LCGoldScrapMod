@@ -788,12 +788,12 @@ public class GoldenGloveScript : GrabbableObject
             {
                 if (stateIndex == 1 && hitValve.triggerScript.interactable)
                 {
-                    Logger.LogDebug($"{name} #{NetworkObjectId} [{stateIndex}] OWNER sending FIX on VALVE {hitValve.name} #{hitValve.NetworkObjectId}");
+                    Logger.LogDebug($"{name} #{NetworkObjectId} [{stateIndex}] OWNER sending FIX on VALVE {hitValve.name} #{hitValve.triggerScript.NetworkObjectId}");
                     hitValve.FixValve();
                 }
                 else if (stateIndex == 0 && !hitValve.triggerScript.interactable)
                 {
-                    Logger.LogDebug($"{name} #{NetworkObjectId} [{stateIndex}] OWNER sending BURST on VALVE {hitValve.name} #{hitValve.NetworkObjectId}");
+                    Logger.LogDebug($"{name} #{NetworkObjectId} [{stateIndex}] OWNER sending BURST on VALVE {hitValve.name} #{hitValve.triggerScript.NetworkObjectId}");
                     float backUpFogMultiplier = Random.Range(0.6f, 0.98f);
                     if (hitValve.valveBurstTime == 0 || hitValve.valveBurstTime > TimeOfDay.Instance.normalizedTimeOfDay)
                     {
@@ -805,7 +805,7 @@ public class GoldenGloveScript : GrabbableObject
                         playSyncClip = GetClipIndex(extendStopClip);
                     }
                     CollideValveLocal(hitValve, backUpFogMultiplier);
-                    CollideValveServerRpc((int)playerHeldBy.playerClientId, hitValve.NetworkObject, backUpFogMultiplier);
+                    CollideValveServerRpc((int)playerHeldBy.playerClientId, hitValve.triggerScript.NetworkObject, backUpFogMultiplier);
                 }
                 stopExtending = true;
             }
@@ -2097,7 +2097,7 @@ public class GoldenGloveScript : GrabbableObject
                     Logger.LogError($"{name} #{NetworkObjectId} [{stateIndex}] failed to get SCRIPT on steam valve hazard!!!");
                     return;
                 }
-                Logger.LogDebug($"{name} #{NetworkObjectId} [{stateIndex}] CLIENT interacting with VALVE {hitValve.name} #{hitValve.NetworkObjectId}");
+                Logger.LogDebug($"{name} #{NetworkObjectId} [{stateIndex}] CLIENT interacting with VALVE {hitValve.name} #{hitValve.triggerScript.NetworkObjectId}");
                 CollideValveLocal(hitValve, fogMultiplier);
             }
             else
@@ -2111,23 +2111,23 @@ public class GoldenGloveScript : GrabbableObject
     {
         if (valveScript.valveBurstTime != 0 && TimeOfDay.Instance.normalizedTimeOfDay > valveScript.valveBurstTime)
         {
-            Logger.LogDebug($"{valveScript.name} #{valveScript.NetworkObjectId}: 0) valve has already burst, returning");
+            Logger.LogDebug($"{valveScript.name} #{valveScript.triggerScript.NetworkObjectId}: 0) valve has already burst, returning");
             return;
         }
         if (valveScript.valveCrackTime > TimeOfDay.Instance.normalizedTimeOfDay || valveScript.valveCrackTime == 0)
         {
-            Logger.LogDebug($"{valveScript.name} #{valveScript.NetworkObjectId}: 1) valve has not yet cracked or will not crack");
+            Logger.LogDebug($"{valveScript.name} #{valveScript.triggerScript.NetworkObjectId}: 1) valve has not yet cracked or will not crack");
             valveScript.valveCrackTime = TimeOfDay.Instance.normalizedTimeOfDay + 0.0001f;
             valveScript.valveBurstTime = TimeOfDay.Instance.normalizedTimeOfDay + 0.001f;
         }
         else if (TimeOfDay.Instance.normalizedTimeOfDay > valveScript.valveCrackTime)
         {
-            Logger.LogDebug($"{valveScript.name} #{valveScript.NetworkObjectId}: 2) valve has already cracked");
+            Logger.LogDebug($"{valveScript.name} #{valveScript.triggerScript.NetworkObjectId}: 2) valve has already cracked");
             valveScript.valveBurstTime = TimeOfDay.Instance.normalizedTimeOfDay + 0.0001f;
         }
         if (valveScript.fogSizeMultiplier == 0)
         {
-            Logger.LogDebug($"{valveScript.name} #{valveScript.NetworkObjectId}: 3) no fogSizeMultiplier, injecting custom {fogMultiplier}");
+            Logger.LogDebug($"{valveScript.name} #{valveScript.triggerScript.NetworkObjectId}: 3) no fogSizeMultiplier, injecting custom {fogMultiplier}");
             valveScript.fogSizeMultiplier = fogMultiplier;
         }
     }

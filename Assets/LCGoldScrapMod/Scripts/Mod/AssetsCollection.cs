@@ -667,7 +667,7 @@ public class AssetsCollection
             {
                 Logger.LogDebug("Trying to build GOLDEN EGGBEATER");
                 Mesh originalMesh = itemData.spawnPrefab.GetComponent<MeshFilter>().sharedMesh;
-                if (originalMesh.vertexCount == 269)
+                if (originalMesh.vertexCount == 269 || (Plugin.v70Compatible && originalMesh.vertexCount == 277))
                 {
                     goldenEggbeaterMesh = originalMesh;
                 }
@@ -1490,7 +1490,7 @@ public class AssetsCollection
             {
                 Logger.LogDebug("Trying to build MARIGOLD");
                 Mesh originalMesh = enemy.enemyPrefab.transform.GetChild(1).GetChild(0).GetComponent<SkinnedMeshRenderer>().sharedMesh;
-                if (originalMesh.vertexCount == 4866)
+                if (originalMesh.vertexCount == 4866 || (Plugin.v70Compatible && originalMesh.vertexCount == 4884))
                 {
                     marigoldMesh = originalMesh;
                 }
@@ -1696,7 +1696,7 @@ public class AssetsCollection
             {
                 Logger.LogDebug("Trying to build GOLDKEEPER");
                 Mesh originalMesh = outsideEnemy.enemyPrefab.transform.GetChild(0).GetChild(1).GetComponent<SkinnedMeshRenderer>().sharedMesh;
-                if (originalMesh.vertexCount == 2416)
+                if (originalMesh.vertexCount == 2416 || (Plugin.v70Compatible && originalMesh.vertexCount == 2417))
                 {
                     goldkeeperMesh = originalMesh;
                 }
@@ -1716,7 +1716,7 @@ public class AssetsCollection
                 Mesh originalTopMesh = outsideEnemy.enemyPrefab.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(1).GetComponent<MeshFilter>().sharedMesh;
                 Mesh originalBottomMesh = outsideEnemy.enemyPrefab.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<MeshFilter>().sharedMesh;
                 //Mesh (Body)
-                if (originalBodyMesh.vertexCount == 1080)
+                if (originalBodyMesh.vertexCount == 1080 || (Plugin.v70Compatible && originalBodyMesh.vertexCount == 1085))
                 {
                     goldenRetrieverBodyMesh = originalBodyMesh;
                 }

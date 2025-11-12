@@ -10,7 +10,7 @@ using HarmonyLib.Tools;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 
-[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.2.2")]
+[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.2.5")]
 [BepInDependency("LCSimonTendoPlaylistsMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("LethalConfig", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
@@ -38,6 +38,7 @@ public class Plugin : BaseUnityPlugin
     //Compatibility
     public static bool v50Compatible = false;
     public static bool v60Compatible = false;
+    public static bool v70Compatible = false;
     public static bool playlistsModCompatible = false;
     public static bool lethalConfigCompatible = false;
 
@@ -66,7 +67,7 @@ public class Plugin : BaseUnityPlugin
 
         LoadMiscellaneous();
         LoadSavedData();
-        GetCompatability();
+        GetCompatibility();
         Configs.LoadAndDisplayConfigs();
         UnityNetcodePatcher();
     }
@@ -110,7 +111,7 @@ public class Plugin : BaseUnityPlugin
         saveData.Load();
     }
 
-    private static void GetCompatability()
+    private static void GetCompatibility()
     {
         //v50
         if (typeof(UnlockableItem).GetField("jumpAudio") != null)
@@ -130,6 +131,13 @@ public class Plugin : BaseUnityPlugin
             v60Compatible = true;
         }
         Logger.LogDebug($"v60 compatibility is {v60Compatible}");
+
+        //v70
+        if (typeof(EnemyAI).GetField("nestObject", BindingFlags.Instance | BindingFlags.NonPublic) != null)
+        {
+            v70Compatible = true;
+        }
+        Logger.LogDebug($"v70 compatibility is {v70Compatible}");
 
         //LCSimonTendoPlaylistsMod
         playlistsModCompatible = CheckForPlugin("LCSimonTendoPlaylistsMod");

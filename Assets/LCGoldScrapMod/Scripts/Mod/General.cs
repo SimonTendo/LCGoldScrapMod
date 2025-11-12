@@ -167,7 +167,7 @@ public class General
             StormyWeather stormyWeatherInstance = UnityEngine.Object.FindAnyObjectByType<StormyWeather>();
             if (stormyWeatherInstance != null)
             {
-                PrivateAccesser.GetPrivateField<List<GrabbableObject>>(stormyWeatherInstance, "metalObjects").Add(item);
+                GoldScrapPrivateAccesser.GetPrivateField<List<GrabbableObject>>(stormyWeatherInstance, "metalObjects").Add(item);
                 Logger.LogDebug($"added {item.gameObject.name} to currentLevel's currentWeather {StartOfRound.Instance.currentLevel.currentWeather.ToString()}.metalObjects");
             }
         }

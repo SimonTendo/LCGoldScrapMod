@@ -35,7 +35,7 @@ public class TagDoor : MonoBehaviour, IGoldenGlassSecret
         [HarmonyPostfix]
         public static void AwakePostfix(DoorLock __instance)
         {
-            if (PrivateAccesser.GetPrivateField<bool>(__instance, "hauntedDoor"))
+            if (GoldScrapPrivateAccesser.GetPrivateField<bool>(__instance, "hauntedDoor"))
             {
                 Instantiate(tagContainer, __instance.transform);
             }

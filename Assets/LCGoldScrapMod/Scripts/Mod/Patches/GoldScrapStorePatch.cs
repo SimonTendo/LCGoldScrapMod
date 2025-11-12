@@ -175,7 +175,7 @@ public class GoldScrapStorePatch
         [HarmonyPrefix, HarmonyPatch("StoreObjectLocalClient")]
         public static void Local(ShipBuildModeManager __instance)
         {
-            PlaceableShipObject placingObject = PrivateAccesser.GetPrivateField<PlaceableShipObject>(__instance, "placingObject");
+            PlaceableShipObject placingObject = GoldScrapPrivateAccesser.GetPrivateField<PlaceableShipObject>(__instance, "placingObject");
             if (placingObject == null)
             {
                 Logger.LogDebug("null, returning");
