@@ -6,7 +6,7 @@ using GameNetcodeStuff;
 
 public class GoldmineScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Space(3f)]
     [Header("Functionality")]
@@ -32,7 +32,7 @@ public class GoldmineScript : GrabbableObject
     {
         base.Start();
         triggerLight.enabled = false;
-        int chanceToStartActive = Configs.hostToolRebalance ? 67 : 33;
+        int chanceToStartActive = GoldScrapConfigs.hostToolRebalance ? 67 : 33;
         if (IsServer && !isInShipRoom && Random.Range(1, 101) < chanceToStartActive)
         {
             ToggleActiveClientRpc(true);
@@ -117,7 +117,7 @@ public class GoldmineScript : GrabbableObject
     public override void ItemInteractLeftRight(bool right)
     {
         base.ItemInteractLeftRight(right);
-        if (right && !Configs.hostToolRebalance)
+        if (right && !GoldScrapConfigs.hostToolRebalance)
         {
             ToggleActiveServerRpc();
         }

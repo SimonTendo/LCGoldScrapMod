@@ -4,7 +4,7 @@ using HarmonyLib;
 
 public class GoldmineTrigger : MonoBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public GoldmineScript mainScript;
 

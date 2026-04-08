@@ -3,7 +3,7 @@ using BepInEx.Logging;
 
 public class CatOGoldScript : MonoBehaviour, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static CatOGoldScript Instance;
     public Animator armAnimator;
@@ -52,7 +52,7 @@ public class CatOGoldScript : MonoBehaviour, IGoldenGlassSecret
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Configs.hostToolRebalance)
+        if (!GoldScrapConfigs.hostToolRebalance)
         {
             scanNodeObject.SetActive(true);
         }

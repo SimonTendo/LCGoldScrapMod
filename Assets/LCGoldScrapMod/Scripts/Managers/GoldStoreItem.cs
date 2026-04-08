@@ -11,7 +11,7 @@ public class GoldStoreItem : MonoBehaviour
         GrabbableObject item = GetComponent<GrabbableObject>();
         if (item != null && item.itemProperties != null && item.itemProperties.isConductiveMetal)
         {
-            General.AddMetalObjectsRuntime(item);
+            GoldScrapGeneral.AddMetalObjectsRuntime(item);
         }
     }
 }

@@ -4,7 +4,7 @@ using BepInEx.Logging;
 
 public class LightSwitchRevealer : MonoBehaviour, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static GameObject lightRevealerPrefab;
     public Light lightSource;
@@ -19,7 +19,7 @@ public class LightSwitchRevealer : MonoBehaviour, IGoldenGlassSecret
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Configs.hostToolRebalance)
+        if (!GoldScrapConfigs.hostToolRebalance)
         {
             lightSource.enabled = true;
         }

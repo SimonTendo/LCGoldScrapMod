@@ -4,7 +4,7 @@ using BepInEx.Logging;
 
 public class JackInTheGoldScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     private float timeAtLastExplosion;
     private float audibleNoiseTimer;

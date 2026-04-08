@@ -1,9 +1,9 @@
 using UnityEngine;
 using BepInEx.Logging;
 
-public class AssetsCollection
+public class GoldScrapAssetsCollection
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static bool alreadyCheckedItems = false;
     public static bool alreadyCheckedEnemies = false;
@@ -181,18 +181,18 @@ public class AssetsCollection
 
     public static void LoadEditorAssets()
     {
-        defaultMaterialGold = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMat.mat");
-        defaultMaterialGoldTransparent = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatTransparent.mat");
-        defaultMaterialGoldEmmissive = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatEmmissive.mat");
-        defaultMaterialSilver = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMat.mat");
-        defaultMaterialSilverTransparent = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMatTransparent.mat");
-        defaultMaterialSilverEmmissive = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMatEmmissive.mat");
-        defaultMaterialBronze = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMat.mat");
-        defaultMaterialBronzeTransparent = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMatTransparent.mat");
-        defaultMaterialBronzeEmmissive = Plugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMatEmmissive.mat");
-        sillyItemIcon = Plugin.CustomGoldScrapAssets.LoadAsset<Sprite>("Assets/LCGoldScrapMod/GoldScrapVisuals/Sprites/GoldScrapItemIconPlaceholder.png");
-        artOfGoldMaterials = Plugin.CustomGoldScrapAssets.LoadAsset<ArtOfGoldMaterials>("Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/ArtOfGoldMaterials.asset");
-        sparkleParticle = Plugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapMisc/SpecialDateCase/SparkleGold.prefab");
+        defaultMaterialGold = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMat.mat");
+        defaultMaterialGoldTransparent = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatTransparent.mat");
+        defaultMaterialGoldEmmissive = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldMatEmmissive.mat");
+        defaultMaterialSilver = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMat.mat");
+        defaultMaterialSilverTransparent = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMatTransparent.mat");
+        defaultMaterialSilverEmmissive = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/SilverMatEmmissive.mat");
+        defaultMaterialBronze = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMat.mat");
+        defaultMaterialBronzeTransparent = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMatTransparent.mat");
+        defaultMaterialBronzeEmmissive = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>("Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/BronzeMatEmmissive.mat");
+        sillyItemIcon = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Sprite>("Assets/LCGoldScrapMod/GoldScrapVisuals/Sprites/GoldScrapItemIconPlaceholder.png");
+        artOfGoldMaterials = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<ArtOfGoldMaterials>("Assets/LCGoldScrapMod/GoldScrapAssets/ArtOfGold/ArtOfGoldMaterials.asset");
+        sparkleParticle = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapMisc/SpecialDateCase/SparkleGold.prefab");
     }
 
     public static void GetItemAssets(StartOfRound __instance)
@@ -249,7 +249,7 @@ public class AssetsCollection
                     Logger.LogWarning("Sound was not recognized. Only sounds from vanilla Lethal Company will be applied. Sound: FlashlightOutOfBatteries");
                 }
                 //SFX (FlashlightFlicker)
-                if (flashlightScript != null && flashlightScript.flashlightFlicker != null && flashlightScript.flashlightFlicker.samples == 38174)
+                if (flashlightScript != null && flashlightScript.flashlightFlicker != null && (flashlightScript.flashlightFlicker.samples == 38174 || (GoldScrapPlugin.v80Compatible && flashlightScript.flashlightFlicker.samples == 25771)))
                 {
                     sharedSFXflashlightFlicker = flashlightScript.flashlightFlicker;
                 }
@@ -667,7 +667,7 @@ public class AssetsCollection
             {
                 Logger.LogDebug("Trying to build GOLDEN EGGBEATER");
                 Mesh originalMesh = itemData.spawnPrefab.GetComponent<MeshFilter>().sharedMesh;
-                if (originalMesh.vertexCount == 269 || (Plugin.v70Compatible && originalMesh.vertexCount == 277))
+                if (originalMesh.vertexCount == 269 || (GoldScrapPlugin.v70Compatible && originalMesh.vertexCount == 277))
                 {
                     goldenEggbeaterMesh = originalMesh;
                 }
@@ -1490,7 +1490,7 @@ public class AssetsCollection
             {
                 Logger.LogDebug("Trying to build MARIGOLD");
                 Mesh originalMesh = enemy.enemyPrefab.transform.GetChild(1).GetChild(0).GetComponent<SkinnedMeshRenderer>().sharedMesh;
-                if (originalMesh.vertexCount == 4866 || (Plugin.v70Compatible && originalMesh.vertexCount == 4884))
+                if (originalMesh.vertexCount == 4866 || (GoldScrapPlugin.v70Compatible && originalMesh.vertexCount == 4884))
                 {
                     marigoldMesh = originalMesh;
                 }
@@ -1696,7 +1696,7 @@ public class AssetsCollection
             {
                 Logger.LogDebug("Trying to build GOLDKEEPER");
                 Mesh originalMesh = outsideEnemy.enemyPrefab.transform.GetChild(0).GetChild(1).GetComponent<SkinnedMeshRenderer>().sharedMesh;
-                if (originalMesh.vertexCount == 2416 || (Plugin.v70Compatible && originalMesh.vertexCount == 2417))
+                if (originalMesh.vertexCount == 2416 || (GoldScrapPlugin.v70Compatible && originalMesh.vertexCount == 2417))
                 {
                     goldkeeperMesh = originalMesh;
                 }
@@ -1716,7 +1716,7 @@ public class AssetsCollection
                 Mesh originalTopMesh = outsideEnemy.enemyPrefab.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(1).GetComponent<MeshFilter>().sharedMesh;
                 Mesh originalBottomMesh = outsideEnemy.enemyPrefab.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<MeshFilter>().sharedMesh;
                 //Mesh (Body)
-                if (originalBodyMesh.vertexCount == 1080 || (Plugin.v70Compatible && originalBodyMesh.vertexCount == 1085))
+                if (originalBodyMesh.vertexCount == 1080 || (GoldScrapPlugin.v70Compatible && originalBodyMesh.vertexCount == 1085))
                 {
                     goldenRetrieverBodyMesh = originalBodyMesh;
                 }
@@ -2080,7 +2080,7 @@ public class AssetsCollection
 
     public static Mesh LoadSillyMesh(string fileName)
     {
-        Mesh meshToReturn = Plugin.CustomGoldScrapAssets.LoadAsset<Mesh>($"Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/{fileName}.blend");
+        Mesh meshToReturn = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Mesh>($"Assets/LCGoldScrapMod/GoldScrapVisuals/Meshes/SillyScrapModels/{fileName}.blend");
         if (meshToReturn == null)
         {
             Logger.LogError($"LoadSillyMesh() called with null '{fileName}'");
@@ -2095,7 +2095,7 @@ public class AssetsCollection
         {
             folderName = fileName.Remove(0, 5);
         }
-        Mesh meshToReturn = Plugin.CustomGoldScrapAssets.LoadAsset<Mesh>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{folderName}/{fileName}.blend");
+        Mesh meshToReturn = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Mesh>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{folderName}/{fileName}.blend");
         if (meshToReturn == null)
         {
             Logger.LogError($"LoadGoldStoreMesh() called with null '{folderName}' & '{fileName}'");
@@ -2105,7 +2105,7 @@ public class AssetsCollection
 
     public static AudioClip LoadSillySFX(string fileName)
     {
-        AudioClip clipToReturn = Plugin.CustomGoldScrapAssets.LoadAsset<AudioClip>($"Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/{fileName}.ogg");
+        AudioClip clipToReturn = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<AudioClip>($"Assets/LCGoldScrapMod/GoldScrapAudio/SillyScrapSFX/{fileName}.ogg");
         if (clipToReturn == null)
         {
             Logger.LogError($"LoadSillySFX() called with null '{fileName}'");
@@ -2115,7 +2115,7 @@ public class AssetsCollection
 
     public static AudioClip LoadReplaceSFX(string fileName)
     {
-        AudioClip clipToReturn = Plugin.CustomGoldScrapAssets.LoadAsset<AudioClip>($"Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/{fileName}.ogg");
+        AudioClip clipToReturn = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<AudioClip>($"Assets/LCGoldScrapMod/GoldScrapAudio/ReplaceSFX/{fileName}.ogg");
         if (clipToReturn == null)
         {
             Logger.LogError($"LoadReplaceSFX() called with null '{fileName}'");
@@ -2125,7 +2125,7 @@ public class AssetsCollection
 
     public static AudioClip LoadNewSFX(string fileName)
     {
-        AudioClip clipToReturn = Plugin.CustomGoldScrapAssets.LoadAsset<AudioClip>($"Assets/LCGoldScrapMod/GoldScrapAudio/NewSFX/{fileName}.ogg");
+        AudioClip clipToReturn = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<AudioClip>($"Assets/LCGoldScrapMod/GoldScrapAudio/NewSFX/{fileName}.ogg");
         if (clipToReturn == null)
         {
             Logger.LogError($"LoadNewSFX() called with null '{fileName}'");
@@ -2135,7 +2135,7 @@ public class AssetsCollection
 
     public static AudioClip LoadDiscoBallMusic(string fileName)
     {
-        AudioClip clipToReturn = Plugin.CustomGoldScrapAssets.LoadAsset<AudioClip>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/GoldScrapShop{fileName}Music.ogg");
+        AudioClip clipToReturn = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<AudioClip>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/GoldScrapShop{fileName}Music.ogg");
         if (clipToReturn == null)
         {
             Logger.LogError($"LoadDiscoBallMusic() called with null '{fileName}'");

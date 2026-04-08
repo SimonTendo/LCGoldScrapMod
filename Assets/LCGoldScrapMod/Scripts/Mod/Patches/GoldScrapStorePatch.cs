@@ -6,7 +6,7 @@ using HarmonyLib;
 
 public class GoldScrapStorePatch
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     //Make sure GoldNuggets are not counted at the end-of-game value of collected scrap
     [HarmonyPatch(typeof(DepositItemsDesk), "SellAndDisplayItemProfits")]
@@ -32,7 +32,7 @@ public class GoldScrapStorePatch
                     }
                 }
             }
-            Plugin.Logger.LogDebug($"sold goldstore items at total value of: {goldNuggetValueSold}");
+            GoldScrapPlugin.Logger.LogDebug($"sold goldstore items at total value of: {goldNuggetValueSold}");
             StartOfRound.Instance.gameStats.scrapValueCollected -= goldNuggetValueSold;
         }
     }
@@ -66,11 +66,11 @@ public class GoldScrapStorePatch
             }
             if (putOnSuit)
             {
-                General.InstantiateSparklesOnTransform(player.lowerSpine);
+                GoldScrapGeneral.InstantiateSparklesOnTransform(player.lowerSpine);
             }
             else
             {
-                General.DestroySparklesOnTransform(player.lowerSpine);
+                GoldScrapGeneral.DestroySparklesOnTransform(player.lowerSpine);
             }
         }
 
@@ -79,7 +79,7 @@ public class GoldScrapStorePatch
         {
             if (__instance != null && (__instance.suitID == StoreAndTerminal.goldSuitID || __instance.suitID == StoreAndTerminal.silverSuitID || __instance.suitID == StoreAndTerminal.bronzeSuitID))
             {
-                General.InstantiateSparklesOnTransform(__instance.transform);
+                GoldScrapGeneral.InstantiateSparklesOnTransform(__instance.transform);
             }
         }
     }
@@ -93,7 +93,7 @@ public class GoldScrapStorePatch
         [HarmonyPrefix]
         public static void DiscoBallPrefix(CozyLights __instance, bool ___cozyLightsOn)
         {
-            if (!Plugin.playlistsModCompatible && __instance.gameObject.transform.parent?.name == "DiscoBallContainer(Clone)" && ___cozyLightsOn && !__instance.turnOnAudio.isPlaying)
+            if (!GoldScrapPlugin.playlistsModCompatible && __instance.gameObject.transform.parent?.name == "DiscoBallContainer(Clone)" && ___cozyLightsOn && !__instance.turnOnAudio.isPlaying)
             {
                 if (!HasUnlockedDiscoBallSong())
                 {
@@ -138,7 +138,7 @@ public class GoldScrapStorePatch
             MedalManager.instance.ListenToNewUnlockable(unlockableID);
             if (unlockableID == StoreAndTerminal.groovyGoldID)
             {
-                General.ToggleDiscoBall(true, "GroovyGold");
+                GoldScrapGeneral.ToggleDiscoBall(true, "GroovyGold");
             }
             else if (unlockableID == StoreAndTerminal.directoryLogID)
             {
@@ -175,16 +175,15 @@ public class GoldScrapStorePatch
         [HarmonyPrefix, HarmonyPatch("StoreObjectLocalClient")]
         public static void Local(ShipBuildModeManager __instance)
         {
-            PlaceableShipObject placingObject = GoldScrapPrivateAccesser.GetPrivateField<PlaceableShipObject>(__instance, "placingObject");
-            if (placingObject == null)
+            if (__instance == null || __instance.placingObject == null)
             {
                 Logger.LogDebug("null, returning");
                 return;
             }
-            if (placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindAnyObjectByType<SafeBoxScript>() != null)
+            if (__instance.placingObject.unlockableID == StoreAndTerminal.safeBoxID && Object.FindAnyObjectByType<SafeBoxScript>() != null)
             {
                 Logger.LogDebug("storing SafeBox: Local");
-                UnlockableItem safeData = StartOfRound.Instance.unlockablesList.unlockables[placingObject.unlockableID];
+                UnlockableItem safeData = StartOfRound.Instance.unlockablesList.unlockables[__instance.placingObject.unlockableID];
                 safeData.spawnPrefab = false;
             }
         }

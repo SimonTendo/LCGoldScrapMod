@@ -4,7 +4,7 @@ using System.Collections;
 
 public class GoldScrapObject : MonoBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public GrabbableObject item;
     public ItemData data;
@@ -29,7 +29,7 @@ public class GoldScrapObject : MonoBehaviour
 
     private IEnumerator SetConfigDependencies()
     {
-        yield return new WaitUntil(() => Plugin.appliedHostConfigs);
+        yield return new WaitUntil(() => GoldScrapPlugin.appliedHostConfigs);
         if (item != null)
         {
             dropStopTimer = Mathf.Clamp(Mathf.Pow(item.itemProperties.weight - (weightBeforeIncreasing / 100f), powerMultiplier), 0, maxWaitTimer);
@@ -38,10 +38,10 @@ public class GoldScrapObject : MonoBehaviour
                 HoarderBugAI.grabbableObjectsInMap.Add(item.gameObject);
             }
         }
-        if (Plugin.specialDateCase >= 0 && data != null)
+        if (GoldScrapPlugin.specialDateCase >= 0 && data != null)
         {
             Logger.LogDebug($"calling runtime change from {gameObject}");
-            RuntimeChanges.UpdatePrefabForSpecialDate(Plugin.specialDateCase, data, gameObject);
+            RuntimeChanges.UpdatePrefabForSpecialDate(GoldScrapPlugin.specialDateCase, data, gameObject);
         }
     }
 

@@ -16,14 +16,14 @@ public class GoldScrapTerminalPatch
             StoreAndTerminal.SetBuyAndInfoTerminal(__instance);
             StoreAndTerminal.AddGoldScrapKeywordsToTerminal(__instance);
             StoreAndTerminal.GetConfirmAndDenyTerminal(StartOfRound.Instance);
-            if (!Plugin.alreadyAddedUnlockables)
+            if (!GoldScrapPlugin.alreadyAddedUnlockables)
             {
                 StoreAndTerminal.AddGoldUnlockablesToShop(StartOfRound.Instance);
-                if (Configs.replaceSFX.Value && Plugin.v50Compatible)
+                if (GoldScrapConfigs.replaceSFX.Value && GoldScrapPlugin.v50Compatible)
                 {
                     StoreAndTerminal.LoadGoldStoreSuitJumpAudio();
                 }
-                Plugin.alreadyAddedUnlockables = true;
+                GoldScrapPlugin.alreadyAddedUnlockables = true;
             }
         }
     }
@@ -42,18 +42,18 @@ public class GoldScrapTerminalPatch
             {
                 return true;
             }
-            switch (Plugin.specialDateCase)
+            switch (GoldScrapPlugin.specialDateCase)
             {
                 case 1:
                     if (input.Contains("bronze") || input.Contains("silver"))
                     {
                         if (input == "bronze suit" || input == "silver suit" /*|| input == "bronze medal" || input == "silver medal" || input == "bronze trophy" || input == "silver trophy" || input == "bronze crown" || input == "silver crown"*/)
                         {
-                            Plugin.Logger.LogDebug($"!!specialDateCase {Plugin.specialDateCase} caught exception input '{input}', leaving be");
+                            GoldScrapPlugin.Logger.LogDebug($"!!specialDateCase {GoldScrapPlugin.specialDateCase} caught exception input '{input}', leaving be");
                         }
                         else
                         {
-                            input = RuntimeChanges.ReplaceGoldInName(input, Plugin.specialDateCase, getReverse: true).ToLower();
+                            input = RuntimeChanges.ReplaceGoldInName(input, GoldScrapPlugin.specialDateCase, getReverse: true).ToLower();
                             if (input.Contains("hourglass") || input.Contains("glove") || input.Contains("pickaxe") || input.Contains("throne") || input.Contains("ticket"))
                             {
                                 input = input.Replace("gold", "golden");
@@ -66,7 +66,7 @@ public class GoldScrapTerminalPatch
                             {
                                 input = input.Replace("neon ", "");
                             }
-                            Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} overwriting input to {input}");
+                            GoldScrapPlugin.Logger.LogDebug($"specialDateCase {GoldScrapPlugin.specialDateCase} overwriting input to {input}");
                         }
                     }
                     break;
@@ -74,12 +74,12 @@ public class GoldScrapTerminalPatch
                     if (input.Contains("neon gold"))
                     {
                         input = input.Replace("neon gold", "bronze");
-                        Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} overwriting input to {input}");
+                        GoldScrapPlugin.Logger.LogDebug($"specialDateCase {GoldScrapPlugin.specialDateCase} overwriting input to {input}");
                     }
                     else if (input.Contains("transparent gold"))
                     {
                         input = input.Replace("transparent gold", "silver");
-                        Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} overwriting input to {input}");
+                        GoldScrapPlugin.Logger.LogDebug($"specialDateCase {GoldScrapPlugin.specialDateCase} overwriting input to {input}");
                     }
                     break;
             }
@@ -87,21 +87,21 @@ public class GoldScrapTerminalPatch
             {
                 if (input.StartsWith(goldScrapKeyword.word) && IsValidNode(goldScrapKeyword))
                 {
-                    Plugin.Logger.LogDebug($"intercepted input '{input}' with custom keyword {goldScrapKeyword.specialKeywordResult}");
+                    GoldScrapPlugin.Logger.LogDebug($"intercepted input '{input}' with custom keyword {goldScrapKeyword.specialKeywordResult}");
                     string nodeName = goldScrapKeyword.name.Remove(goldScrapKeyword.name.Length - 7, 7).Remove(0, 13);
-                    Plugin.Logger.LogDebug($"parsed name '{nodeName}'");
+                    GoldScrapPlugin.Logger.LogDebug($"parsed name '{nodeName}'");
                     string excess = input.Remove(0, goldScrapKeyword.word.Length);
-                    Plugin.Logger.LogDebug($"found excess '{excess}'");
+                    GoldScrapPlugin.Logger.LogDebug($"found excess '{excess}'");
                     string amount = Regex.Match(excess, "\\d+").Value;
-                    Plugin.Logger.LogDebug($"{amount}; null = {amount.Length == 0}");
+                    GoldScrapPlugin.Logger.LogDebug($"{amount}; null = {amount.Length == 0}");
                     bool loadInfoNode = false;
                     if (excess.Contains("info"))
                     {
                         loadInfoNode = true;
                     }
-                    else if (excess.Contains("buy") || amount.Length != 0)
+                    else
                     {
-                        if (!string.IsNullOrWhiteSpace(amount))
+                        if (amount.Length != 0)
                         {
                             __instance.playerDefinedAmount = Mathf.Clamp(int.Parse(amount), 1, 10);
                         }
@@ -111,7 +111,7 @@ public class GoldScrapTerminalPatch
                         }
                     }
                     string nameEnd = loadInfoNode ? "Info.asset" : ".asset";
-                    TerminalNode nodeToLoad = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{nodeName}/GoldScrapShop{nodeName}{nameEnd}");
+                    TerminalNode nodeToLoad = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{nodeName}/GoldScrapShop{nodeName}{nameEnd}");
                     if (nodeToLoad != null)
                     {
                         LoadNodeCustom(__instance, nodeToLoad, loadInfoNode);
@@ -144,7 +144,7 @@ public class GoldScrapTerminalPatch
             }
             __instance.screenText.ActivateInputField();
             __instance.screenText.Select();
-            Plugin.Logger.LogDebug($"loaded {nodeToLoad} with amount {__instance.playerDefinedAmount}");
+            GoldScrapPlugin.Logger.LogDebug($"loaded {nodeToLoad} with amount {__instance.playerDefinedAmount}");
         }
     }
 
@@ -158,11 +158,11 @@ public class GoldScrapTerminalPatch
         public static bool TextPostProcessPrefix(ref string modifiedDisplayText, ref string __result)
         {
             //[Custom Terminal Scan] TRUE
-            if (Configs.fixScan.Value && modifiedDisplayText.Contains("[scanForItems]"))
+            if (GoldScrapConfigs.fixScan.Value && modifiedDisplayText.Contains("[scanForItems]"))
             {
-                if (!General.DoesMoonHaveGoldScrap()) return true;
+                if (!GoldScrapGeneral.DoesMoonHaveGoldScrap()) return true;
 
-                Plugin.Logger.LogInfo("Config [Custom Terminal Scan] is set to TRUE. Calculating value using custom scan.");
+                GoldScrapPlugin.Logger.LogInfo("Config [Custom Terminal Scan] is set to TRUE. Calculating value using custom scan.");
 
                 int normalScrapAmount = 0;
                 int normalScrapValue = 0;
@@ -217,14 +217,14 @@ public class GoldScrapTerminalPatch
             if (__result.Contains("Welcome to the Company store."))
             {
                 string nuggetColor = "Gold";
-                if (Plugin.specialDateCase == 1)
+                if (GoldScrapPlugin.specialDateCase == 1)
                 {
                     foreach (ItemData nuggetData in StoreAndTerminal.allGoldStoreItemData)
                     {
                         if (nuggetData.folderName == "GoldNugget")
                         {
                             nuggetColor = nuggetData.localItemsListIndex % 2 == 0 ? "Silver" : "Bronze";
-                            Plugin.Logger.LogDebug($"searching for nuggetColor: {nuggetColor}");
+                            GoldScrapPlugin.Logger.LogDebug($"searching for nuggetColor: {nuggetColor}");
                             break;
                         }
                     }
@@ -238,32 +238,21 @@ public class GoldScrapTerminalPatch
             {
                 __result = __result.Replace("[goldScrapHostPlayer]", StartOfRound.Instance.allPlayerScripts[0].playerUsername);
             }
-            if (__result.Contains("[goldScrapDateCaseSecretQuestion]"))
-            {
-                if (Plugin.specialDateCase >= 0)
-                {
-                    __result = __result.Replace("[goldScrapDateCaseSecretQuestion]", "10) O Spirits of Gold, reveal your secrets to me!\n");
-                }
-                else
-                {
-                    __result = __result.Replace("[goldScrapDateCaseSecretQuestion]", "");
-                }
-            }
             if (__result.Contains("[goldScrapDateCaseSecretCode]"))
             {
-                string codeString = General.ConvertSpecialDateCase(Plugin.specialDateCase);
+                string codeString = GoldScrapGeneral.ConvertSpecialDateCase(GoldScrapPlugin.specialDateCase);
                 if (codeString == "0000")
                 {
-                    __result = __result.Replace("[goldScrapDateCaseSecretCode]", "The spirits have nothing to say to you, mortal.");
+                    __result = __result.Replace("[goldScrapDateCaseSecretCode]", "The spirits have nothing to say. Not today...");
                 }
                 else
                 {
                     __result = __result.Replace("[goldScrapDateCaseSecretCode]", $"Today's stars align to form {codeString}");
                 }
             }
-            if ((Plugin.specialDateCase == 1 || Plugin.specialDateCase == 4) && (__result.Contains("You have requested to order") || __result.Contains("Ordered ")))
+            if ((GoldScrapPlugin.specialDateCase == 1 || GoldScrapPlugin.specialDateCase == 4) && (__result.Contains("You have requested to order") || __result.Contains("Ordered ")))
             {
-                Plugin.Logger.LogDebug($"caught special node");
+                GoldScrapPlugin.Logger.LogDebug($"caught special node");
                 ItemData foundItem = null;
                 int foundIndex = -1;
                 for (int j = 0; j < StoreAndTerminal.allGoldStoreItemData.Length; j++)
@@ -277,10 +266,10 @@ public class GoldScrapTerminalPatch
                 }
                 if (foundItem != null && foundIndex != -1)
                 {
-                    Plugin.Logger.LogDebug($"foundItem: {foundItem} | foundIndex: {foundIndex}");
+                    GoldScrapPlugin.Logger.LogDebug($"foundItem: {foundItem} | foundIndex: {foundIndex}");
                     int indexOf = __result.IndexOf(foundItem.displayName);
                     string substring = __result.Substring(indexOf);
-                    __result = __result.Substring(0, indexOf) + RuntimeChanges.ReplaceGoldInName(substring, Plugin.specialDateCase, foundIndex % 2 == 0, RuntimeChanges.DoesItemHaveAlts(foundItem, Plugin.specialDateCase), printDebug: false);
+                    __result = __result.Substring(0, indexOf) + RuntimeChanges.ReplaceGoldInName(substring, GoldScrapPlugin.specialDateCase, foundIndex % 2 == 0, RuntimeChanges.DoesItemHaveAlts(foundItem, GoldScrapPlugin.specialDateCase), printDebug: false);
                 }
             }
 
@@ -315,7 +304,7 @@ public class GoldScrapTerminalPatch
                         }
                         else
                         {
-                            Plugin.Logger.LogError($"FAILED PARSE!!!!!!!");
+                            GoldScrapPlugin.Logger.LogError($"FAILED PARSE!!!!!!!");
                             successfulInt = false;
                         }
                         string textToWrite = buildingString;
@@ -324,7 +313,7 @@ public class GoldScrapTerminalPatch
                             ItemData dataToWorkFrom = StoreAndTerminal.allGoldStoreItemData[parsedIndex];
                             if (dataToWorkFrom == null || (dataToWorkFrom.localBuyItemIndex == -1 && dataToWorkFrom.localUnlockableID == -1))
                             {
-                                Plugin.Logger.LogError($"invalid dataToWorkFrom, null? {dataToWorkFrom == null}");
+                                GoldScrapPlugin.Logger.LogError($"invalid dataToWorkFrom, null? {dataToWorkFrom == null}");
                             }
                             else if (dataToWorkFrom.localBuyItemIndex != -1 && dataToWorkFrom.itemProperties != null)
                             {
@@ -424,7 +413,7 @@ public class GoldScrapTerminalPatch
                             break;
                         }
                     }
-                    Plugin.Logger.LogDebug($"deduced levelIDInList {levelIDInList}");
+                    GoldScrapPlugin.Logger.LogDebug($"deduced levelIDInList {levelIDInList}");
                     if (levelIDInList != -1)
                     {
                         string[] lines = __result.Split('\n');
@@ -448,11 +437,11 @@ public class GoldScrapTerminalPatch
 
 
             //[Custom Terminal Scan] FALSE
-            if (!Configs.fixScan.Value && __result.Contains(" objects outside the ship, totalling at an approximate value of $"))
+            if (!GoldScrapConfigs.fixScan.Value && __result.Contains(" objects outside the ship, totalling at an approximate value of $"))
             {
-                if (!General.DoesMoonHaveGoldScrap()) return;
+                if (!GoldScrapGeneral.DoesMoonHaveGoldScrap()) return;
 
-                Plugin.Logger.LogInfo("Config [Custom Terminal Scan] is set to FALSE. Using vanilla scan.");
+                GoldScrapPlugin.Logger.LogInfo("Config [Custom Terminal Scan] is set to FALSE. Using vanilla scan.");
                 int goldScrapAmount = 0;
                 int goldScrapValue = 0;
 
@@ -486,7 +475,7 @@ public class GoldScrapTerminalPatch
     {
         int sale = RarityManager.allItemPricePercentages[parsedIndex];
         float salesPercentage = (float)(sale / 100f);
-        Plugin.Logger.LogDebug($"parsedIndex: {parsedIndex} | sale of {100 - sale}");
+        GoldScrapPlugin.Logger.LogDebug($"parsedIndex: {parsedIndex} | sale of {100 - sale}");
         int displayPrice = 0;
         if (dataToWorkFrom.itemProperties != null)
         {

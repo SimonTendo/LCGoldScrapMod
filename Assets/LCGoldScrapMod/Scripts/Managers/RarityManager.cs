@@ -6,7 +6,7 @@ using HarmonyLib;
 
 public class RarityManager : NetworkBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static RarityManager instance;
 
@@ -105,7 +105,7 @@ public class RarityManager : NetworkBehaviour
 
     private void SucceededGoldFeverCheck()
     {
-        int levelID = General.GetRandomLevelID();
+        int levelID = GoldScrapGeneral.GetRandomLevelID();
         if (daysUntilNextFever <= 1 && TimeOfDay.Instance.daysUntilDeadline == 1 && daysUntilNextFever != -1)
         {
             for (int i = 0; i < StartOfRound.Instance.levels.Length; i++)
@@ -118,7 +118,7 @@ public class RarityManager : NetworkBehaviour
             }
             SetGoldFeverForLevel(levelID, -1, true);
         }
-        else if (!General.DoesMoonHaveGoldScrap(levelID, false))
+        else if (!GoldScrapGeneral.DoesMoonHaveGoldScrap(levelID, false))
         {
             Logger.LogDebug($"SALES: rolled randomLevelID: {levelID}");
             SetGoldFeverForLevel(levelID, -1, true);
@@ -270,7 +270,7 @@ public class RarityManager : NetworkBehaviour
 
     private IEnumerator SyncFeverSalesOnDelay(int[] hostSalesPercentages)
     {
-        yield return new WaitUntil(() => Plugin.appliedHostConfigs);
+        yield return new WaitUntil(() => GoldScrapPlugin.appliedHostConfigs);
         SyncFeverSales(hostSalesPercentages);
     }
 
@@ -381,9 +381,9 @@ public class RarityManager : NetworkBehaviour
             {
                 continue;
             }
-            for (int j = 0; j < Plugin.allGoldGrabbableObjects.Length; j++)
+            for (int j = 0; j < GoldScrapPlugin.allGoldGrabbableObjects.Length; j++)
             {
-                ItemData itemData = Plugin.allGoldGrabbableObjects[j];
+                ItemData itemData = GoldScrapPlugin.allGoldGrabbableObjects[j];
                 if (itemData == null || itemData.itemProperties == null)
                 {
                     continue;
@@ -412,14 +412,14 @@ public class RarityManager : NetworkBehaviour
         }
         float rarity = 1f;
         float difference = 0f;
-        if (forLevel.levelID <= Plugin.suspectedLevelListLength)
+        if (forLevel.levelID <= GoldScrapPlugin.suspectedLevelListLength)
         {
             rarity = CalculateDefaultRarityWithConfig(itemData.defaultRarity);
             difference = CalculateRarityDifferenceModifier(GetThisLevelsDifferenceModifier(itemData, forLevel.levelID), itemData);
         }
         else
         {
-            rarity = Configs.moddedMoonRarity.Value;
+            rarity = GoldScrapConfigs.moddedMoonRarity.Value;
         }
         float dateCaseMultiplier = CalculateDateCaseMultiplier(itemData);
         int toReturn = (int)((rarity + difference) * dateCaseMultiplier);
@@ -428,7 +428,7 @@ public class RarityManager : NetworkBehaviour
 
     public static float CalculateDefaultRarityWithConfig(int rarityToMultiply)
     {
-        return rarityToMultiply / 3f * Configs.rarityMultiplier.Value;
+        return rarityToMultiply / 3f * GoldScrapConfigs.rarityMultiplier.Value;
     }
 
     public static float CalculateRarityDifferenceModifier(int minusPlusOrCustom, ItemData itemData = null)
@@ -438,21 +438,21 @@ public class RarityManager : NetworkBehaviour
             default:
                 return 0f;
             case 0:
-                return -0.34f / Configs.rarityMultiplier.Value;
+                return -0.34f / GoldScrapConfigs.rarityMultiplier.Value;
             case 1:
-                return 0.67f * Configs.rarityMultiplier.Value;
+                return 0.67f * GoldScrapConfigs.rarityMultiplier.Value;
             case 2:
                 if (itemData == null)
                 {
                     return 0f;
                 }
-                return itemData.customChange > 0 ? itemData.customChange / 3f * Configs.rarityMultiplier.Value : itemData.customChange * 3f / Configs.rarityMultiplier.Value;
+                return itemData.customChange > 0 ? itemData.customChange / 3f * GoldScrapConfigs.rarityMultiplier.Value : itemData.customChange * 3f / GoldScrapConfigs.rarityMultiplier.Value;
         }
     }
 
     private static int GetThisLevelsDifferenceModifier(ItemData item, int levelID)
     {
-        if (item == null || levelID < 0 || levelID > Plugin.suspectedLevelListLength)
+        if (item == null || levelID < 0 || levelID > GoldScrapPlugin.suspectedLevelListLength)
         {
             return -1;
         }
@@ -484,22 +484,22 @@ public class RarityManager : NetworkBehaviour
 
     private static float CalculateDateCaseMultiplier(ItemData itemData)
     {
-        switch (Plugin.specialDateCase)
+        switch (GoldScrapPlugin.specialDateCase)
         {
             default:
                 return 1.0f;
             case 0:
-                return General.ItemHasMatchingDateCase(itemData) ? 7.7f : 0.9f;
+                return GoldScrapGeneral.ItemHasMatchingDateCase(itemData) ? 7.7f : 0.9f;
             case 1:
                 return 1.2f;
             case 2:
-                return General.ItemHasMatchingDateCase(itemData) ? 2.0f : 1.0f;
+                return GoldScrapGeneral.ItemHasMatchingDateCase(itemData) ? 2.0f : 1.0f;
             case 3:
-                return General.ItemHasMatchingDateCase(itemData) ? 0.1f : 1.0f;
+                return GoldScrapGeneral.ItemHasMatchingDateCase(itemData) ? 0.1f : 1.0f;
             case 4:
                 return 1.5f;
             case 5:
-                return General.ItemHasMatchingDateCase(itemData) ? 3.3f : 1.0f;
+                return GoldScrapGeneral.ItemHasMatchingDateCase(itemData) ? 3.3f : 1.0f;
         }
     }
 
@@ -567,7 +567,7 @@ public class RarityManager : NetworkBehaviour
         Item itemToSpawn = null;
         while (itemData == null || !itemData.isScrap || itemData.itemProperties == null)
         {
-            itemData = Plugin.allGoldGrabbableObjects[Random.Range(0, Plugin.allGoldGrabbableObjects.Length)];
+            itemData = GoldScrapPlugin.allGoldGrabbableObjects[Random.Range(0, GoldScrapPlugin.allGoldGrabbableObjects.Length)];
             Logger.LogDebug($"randomly rolled {itemData.name} (scrap: {itemData.isScrap} | store: {itemData.isStoreItem})");
             yield return null;
         }

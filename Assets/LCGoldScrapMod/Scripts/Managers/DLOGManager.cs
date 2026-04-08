@@ -4,7 +4,7 @@ using BepInEx.Logging;
 
 public class DLOGManager : NetworkBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static DLOGManager instance;
 

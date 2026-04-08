@@ -5,7 +5,7 @@ using BepInEx.Logging;
 
 public class GoldenClockScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Space(3f)]
     [Header("Original Clock")]

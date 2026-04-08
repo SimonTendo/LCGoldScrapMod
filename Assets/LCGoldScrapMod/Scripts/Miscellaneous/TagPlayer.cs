@@ -6,7 +6,7 @@ using GameNetcodeStuff;
 
 public class TagPlayer : NetworkBehaviour, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static GameObject tagContainer;
     public ScanNodeProperties scanNode;

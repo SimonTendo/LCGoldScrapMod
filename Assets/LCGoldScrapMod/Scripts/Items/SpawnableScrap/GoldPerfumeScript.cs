@@ -4,7 +4,7 @@ using BepInEx.Logging;
 
 public class GoldPerfumeScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public StringList fakeBrandNames;
     public ScanNodeProperties scanNode;
@@ -54,7 +54,7 @@ public class GoldPerfumeScript : GrabbableObject
         }
         else if (textToReplace.Contains("[randomPlayer]"))
         {
-            textToReplace = textToReplace.Replace("[randomPlayer]", General.GetRandomPlayer().playerUsername);
+            textToReplace = textToReplace.Replace("[randomPlayer]", GoldScrapGeneral.GetRandomPlayer().playerUsername);
         }
         else if (textToReplace.Contains("[profitQuota]"))
         {
@@ -98,7 +98,7 @@ public class GoldPerfumeScript : GrabbableObject
 
     private string GetCurrentLevel()
     {
-        if (StartOfRound.Instance.currentLevelID < 0 || StartOfRound.Instance.currentLevelID > Plugin.suspectedLevelListLength)
+        if (StartOfRound.Instance.currentLevelID < 0 || StartOfRound.Instance.currentLevelID > GoldScrapPlugin.suspectedLevelListLength)
         {
             return null;
         }

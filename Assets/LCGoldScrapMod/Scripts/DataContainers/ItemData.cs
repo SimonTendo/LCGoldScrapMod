@@ -8,7 +8,7 @@ public class ItemData : ScriptableObject
     public string folderName = "FolderName";
     [Tooltip("The display name to show on the Item's itemName and UnlockableItem's unlockableName.\nPrimarily used to reset to as a default value.")]
     public string displayName = "Display Name";
-    [Tooltip("Determines what values for hostDateCase this item's prefab will be influences by.\n\n0: More common on New Year's. 2: More common on World Art Day. 3: Does not appear on Freedom Day. 5: More common on Halloween.")]
+    [Tooltip("Determines what values for hostDateCase this item's prefab will be influenced by.\n\n0: More common on New Year's.\n2: More common on World Art Day.\n3: Does not appear on Freedom Day.\n5: More common on Halloween.")]
     public int[] specialDateCases;
 
     [Header("Item")]

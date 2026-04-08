@@ -10,17 +10,18 @@ using HarmonyLib.Tools;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 
-[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.2.5")]
+[BepInPlugin("LCGoldScrapMod", "LCGoldScrapMod", "2.2.7")]
 [BepInDependency("LCSimonTendoPlaylistsMod", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("local.SimonTendo.LCCrashBandicootCratesMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("LethalConfig", BepInDependency.DependencyFlags.SoftDependency)]
-public class Plugin : BaseUnityPlugin
+public class GoldScrapPlugin : BaseUnityPlugin
 {
     internal new static ManualLogSource Logger;
     public static AssetBundle CustomGoldScrapAssets;
     public static GoldScrapSaveData.SaveData saveData;
     public static string sAssemblyLocation;
     public static string sSaveLocation;
-    public static Configs myConfig { get; internal set; }
+    public static GoldScrapConfigs myConfig { get; internal set; }
 
     public static bool alreadyAddedItems = false;
     public static bool alreadyAddedUnlockables = false;
@@ -39,7 +40,9 @@ public class Plugin : BaseUnityPlugin
     public static bool v50Compatible = false;
     public static bool v60Compatible = false;
     public static bool v70Compatible = false;
+    public static bool v80Compatible = false;
     public static bool playlistsModCompatible = false;
+    public static bool crashBandicootCratesCompatible = false;
     public static bool lethalConfigCompatible = false;
 
     private void Awake()
@@ -68,7 +71,7 @@ public class Plugin : BaseUnityPlugin
         LoadMiscellaneous();
         LoadSavedData();
         GetCompatibility();
-        Configs.LoadAndDisplayConfigs();
+        GoldScrapConfigs.LoadAndDisplayConfigs();
         UnityNetcodePatcher();
     }
 
@@ -82,7 +85,7 @@ public class Plugin : BaseUnityPlugin
         LightSwitchRevealer.lightRevealerPrefab = CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapMisc/GoldenGlassSecrets/LightSwitchRevealer/LightSwitchRevealer.prefab");
         LogManager.managerPrefab = CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapMisc/StoryLogs/LogManager.prefab");
         LogManager.allLogPrefabs = CustomGoldScrapAssets.LoadAsset<GameObjectList>("Assets/LCGoldScrapMod/GoldScrapMisc/StoryLogs/AllLogs.asset");
-        AssetsCollection.LoadEditorAssets();
+        GoldScrapAssetsCollection.LoadEditorAssets();
         StoreAndTerminal.LoadEditorAssets();
     }
 
@@ -139,8 +142,22 @@ public class Plugin : BaseUnityPlugin
         }
         Logger.LogDebug($"v70 compatibility is {v70Compatible}");
 
+        //v80
+        if (typeof(EnemyType).GetField("DiversityPowerLevel") != null)
+        {
+            v80Compatible = true;
+        }
+        Logger.LogDebug($"v80 compatibility is {v80Compatible}");
+
         //LCSimonTendoPlaylistsMod
         playlistsModCompatible = CheckForPlugin("LCSimonTendoPlaylistsMod");
+
+        //LCCrashBandicootCratesMod
+        crashBandicootCratesCompatible = CheckForPlugin("LCCrashBandicootCratesMod");
+        if (crashBandicootCratesCompatible)
+        {
+            CrossModCompatibility.CreateGoldCrate();
+        }
 
         //LethalConfig
         lethalConfigCompatible = CheckForPlugin("LethalConfig");
@@ -209,21 +226,21 @@ public class Plugin : BaseUnityPlugin
     {
         LethalConfigManager.SetModIcon(CustomGoldScrapAssets.LoadAsset<Sprite>("Assets/LCGoldScrapMod/GoldScrapVisuals/Sprites/icon.png"));
         LethalConfigManager.SetModDescription("Add 50 gold versions of scrap and 20 store unlockables!");
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(Configs.selectedLevels, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.minValueMultiplier, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.maxValueMultiplier, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.rarityMultiplier, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.weightMultiplier, true));
-        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(Configs.priceMultiplier, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.moddedMoonSpawn, true));
-        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(Configs.moddedMoonRarity, true));
-        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(Configs.moddedMoonCost, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.newSFX, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.replaceSFX, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.replaceEnemySFX, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.fixScan, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.toolsRebalance, true));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(Configs.sillyScrap, true));
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(Configs.dateCaseCode, true));
+        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(GoldScrapConfigs.selectedLevels, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(GoldScrapConfigs.minValueMultiplier, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(GoldScrapConfigs.maxValueMultiplier, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(GoldScrapConfigs.rarityMultiplier, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(GoldScrapConfigs.weightMultiplier, true));
+        LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(GoldScrapConfigs.priceMultiplier, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(GoldScrapConfigs.moddedMoonSpawn, true));
+        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(GoldScrapConfigs.moddedMoonRarity, true));
+        LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(GoldScrapConfigs.moddedMoonCost, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(GoldScrapConfigs.newSFX, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(GoldScrapConfigs.replaceSFX, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(GoldScrapConfigs.replaceEnemySFX, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(GoldScrapConfigs.fixScan, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(GoldScrapConfigs.toolsRebalance, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(GoldScrapConfigs.sillyScrap, true));
+        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(GoldScrapConfigs.dateCaseCode, true));
     }
 }

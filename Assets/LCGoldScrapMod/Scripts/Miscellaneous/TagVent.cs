@@ -4,7 +4,7 @@ using HarmonyLib;
 
 public class TagVent : MonoBehaviour, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static GameObject tagContainer;
 
@@ -81,9 +81,7 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
             TagVent childTag = __instance.GetComponentInChildren<TagVent>(true);
             if (childTag != null)
             {
-                Logger.LogDebug($"#{__instance.NetworkObjectId} setting name");
                 childTag.AssignName("Occupied by:");
-                Logger.LogDebug($"set name of {childTag.name} to {childTag.scanNode.subText}");
             }
         }
 
@@ -100,7 +98,7 @@ public class TagVent : MonoBehaviour, IGoldenGlassSecret
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Configs.hostToolRebalance)
+        if (!GoldScrapConfigs.hostToolRebalance)
         {
             scanNodeObject.SetActive(true);
         }

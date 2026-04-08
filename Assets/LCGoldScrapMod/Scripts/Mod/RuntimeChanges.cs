@@ -1,16 +1,16 @@
 using UnityEngine;
 using GameNetcodeStuff;
 using BepInEx.Logging;
-using static AssetsCollection;
+using static GoldScrapAssetsCollection;
 using static RegisterGoldScrap;
 
 public class RuntimeChanges
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static void SetAllDefaultNames()
     {
-        foreach (ItemData scrapItem in Plugin.allGoldGrabbableObjects)
+        foreach (ItemData scrapItem in GoldScrapPlugin.allGoldGrabbableObjects)
         {
             if (scrapItem == null || scrapItem.isStoreItem || scrapItem.itemProperties == null)
             {
@@ -50,28 +50,28 @@ public class RuntimeChanges
     public static void SyncHostConfigs(bool rebalance, float multiplierWeight, float multiplierPrice, int dateCaseHost)
     {
         Logger.LogInfo($"Applying values of host's specialDateCase. Value: {dateCaseHost}");
-        Plugin.specialDateCase = dateCaseHost;
+        GoldScrapPlugin.specialDateCase = dateCaseHost;
 
         Logger.LogInfo($"Applying values of host's config [Multiplier Weight]. Value: {multiplierWeight}");
-        Configs.hostWeightMultiplier = multiplierWeight;
-        foreach (ItemData item in Plugin.allGoldGrabbableObjects)
+        GoldScrapConfigs.hostWeightMultiplier = multiplierWeight;
+        foreach (ItemData item in GoldScrapPlugin.allGoldGrabbableObjects)
         {
             if (item == null)
             {
                 continue;
             }
-            item.itemProperties.weight = Configs.CalculateWeightCustom(item.defaultWeight, multiplierWeight);
+            item.itemProperties.weight = GoldScrapConfigs.CalculateWeightCustom(item.defaultWeight, multiplierWeight);
             if (item.isScrap)
             {
-                Configs.SetCustomGoldScrapValues(item);
+                GoldScrapConfigs.SetCustomGoldScrapValues(item);
             }
         }
 
         Logger.LogInfo($"Applying values of host's config [Multiplier Price]. Value: {multiplierPrice}");
-        Configs.SetCustomGoldStorePrices(multiplierPrice);
+        GoldScrapConfigs.SetCustomGoldStorePrices(multiplierPrice);
 
-        Logger.LogInfo($"Applying values of host's config [Other Tools Balance]. Value: {Configs.hostToolRebalance}");
-        Configs.hostToolRebalance = rebalance;
+        Logger.LogInfo($"Applying values of host's config [Other Tools Balance]. Value: {GoldScrapConfigs.hostToolRebalance}");
+        GoldScrapConfigs.hostToolRebalance = rebalance;
 
         UpdateGoldScrapStatic();
         UpdateGoldScrapInstances();
@@ -83,15 +83,15 @@ public class RuntimeChanges
             {
                 continue;
             }
-            bool printDebug = Application.isEditor && Plugin.specialDateCase >= 0 && StartOfRound.Instance != null && StartOfRound.Instance.localPlayerController != null && StartOfRound.Instance.localPlayerController.isHostPlayerObject && GameNetworkManager.Instance != null && GameNetworkManager.Instance.disableSteam;
+            bool printDebug = Application.isEditor && GoldScrapPlugin.specialDateCase >= 0 && StartOfRound.Instance != null && StartOfRound.Instance.localPlayerController != null && StartOfRound.Instance.localPlayerController.isHostPlayerObject && GameNetworkManager.Instance != null && GameNetworkManager.Instance.disableSteam;
             if (printDebug)
             {
-                Plugin.Logger.LogInfo($"Setting up: {level.name}");
+                GoldScrapPlugin.Logger.LogInfo($"Setting up: {level.name}");
             }
             RarityManager.SetRarityForLevel(level.levelID, -1, printDebug);
         }
 
-        Plugin.appliedHostConfigs = true;
+        GoldScrapPlugin.appliedHostConfigs = true;
     }
 
     private static void UpdateGoldScrapStatic()
@@ -107,17 +107,17 @@ public class RuntimeChanges
         GoldenPickaxe.RebalanceTool();
         GoldenGlove.RebalanceTool();
 
-        if (Plugin.specialDateCase != 1 && Plugin.specialDateCase != 4 && Plugin.specialDateCase != 6)
+        if (GoldScrapPlugin.specialDateCase != 1 && GoldScrapPlugin.specialDateCase != 4 && GoldScrapPlugin.specialDateCase != 6)
         {
             return;
         }
-        foreach (ItemData scrapItem in Plugin.allGoldGrabbableObjects)
+        foreach (ItemData scrapItem in GoldScrapPlugin.allGoldGrabbableObjects)
         {
             if (scrapItem == null || scrapItem.isStoreItem || scrapItem.itemProperties == null)
             {
                 continue;
             }
-            UpdatePrefabForSpecialDate(Plugin.specialDateCase, scrapItem);
+            UpdatePrefabForSpecialDate(GoldScrapPlugin.specialDateCase, scrapItem);
         }
         foreach (ItemData storeItem in StoreAndTerminal.allGoldStoreItemData)
         {
@@ -125,7 +125,7 @@ public class RuntimeChanges
             {
                 continue;
             }
-            UpdatePrefabForSpecialDate(Plugin.specialDateCase, storeItem);
+            UpdatePrefabForSpecialDate(GoldScrapPlugin.specialDateCase, storeItem);
         }
     }
 
@@ -144,42 +144,42 @@ public class RuntimeChanges
                 if (scrapScript.data.itemProperties == GoldenBell.itemData.itemProperties)
                 {
                     GoldenBell.RebalanceTool(scrapScript.gameObject);
-                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {Configs.hostToolRebalance}");
+                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {GoldScrapConfigs.hostToolRebalance}");
                     continue;
                 }
                 if (scrapScript.data.itemProperties == GoldenGlass.itemData.itemProperties)
                 {
                     GoldenGlass.RebalanceTool(scrapScript.gameObject);
-                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {Configs.hostToolRebalance}");
+                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {GoldScrapConfigs.hostToolRebalance}");
                     continue;
                 }
                 if (scrapScript.data.itemProperties == GoldSign.itemData.itemProperties)
                 {
                     GoldSign.RebalanceTool(scrapScript.gameObject);
-                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {Configs.hostToolRebalance}");
+                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {GoldScrapConfigs.hostToolRebalance}");
                     continue;
                 }
                 if (scrapScript.data.itemProperties == GoldRemote.itemData.itemProperties)
                 {
                     GoldRemote.RebalanceTool(scrapScript.gameObject);
-                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {Configs.hostToolRebalance}");
+                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {GoldScrapConfigs.hostToolRebalance}");
                     continue;
                 }
                 if (scrapScript.data.itemProperties == GoldenGrenade.itemData.itemProperties)
                 {
                     GoldenGrenade.RebalanceTool(scrapScript.gameObject);
-                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {Configs.hostToolRebalance}");
+                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {GoldScrapConfigs.hostToolRebalance}");
                     continue;
                 }
                 if (scrapScript.data.itemProperties == GoldenGlove.itemData.itemProperties)
                 {
                     GoldenGlove.RebalanceTool(scrapScript.gameObject);
-                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {Configs.hostToolRebalance}");
+                    Logger.LogDebug($"Updated prefab {scrapScript.name} #{scrapScript.item.NetworkObjectId} with rebalance {GoldScrapConfigs.hostToolRebalance}");
                     continue;
                 }
             }
         }
-        if (Plugin.specialDateCase == 1 || Plugin.specialDateCase == 4 || Plugin.specialDateCase == 6)
+        if (GoldScrapPlugin.specialDateCase == 1 || GoldScrapPlugin.specialDateCase == 4 || GoldScrapPlugin.specialDateCase == 6)
         {
             foreach (UnlockableSuit suit in Object.FindObjectsByType<UnlockableSuit>(FindObjectsSortMode.None))
             {
@@ -189,7 +189,7 @@ public class RuntimeChanges
                 }
                 if (suit.suitID == StoreAndTerminal.goldSuitID || suit.suitID == StoreAndTerminal.silverSuitID || suit.suitID == StoreAndTerminal.bronzeSuitID)
                 {
-                    UpdatePrefabForSpecialDate(Plugin.specialDateCase, runtimeSuit: suit);
+                    UpdatePrefabForSpecialDate(GoldScrapPlugin.specialDateCase, runtimeSuit: suit);
                 }
             }
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
@@ -210,7 +210,7 @@ public class RuntimeChanges
     {
         if (caseToUse == -1)
         {
-            caseToUse = Plugin.specialDateCase;
+            caseToUse = GoldScrapPlugin.specialDateCase;
         }
         Item item = null;
         UnlockableItem unlockable = null;
@@ -330,11 +330,11 @@ public class RuntimeChanges
                 {
                     if (runtimeObject != null)
                     {
-                        General.InstantiateSparklesOnTransform(runtimeObject.transform);
+                        GoldScrapGeneral.InstantiateSparklesOnTransform(runtimeObject.transform);
                     }
                     if (runtimeSuit != null)
                     {
-                        General.InstantiateSparklesOnTransform(runtimeSuit.transform);
+                        GoldScrapGeneral.InstantiateSparklesOnTransform(runtimeSuit.transform);
                     }
                 }
                 break;
@@ -363,12 +363,12 @@ public class RuntimeChanges
                         if (renderer.materials[i].name.StartsWith("GoldenVision"))
                         {
                             string visionColor = makeSilver ? "Silver" : "Bronze"; 
-                            newMats[i] = Plugin.CustomGoldScrapAssets.LoadAsset<Material>($"Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldenVision{visionColor}.mat");
+                            newMats[i] = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>($"Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldenVision{visionColor}.mat");
                         }
                         else if (renderer.materials[i].name.StartsWith("GoldenTicket"))
                         {
                             string ticketColor = makeSilver ? "Silver" : "Bronze";
-                            newMats[i] = Plugin.CustomGoldScrapAssets.LoadAsset<Material>($"Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldenTicket{ticketColor}.mat");
+                            newMats[i] = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<Material>($"Assets/LCGoldScrapMod/GoldScrapVisuals/Materials/GoldenTicket{ticketColor}.mat");
                         }
                         else if (renderer.materials[i].name.StartsWith("GoldMatTransparent"))
                         {
@@ -653,7 +653,7 @@ public class RuntimeChanges
         }
         matchingName = ReplaceGoldInName(matchingName, caseToUse, true, printDebug: false);
         int indexOfItem = -1;
-        ItemData[] listToCheck = forStoreItem ? StoreAndTerminal.allGoldStoreItemData : Plugin.allGoldGrabbableObjects;
+        ItemData[] listToCheck = forStoreItem ? StoreAndTerminal.allGoldStoreItemData : GoldScrapPlugin.allGoldGrabbableObjects;
         for (int i = 0; i < listToCheck.Length; i++)
         {
             ItemData data = listToCheck[i];

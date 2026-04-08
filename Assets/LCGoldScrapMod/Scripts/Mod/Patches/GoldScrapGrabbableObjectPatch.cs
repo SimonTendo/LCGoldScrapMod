@@ -17,7 +17,7 @@ public class GoldScrapGrabbableObjectPatch
                 __instance.itemUsedUp = false;
                 __instance.pinPulled = false;
                 __instance.explodeTimer = 0;
-                GoldScrapPrivateAccesser.SetPrivateValue<Coroutine>(__instance, "pullPinCoroutine").SetValue(__instance, null);
+                __instance.pullPinCoroutine = null;
             }
         }
     }
@@ -31,7 +31,7 @@ public class GoldScrapGrabbableObjectPatch
         [HarmonyPrefix]
         public static void NormalBellSoundRandomPitch(AnimatedItem __instance)
         {
-            if (__instance.gameObject.name == "GoldenBellPrefab(Clone)" && !Configs.sillyScrap.Value && !Configs.replaceSFX.Value && AssetsCollection.sharedSFXdropBell != null)
+            if (__instance.gameObject.name == "GoldenBellPrefab(Clone)" && !GoldScrapConfigs.sillyScrap.Value && !GoldScrapConfigs.replaceSFX.Value && GoldScrapAssetsCollection.sharedSFXdropBell != null)
             {
                 __instance.itemAudio.pitch = Random.Range(0.66f, 1.33f);
             }
@@ -60,7 +60,7 @@ public class GoldScrapGrabbableObjectPatch
         {
             if (__instance.GetComponent<GoldScrapObject>() != null)
             {
-                General.DestroySparklesOnTransform(__instance.transform);
+                GoldScrapGeneral.DestroySparklesOnTransform(__instance.transform);
             }
         }
     }
@@ -76,7 +76,7 @@ public class GoldScrapGrabbableObjectPatch
         {
             if (__instance.enemyHP == 3 && __instance.heldItem != null && __instance.heldItem.itemGrabbableObject != null && __instance.heldItem.itemGrabbableObject.itemProperties == RegisterGoldScrap.CuddlyGold.itemData.itemProperties)
             {
-                Plugin.Logger.LogDebug($"{__instance.name} #{__instance.NetworkObjectId} got CuddlyGold!!");
+                GoldScrapPlugin.Logger.LogDebug($"{__instance.name} #{__instance.NetworkObjectId} got CuddlyGold!!");
 
                 __instance.angryTimer = -1;
                 __instance.creatureVoice.Stop();
@@ -87,18 +87,18 @@ public class GoldScrapGrabbableObjectPatch
 
                 foreach (HoarderBugAI bug in Object.FindObjectsByType<HoarderBugAI>(FindObjectsSortMode.None))
                 {
-                    Plugin.Logger.LogDebug($"setting #{bug.NetworkObjectId}'s annoyance DOWN");
-                    GoldScrapPrivateAccesser.SetPrivateValue<float>(bug, "annoyanceMeter").SetValue(bug, -9999f);
+                    GoldScrapPlugin.Logger.LogDebug($"setting #{bug.NetworkObjectId}'s annoyance DOWN");
+                    bug.annoyanceMeter = -9999f;
                 }
 
                 if (HoarderBugAI.HoarderBugItems != null)
                 {
-                    Plugin.Logger.LogDebug("locally clearing HoarderBugItems");
+                    GoldScrapPlugin.Logger.LogDebug("locally clearing HoarderBugItems");
                     HoarderBugAI.HoarderBugItems.Clear();
                 }
                 if (HoarderBugAI.grabbableObjectsInMap != null)
                 {
-                    Plugin.Logger.LogDebug("locally clearing grabbableObjectsInMap");
+                    GoldScrapPlugin.Logger.LogDebug("locally clearing grabbableObjectsInMap");
                     HoarderBugAI.grabbableObjectsInMap.Clear();
                 }
             }
@@ -118,12 +118,12 @@ public class GoldScrapGrabbableObjectPatch
                 {
                     if (HoarderBugAI.HoarderBugItems != null && HoarderBugAI.HoarderBugItems.Count > 0)
                     {
-                        Plugin.Logger.LogDebug("host clearing HoarderBugItems");
+                        GoldScrapPlugin.Logger.LogDebug("host clearing HoarderBugItems");
                         HoarderBugAI.HoarderBugItems.Clear();
                     }
                     if (HoarderBugAI.grabbableObjectsInMap != null && HoarderBugAI.grabbableObjectsInMap.Count > 0)
                     {
-                        Plugin.Logger.LogDebug("host clearing grabbableObjectsInMap");
+                        GoldScrapPlugin.Logger.LogDebug("host clearing grabbableObjectsInMap");
                         HoarderBugAI.grabbableObjectsInMap.Clear();
                     }
                     return false;
@@ -148,7 +148,7 @@ public class GoldScrapGrabbableObjectPatch
             {
                 if (GetBugHoldingCuddlyGold(bug) != null && bug.angryTimer <= 0 && bug.enemyHP == 3)
                 {
-                    Plugin.Logger.LogDebug($"{bug.name} #{bug.NetworkObjectId} holding CuddlyGold, clearing list after it's been refreshed");
+                    GoldScrapPlugin.Logger.LogDebug($"{bug.name} #{bug.NetworkObjectId} holding CuddlyGold, clearing list after it's been refreshed");
                     HoarderBugAI.grabbableObjectsInMap.Clear();
                     return;
                 }
@@ -166,15 +166,15 @@ public class GoldScrapGrabbableObjectPatch
 
         private static AudioClip GetGrabCuddlyGoldSFX()
         {
-            if (Configs.sillyScrap.Value)
+            if (GoldScrapConfigs.sillyScrap.Value)
             {
-                return AssetsCollection.LoadSillySFX("CuddlyGoldGrab");
+                return GoldScrapAssetsCollection.LoadSillySFX("CuddlyGoldGrab");
             }
-            if (Configs.replaceEnemySFX.Value || AssetsCollection.sharedSFXapplause == null)
+            if (GoldScrapConfigs.replaceEnemySFX.Value || GoldScrapAssetsCollection.sharedSFXapplause == null)
             {
-                return AssetsCollection.LoadReplaceSFX("GrabCuddlyGold");
+                return GoldScrapAssetsCollection.LoadReplaceSFX("GrabCuddlyGold");
             }
-            return AssetsCollection.sharedSFXapplause;
+            return GoldScrapAssetsCollection.sharedSFXapplause;
         }
     }
 }

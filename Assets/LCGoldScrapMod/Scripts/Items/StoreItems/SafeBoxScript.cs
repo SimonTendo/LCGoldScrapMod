@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using Unity.Netcode;
 using GameNetcodeStuff;
 using BepInEx.Logging;
@@ -7,7 +8,7 @@ using HarmonyLib;
 
 public class SafeBoxScript : NetworkBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Header("Scripts")]
     public InteractTrigger outsideTrigger;
@@ -43,6 +44,7 @@ public class SafeBoxScript : NetworkBehaviour
     private int currentBonks;
     public float checkTrappedInterval;
     private float checkTrappedTimer;
+    public NavMeshObstacle navBlocker;
 
     private void Start()
     {
@@ -78,6 +80,7 @@ public class SafeBoxScript : NetworkBehaviour
         outsideTrigger.hoverTip = setOpenTo ? "Close : [E]" : "Open : [E]";
         isOpen = setOpenTo;
         insideLight.enabled = setOpenTo;
+        navBlocker.enabled = !setOpenTo;
         if (isOpen)
         {
             OnOpen();

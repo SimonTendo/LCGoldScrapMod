@@ -6,7 +6,7 @@ using HarmonyLib;
 
 public class LogManager : MonoBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static GameObject managerPrefab;
     public static GameObjectList allLogPrefabs;
@@ -49,7 +49,7 @@ public class LogManager : MonoBehaviour
             thisLog.SetStoryLogID(terminalScript.logEntryFiles.Count - 1);
 
             InteractTrigger logTrigger = logPrefab.GetComponent<InteractTrigger>();
-            logTrigger.hoverIcon = AssetsCollection.handIcon;
+            logTrigger.hoverIcon = GoldScrapAssetsCollection.handIcon;
 
             Logger.LogDebug($"Added {logNode.name} to logEntryFiles at storyLogID {thisLog.storyLogID}");
         }

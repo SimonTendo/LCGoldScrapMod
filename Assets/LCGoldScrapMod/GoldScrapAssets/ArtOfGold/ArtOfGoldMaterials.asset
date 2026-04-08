@@ -17,6 +17,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 9eeb1d9428cba894da94137d919571d4, type: 2}
   - {fileID: 2100000, guid: ca4e760863cc2b94385fdaa58026d3e2, type: 2}
   - {fileID: 2100000, guid: f84f7df558a48a940ab987791e77322f, type: 2}
+  - {fileID: 2100000, guid: ccbd7c468aea0054ab35a97749fea754, type: 2}
   - {fileID: 2100000, guid: 44bbd61cbae9942499a93c8ce9831a39, type: 2}
   allSillyArtwork:
   - {fileID: 2100000, guid: f5612ea5fd3d72f4d964ca1cb4212029, type: 2}

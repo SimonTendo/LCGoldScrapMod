@@ -8,7 +8,7 @@ using BepInEx.Logging;
 
 public class GoldfatherClockScript : NetworkBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
     private static bool debugCheckEveryMinute = false;
 
     [Header("AUDIO")]

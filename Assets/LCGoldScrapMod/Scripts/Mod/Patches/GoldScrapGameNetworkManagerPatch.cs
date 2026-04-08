@@ -13,15 +13,15 @@ public class GoldScrapGameNetworkManagerPatch
         [HarmonyPostfix, HarmonyPatch(typeof(GameNetworkManager), "Start")]
         public static void Init(GameNetworkManager __instance)
         {
-            AssetsCollection.GetMenuAssets(__instance);
+            GoldScrapAssetsCollection.GetMenuAssets(__instance);
 
             if (networkPrefab != null)
                 return;
 
-            networkPrefab = Plugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapNetcode/NetworkPrefabs/GoldScrapNetworkHandler.prefab");
+            networkPrefab = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapNetcode/NetworkPrefabs/GoldScrapNetworkHandler.prefab");
 
             //Register NetworkPrefabs of all miscellaneous gameObjects
-            foreach (GameObject prefab in Plugin.allMiscNetworkPrefabs)
+            foreach (GameObject prefab in GoldScrapPlugin.allMiscNetworkPrefabs)
             {
                 if (prefab != null && prefab.GetComponent<NetworkObject>())
                 {
@@ -30,7 +30,7 @@ public class GoldScrapGameNetworkManagerPatch
             }
 
             //Register NetworkPrefabs of all Gold Scrap
-            foreach (ItemData item in Plugin.allGoldGrabbableObjects)
+            foreach (ItemData item in GoldScrapPlugin.allGoldGrabbableObjects)
             {
                 if (item != null && item.itemProperties != null && item.itemProperties.spawnPrefab != null && item.itemProperties.spawnPrefab.GetComponent<NetworkObject>())
                 {
@@ -63,13 +63,13 @@ public class GoldScrapGameNetworkManagerPatch
             if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
             {
                 Transform goldScrapManager = new GameObject("LCGoldScrapMod").transform;
-                goldScrapManager.transform.SetParent(Plugin.SearchForObject("SimonTendoManagers", StartOfRound.Instance.gameObject.transform.parent).transform);
+                goldScrapManager.transform.SetParent(GoldScrapPlugin.SearchForObject("SimonTendoManagers", StartOfRound.Instance.gameObject.transform.parent).transform);
 
                 GameObject networkHandler = Object.Instantiate(networkPrefab);
                 networkHandler.transform.SetParent(goldScrapManager, false);
                 networkHandler.GetComponent<NetworkObject>().Spawn();
 
-                foreach (GameObject prefab in Plugin.allMiscNetworkPrefabs)
+                foreach (GameObject prefab in GoldScrapPlugin.allMiscNetworkPrefabs)
                 {
                     if (prefab.name.Contains("Manager"))
                     {
@@ -94,7 +94,7 @@ public class GoldScrapGameNetworkManagerPatch
         {
             if (__instance == null || __instance.localPlayerController == null || !__instance.localPlayerController.isHostPlayerObject)
             {
-                Plugin.Logger.LogDebug("null or client, returning");
+                GoldScrapPlugin.Logger.LogDebug("null or client, returning");
                 return;
             }
             GoldScrapSaveData.SaveData saveData = new GoldScrapSaveData.SaveData();

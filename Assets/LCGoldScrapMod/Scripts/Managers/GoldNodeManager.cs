@@ -7,7 +7,7 @@ using BepInEx.Logging;
 
 public class GoldNodeManager : NetworkBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static GoldNodeManager instance;
 

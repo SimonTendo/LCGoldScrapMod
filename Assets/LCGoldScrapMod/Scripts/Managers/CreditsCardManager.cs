@@ -6,7 +6,7 @@ using HarmonyLib;
 
 public class CreditsCardManager : NetworkBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static CreditsCardManager instance;
 

@@ -5,7 +5,7 @@ using BepInEx.Logging;
 
 public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public bool nodeExhausted = false;
     public Collider pickaxeCollider;
@@ -34,7 +34,7 @@ public class GoldenPickaxeNode : NetworkBehaviour, IGoldenGlassSecret
     {
         revealedLight.enabled = false;
         scanNodeObject.SetActive(false);
-        if (Configs.hostToolRebalance)
+        if (GoldScrapConfigs.hostToolRebalance)
         {
             revealedLight.shadows = LightShadows.Hard;
         }

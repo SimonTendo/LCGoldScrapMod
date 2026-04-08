@@ -9,7 +9,7 @@ using HarmonyLib;
 
 public class GoldenGloveScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Space(3f)]
     [Header("GOLDEN GLOVE")]
@@ -317,11 +317,11 @@ public class GoldenGloveScript : GrabbableObject
         {
             if (holdingItem != null)
             {
-                playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (holdingItem.itemProperties.weight - 1), 1f, 10f);
+                GoldScrapGeneral.UpdatePlayerWeight(playerHeldBy, holdingItem.itemProperties, false);
             }
             if (holdingPlayer != null)
             {
-                playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (holdingPlayer.carryWeight - 0.7f), 1f, 10f);
+                GoldScrapGeneral.UpdatePlayerWeight(playerHeldBy, holdingPlayer.carryWeight - 0.7f, false);
             }
         }
         if (extendCoroutine != null || retractCoroutine != null)
@@ -929,7 +929,7 @@ public class GoldenGloveScript : GrabbableObject
         }
         if (playParticle)
         {
-            Instantiate(AssetsCollection.poofParticle, glove.transform.position + glove.transform.forward * 0.15f, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
+            Instantiate(GoldScrapAssetsCollection.poofParticle, glove.transform.position + glove.transform.forward * 0.15f, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
         }
         if (retractCoroutine == null)
         {
@@ -1277,7 +1277,7 @@ public class GoldenGloveScript : GrabbableObject
         SpecialHoldingItemFunctionality(true);
         if (playerHeldBy != null)
         {
-            playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight + (holdingItem.itemProperties.weight - 1), 1f, 10f);
+            GoldScrapGeneral.UpdatePlayerWeight(playerHeldBy, holdingItem.itemProperties, true);
             playerHeldBy.SetItemInElevator(playerHeldBy.isInHangarShipRoom, playerHeldBy.isInElevator, holdingItem);
             holdingItem.isInFactory = playerHeldBy.isInsideFactory;
             playerHeldBy.equippedUsableItemQE = true;
@@ -1410,7 +1410,7 @@ public class GoldenGloveScript : GrabbableObject
         currentSpeed = GetCurrentSpeed(false) * -1;
         if (playerHeldBy != null)
         {
-            playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (holdingItem.itemProperties.weight - 1), 1f, 10f);
+            GoldScrapGeneral.UpdatePlayerWeight(playerHeldBy, holdingItem.itemProperties, false);
             playerHeldBy.equippedUsableItemQE = true;
             SetToolTips();
         }
@@ -1566,7 +1566,7 @@ public class GoldenGloveScript : GrabbableObject
         }
         if (playerHeldBy != null)
         {
-            playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight + (holdingPlayer.carryWeight - 0.7f), 1f, 10f);
+            GoldScrapGeneral.UpdatePlayerWeight(playerHeldBy, holdingPlayer.carryWeight - 0.7f, true);
             playerHeldBy.twoHanded = true;
             if (playerHeldBy == GameNetworkManager.Instance.localPlayerController)
             {
@@ -1603,7 +1603,7 @@ public class GoldenGloveScript : GrabbableObject
         }
         if (playerHeldBy != null)
         {
-            playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (holdingPlayer.carryWeight - 0.7f), 1f, 10f);
+            GoldScrapGeneral.UpdatePlayerWeight(playerHeldBy, holdingPlayer.carryWeight - 0.7f, false);
             playerHeldBy.twoHanded = false;
             if (playerHeldBy == GameNetworkManager.Instance.localPlayerController)
             {
@@ -2269,12 +2269,22 @@ public class GoldenGloveScript : GrabbableObject
                 break;
             }
         }
-        if (itemSlot != -1)
+        if (itemSlot >= 0 && itemSlot < hitPlayer.ItemSlots.Length)
         {
             hitPlayer.ItemSlots[itemSlot] = null;
             if (hitPlayer == GameNetworkManager.Instance.localPlayerController)
             {
                 HUDManager.Instance.itemSlotIcons[itemSlot].enabled = false;
+                HUDManager.Instance.holdingTwoHandedItem.enabled = false;
+                HUDManager.Instance.ClearControlTips();
+            }
+        }
+        else if (hitPlayer.ItemOnlySlot == item)
+        {
+            hitPlayer.ItemOnlySlot = null;
+            if (hitPlayer == GameNetworkManager.Instance.localPlayerController)
+            {
+                HUDManager.Instance.itemOnlySlotIcon.enabled = false;
                 HUDManager.Instance.holdingTwoHandedItem.enabled = false;
                 HUDManager.Instance.ClearControlTips();
             }
@@ -2287,7 +2297,7 @@ public class GoldenGloveScript : GrabbableObject
         hitPlayer.currentlyHeldObject = null;
         hitPlayer.currentlyHeldObjectServer = null;
         hitPlayer.equippedUsableItemQE = false;
-        hitPlayer.carryWeight = Mathf.Clamp(hitPlayer.carryWeight - (item.itemProperties.weight - 1), 1f, 10f);
+        GoldScrapGeneral.UpdatePlayerWeight(hitPlayer, item.itemProperties, false);
         hitPlayer.playerBodyAnimator.SetBool("cancelHolding", true);
         hitPlayer.playerBodyAnimator.SetTrigger("Throw");
         hitPlayer.playerBodyAnimator.SetBool("Grab", false);

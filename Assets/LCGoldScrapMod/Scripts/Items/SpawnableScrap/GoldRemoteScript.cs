@@ -3,7 +3,7 @@ using BepInEx.Logging;
 
 public class GoldRemoteScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public AudioSource remoteAudio;
 
@@ -26,7 +26,7 @@ public class GoldRemoteScript : GrabbableObject
 
     private void ToggleFacilityLights()
     {
-        if (!Configs.hostToolRebalance)
+        if (!GoldScrapConfigs.hostToolRebalance)
         {
             if (!IsServer)
             {

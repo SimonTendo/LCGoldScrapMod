@@ -7,7 +7,7 @@ using GameNetcodeStuff;
 
 public class GoldkeeperScript : GrabbableObject, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Space(3f)]
     [Header("Blockers")]

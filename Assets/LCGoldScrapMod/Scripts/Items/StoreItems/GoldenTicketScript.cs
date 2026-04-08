@@ -6,7 +6,7 @@ using HarmonyLib;
 
 public class GoldenTicketScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static int playersBeingTeleported;
 
@@ -50,55 +50,76 @@ public class GoldenTicketScript : GrabbableObject
                     break;
                 }
             }
-            Plugin.Logger.LogDebug($"foundValidTicket?: {foundValidTicket}");
+            GoldScrapPlugin.Logger.LogDebug($"foundValidTicket?: {foundValidTicket}");
             if (!foundValidTicket)
             {
                 return true;
             }
 
-            //Teleporter: you keep your own items when teleported back to the ship
-            if (__instance.shipTeleporterId == 1)
-            {
-                for (int i = 0; i < __instance.ItemSlots.Length; i++)
-                {
-                    GrabbableObject currentItem = __instance.ItemSlots[i];
-                    Plugin.Logger.LogDebug($"player: {__instance.playerUsername} | slot: {i} | holding: {currentItem}");
-                    if (currentItem != null)
-                    {
-                        GoldenTicketScript ticket = currentItem.GetComponent<GoldenTicketScript>();
-                        if (ticket != null)
-                        {
-                            Plugin.Logger.LogDebug($"found TELEPORTER and destroying {currentItem.name} #{currentItem.NetworkObjectId} at slot {i}");
-                            ticket.DestroyGoldenTicket(i);
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-
-            //Check if there is an inverse teleporter, should the normal teleporter check fail
+            ShipTeleporter normalTeleporter = null;
             ShipTeleporter inverseTeleporter = null;
             ShipTeleporter[] allTeleporters = FindObjectsByType<ShipTeleporter>(FindObjectsSortMode.None);
             foreach (ShipTeleporter teleporter in allTeleporters)
             {
-                if (teleporter.isInverseTeleporter)
+                if (teleporter == null || teleporter.shipTeleporterAudio == null || !teleporter.shipTeleporterAudio.isPlaying)
+                {
+                    continue;
+                }
+                if (normalTeleporter == null && !teleporter.isInverseTeleporter)
+                {
+                    normalTeleporter = teleporter;
+                    continue;
+                }
+                if (inverseTeleporter == null && teleporter.isInverseTeleporter)
                 {
                     inverseTeleporter = teleporter;
-                    break;
+                    continue;
                 }
             }
-            Plugin.Logger.LogDebug($"found inverseTeleporter?: {inverseTeleporter != null}");
-            if (inverseTeleporter == null)
+            GoldScrapPlugin.Logger.LogDebug($"found... normal?: {normalTeleporter != null} // inverse?: {inverseTeleporter != null}");
+            //Normal Teleporter: only teleported player will keep their items
+            if (normalTeleporter != null)
             {
-                return true;
+                float distance = Vector3.Distance(__instance.transform.position, normalTeleporter.teleporterPosition.position);
+                Logger.LogDebug($"{__instance.playerUsername}: {distance}");
+                if (__instance.shipTeleporterId == 1 || distance < 2f)
+                {
+                    for (int i = 0; i < __instance.ItemSlots.Length; i++)
+                    {
+                        GrabbableObject currentItem = __instance.ItemSlots[i];
+                        GoldScrapPlugin.Logger.LogDebug($"player: {__instance.playerUsername} | slot: {i} | holding: {currentItem}");
+                        if (currentItem != null)
+                        {
+                            GoldenTicketScript ticket = currentItem.GetComponent<GoldenTicketScript>();
+                            if (ticket != null)
+                            {
+                                GoldScrapPlugin.Logger.LogDebug($"found TELEPORTER and destroying NORMAL {currentItem.name} #{currentItem.NetworkObjectId} at slot {i}");
+                                ticket.DestroyGoldenTicket(i);
+                                return false;
+                            }
+                        }
+                    }
+                    GrabbableObject beltItem = __instance.ItemOnlySlot;
+                    GoldScrapPlugin.Logger.LogDebug($"player: {__instance.playerUsername} | slot: -1 | holding: {beltItem}");
+                    if (beltItem != null)
+                    {
+                        GoldenTicketScript ticket = beltItem.GetComponent<GoldenTicketScript>();
+                        if (ticket != null)
+                        {
+                            GoldScrapPlugin.Logger.LogDebug($"found TELEPORTER and destroying BELT {beltItem.name} #{beltItem.NetworkObjectId} at slot -1");
+                            ticket.DestroyGoldenTicket(-1);
+                            return false;
+                        }
+                    }
+                    return true;
+                }
             }
 
             //Inverse Teleporter: all players who will get teleported keep their items
-            if (inverseTeleporter.shipTeleporterAudio.isPlaying)
+            if (inverseTeleporter != null)
             {
                 GoldenTicketScript foundTicket = null;
-                int foundSlot = 0;
+                int foundSlot = -1;
                 int playersInTeleporter = 0;
                 for (int i = 0; i < StartOfRound.Instance.allPlayerScripts.Length; i++)
                 {
@@ -109,13 +130,13 @@ public class GoldenTicketScript : GrabbableObject
                     }
                     float distance = Vector3.Distance(player.transform.position, inverseTeleporter.teleportOutPosition.position);
                     Logger.LogDebug($"{player.playerUsername}: {distance}");
-                    if (distance < 2f)
+                    if (player.shipTeleporterId == 2 || distance < 2f)
                     {
                         playersInTeleporter++;
                         for (int j = 0; j < player.ItemSlots.Length; j++)
                         {
                             GrabbableObject currentItem = player.ItemSlots[j];
-                            Plugin.Logger.LogDebug($"player: {player.playerUsername} | slot: {j} | holding: {currentItem}");
+                            GoldScrapPlugin.Logger.LogDebug($"player: {player.playerUsername} | slot: {j} | holding: {currentItem}");
                             if (foundTicket == null && currentItem != null)
                             {
                                 GoldenTicketScript ticket = currentItem.GetComponent<GoldenTicketScript>();
@@ -123,9 +144,19 @@ public class GoldenTicketScript : GrabbableObject
                                 {
                                     foundTicket = ticket;
                                     foundSlot = j;
-                                    Plugin.Logger.LogDebug($"found INVERSE and destroying {foundTicket.name} #{foundTicket.NetworkObjectId} at slot {foundSlot}");
-                                    break;    
+                                    GoldScrapPlugin.Logger.LogDebug($"found INVERSE and destroying NORMAL {foundTicket.name} #{foundTicket.NetworkObjectId} at slot {foundSlot}");
+                                    break;
                                 }
+                            }
+                        }
+                        if (foundTicket == null && player.ItemOnlySlot != null)
+                        {
+                            GoldenTicketScript ticket = player.ItemOnlySlot.GetComponent<GoldenTicketScript>();
+                            if (ticket != null)
+                            {
+                                foundTicket = ticket;
+                                foundSlot = -1;
+                                GoldScrapPlugin.Logger.LogDebug($"found INVERSE and destroying BELT {foundTicket.name} #{foundTicket.NetworkObjectId} at slot {foundSlot}");
                             }
                         }
                     }
@@ -191,7 +222,7 @@ public class GoldenTicketScript : GrabbableObject
         DestroyObjectInHand(playerHeldBy);
         if (isPocketed)
         {
-            General.BreakPocketedItem(this, itemSlot);
+            GoldScrapGeneral.BreakPocketedItem(this, itemSlot);
         }
     }
 

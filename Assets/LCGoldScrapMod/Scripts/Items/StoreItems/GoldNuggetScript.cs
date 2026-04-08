@@ -11,7 +11,7 @@ public class GoldNuggetScript : GrabbableObject
         CreditsCard
     }
 
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Space(3f)]
     [Header("General")]
@@ -80,7 +80,7 @@ public class GoldNuggetScript : GrabbableObject
     private void RollForNuggetMultiplier()
     {
         int daysLeft = TimeOfDay.Instance.daysUntilDeadline;
-        float multiplierConfig = Configs.hostPriceMultiplier;
+        float multiplierConfig = GoldScrapConfigs.hostPriceMultiplier;
         float multiplierSale = 1f;
         Terminal terminalScript = FindAnyObjectByType<Terminal>();
         if (terminalScript != null && itemData != null)
@@ -138,7 +138,7 @@ public class GoldNuggetScript : GrabbableObject
                 orePreviousIncrease = oreMinIncrease;
                 oreStartingValue = 100 * RarityManager.instance.GetMultiplierByWeather();
             }
-            oreStartingValue = (int)((float)oreStartingValue * Configs.hostPriceMultiplier);
+            oreStartingValue = (int)((float)oreStartingValue * GoldScrapConfigs.hostPriceMultiplier);
             SetGoldOreStartClientRpc(oreStartingValue);
         }
     }
@@ -168,7 +168,7 @@ public class GoldNuggetScript : GrabbableObject
                 Logger.LogDebug($"#{NetworkObjectId}: Bonus for quotas ({bonusQuotas}) rolled {oreBonus}");
                 newOreIncrease += oreBonus;
             }
-            newOreIncrease = (int)((float)newOreIncrease * Configs.hostPriceMultiplier);
+            newOreIncrease = (int)((float)newOreIncrease * GoldScrapConfigs.hostPriceMultiplier);
             SetGoldOreIncreaseClientRpc(scrapValue + newOreIncrease);
             orePreviousIncrease = newOreIncrease;
         }

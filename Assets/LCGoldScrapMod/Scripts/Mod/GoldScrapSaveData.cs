@@ -19,8 +19,8 @@ public class GoldScrapSaveData
 
         public void Save()
         {
-            Plugin.Logger.LogInfo("Saving LCGoldScrapMod SaveData...");
-            string SavePath = new string(Path.Combine(Plugin.sSaveLocation, "LCGoldScrapMod.xml"));
+            GoldScrapPlugin.Logger.LogInfo("Saving LCGoldScrapMod SaveData...");
+            string SavePath = new string(Path.Combine(GoldScrapPlugin.sSaveLocation, "LCGoldScrapMod.xml"));
             XmlSerializer serializer = new XmlSerializer(typeof(DataToSave));
             using (FileStream stream = new FileStream(SavePath, FileMode.Create))
             {
@@ -30,7 +30,7 @@ public class GoldScrapSaveData
 
         public void Load()
         {
-            string savePath = new string(Path.Combine(Plugin.sSaveLocation, "LCGoldScrapMod.xml"));
+            string savePath = new string(Path.Combine(GoldScrapPlugin.sSaveLocation, "LCGoldScrapMod.xml"));
             if (File.Exists(savePath))
             {
                 //Loading the SaveData
@@ -41,12 +41,12 @@ public class GoldScrapSaveData
                 //The variables to set from the loaded data
                 CreditsCardManager.previousCredits = LoadedData.savedPreviousCredits;
 
-                Plugin.Logger.LogInfo("Loaded LCGoldScrapMod SaveData");
+                GoldScrapPlugin.Logger.LogInfo("Loaded LCGoldScrapMod SaveData");
 
             }
             else
             {
-                Plugin.Logger.LogInfo("No LCGoldScrapMod SaveData exists yet");
+                GoldScrapPlugin.Logger.LogInfo("No LCGoldScrapMod SaveData exists yet");
             }
         }
     }

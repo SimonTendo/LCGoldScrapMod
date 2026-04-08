@@ -1,9 +1,9 @@
 using BepInEx.Logging;
 using BepInEx.Configuration;
 
-public class Configs
+public class GoldScrapConfigs
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
     
     public static string selectedMoonsString;
     public static bool hostToolRebalance;
@@ -27,7 +27,7 @@ public class Configs
     public static ConfigEntry<bool> sillyScrap;
     public static ConfigEntry<string> dateCaseCode;
 
-    public Configs(ConfigFile cfg)
+    public GoldScrapConfigs(ConfigFile cfg)
     {
         selectedLevels = cfg.Bind(
             "Customization",
@@ -132,7 +132,7 @@ public class Configs
         selectedMoonsString = selectedLevels.Value.ToLower();
         if (CheckValidSelectedLevels(selectedMoonsString) && !selectedMoonsString.Contains("all") && selectedMoonsString.Contains("none") && !moddedMoonSpawn.Value)
         {
-            Plugin.goldScrapSpawnEnabled = false;
+            GoldScrapPlugin.goldScrapSpawnEnabled = false;
             Logger.LogInfo("Config [Selected Moons] is set to None and config [Modded Spawn Enabled] is set to FALSE. Gold scrap will not spawn :(");
         }
 
@@ -140,7 +140,7 @@ public class Configs
         //[Selected Moons]
         if (!CheckValidSelectedLevels(selectedMoonsString))
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogWarning("Config [Selected Moons] does not contain any valid level names, likely due to typos. Resetting to default value.");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogWarning("Config [Selected Moons] does not contain any valid level names, likely due to typos. Resetting to default value.");
             selectedLevels.Value = "All";
             selectedMoonsString = selectedLevels.Value.ToLower();
         }
@@ -148,95 +148,95 @@ public class Configs
         {
             if (selectedMoonsString.Contains("all"))
             {
-                if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo("Config [Selected Moons] is set to All");
+                if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo("Config [Selected Moons] is set to All");
             }
             else if (selectedMoonsString.Contains("none") && !selectedMoonsString.Contains("all"))
             {
-                if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo("Config [Selected Moons] is set to None");
+                if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo("Config [Selected Moons] is set to None");
             }
             else if (!selectedMoonsString.Contains("none") && !selectedMoonsString.Contains("all"))
             {
-                if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Selected Moons] received input: {selectedMoonsString}");
+                if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Selected Moons] received input: {selectedMoonsString}");
             }
         }
         //[Multiplier Minimum Value]
         if (minValueMultiplier.Value < 0)
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Minimum Value] is set to an invalid value of {minValueMultiplier.Value}. Resetting to default value.");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Minimum Value] is set to an invalid value of {minValueMultiplier.Value}. Resetting to default value.");
             minValueMultiplier.Value = 2.5f;
         }
         else
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Minimum Value] is set to a value of {minValueMultiplier.Value}");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Minimum Value] is set to a value of {minValueMultiplier.Value}");
         }
         //[Multiplier Maximum Value]
         if (maxValueMultiplier.Value < 0)
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Maximum Value] is set to an invalid value of {maxValueMultiplier.Value}. Resetting to default value.");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Maximum Value] is set to an invalid value of {maxValueMultiplier.Value}. Resetting to default value.");
             maxValueMultiplier.Value = 2f;
         }
         else
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Maximum Value] is set to a value of {maxValueMultiplier.Value}");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Maximum Value] is set to a value of {maxValueMultiplier.Value}");
         }
         //[Multiplier Rarity]
         if ((selectedMoonsString.Contains("all") || !selectedMoonsString.Contains("all") && !selectedMoonsString.Contains("none")) && rarityMultiplier.Value <= 0)
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Rarity] is set to an invalid value of {rarityMultiplier.Value}. Resetting to default value.");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Rarity] is set to an invalid value of {rarityMultiplier.Value}. Resetting to default value.");
             rarityMultiplier.Value = 3f;
         }
         else if ((selectedMoonsString.Contains("all") || !selectedMoonsString.Contains("all") && !selectedMoonsString.Contains("none")) && rarityMultiplier.Value > 0)
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Rarity] is set to a value of {rarityMultiplier.Value}");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Rarity] is set to a value of {rarityMultiplier.Value}");
         }
         //[Multiplier Weight]
         if (weightMultiplier.Value < 0)
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Weight] is set to an invalid value of {weightMultiplier.Value}. Resetting to default value.");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Weight] is set to an invalid value of {weightMultiplier.Value}. Resetting to default value.");
             weightMultiplier.Value = 1.5f;
         }
         else
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Weight] is set to a value of {weightMultiplier.Value}");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Weight] is set to a value of {weightMultiplier.Value}");
         }
         //[Multiplier Price]
         if (priceMultiplier.Value < 0)
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Price] is set to an invalid value of {priceMultiplier.Value}. Resetting to default value.");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Multiplier Price] is set to an invalid value of {priceMultiplier.Value}. Resetting to default value.");
             priceMultiplier.Value = 1.0f;
         }
         else
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Price] is set to a value of {priceMultiplier.Value}");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Multiplier Price] is set to a value of {priceMultiplier.Value}");
         }
 
         //Modded Moons:
         //[Modded Spawn Enabled]
         if (moddedMoonSpawn.Value)
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo("Config [Modded Spawn Enabled] is set to TRUE. Gold scrap can spawn on moons added through mods.");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo("Config [Modded Spawn Enabled] is set to TRUE. Gold scrap can spawn on moons added through mods.");
         }
         else
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo("Config [Modded Spawn Enabled] is set to FALSE. Gold scrap will only spawn on vanilla Lethal Company moons.");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo("Config [Modded Spawn Enabled] is set to FALSE. Gold scrap will only spawn on vanilla Lethal Company moons.");
         }
         //[Modded Spawn Rarity]
         if (moddedMoonSpawn.Value)
         {
             if (moddedMoonRarity.Value < 1)
             {
-                if (Plugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Modded Spawn Rarity] is set to an invalid value of {moddedMoonRarity.Value}. Resetting to default value.");
+                if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogWarning($"Config [Modded Spawn Rarity] is set to an invalid value of {moddedMoonRarity.Value}. Resetting to default value.");
                 moddedMoonRarity.Value = 1;
             }
             else
             {
-                if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Modded Spawn Rarity] is set to a value of {moddedMoonRarity.Value}");
+                if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Modded Spawn Rarity] is set to a value of {moddedMoonRarity.Value}");
             }
         }
         //[Modded Minimum Cost]
         if (moddedMoonSpawn.Value)
         {
-            if (Plugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Modded Minimum Cost] is set to a value of {moddedMoonCost.Value}");
+            if (GoldScrapPlugin.goldScrapSpawnEnabled) Logger.LogInfo($"Config [Modded Minimum Cost] is set to a value of {moddedMoonCost.Value}");
         }
 
         //Other:
@@ -291,7 +291,7 @@ public class Configs
             Logger.LogInfo("Config [Other Silly Scrap] is set to TRUE. Loading silliness...");
         }
         //[Other Secret Code]
-        if (General.ConvertSpecialDateCase(dateCaseCode.Value) != -1)
+        if (GoldScrapGeneral.ConvertSpecialDateCase(dateCaseCode.Value) != -1)
         {
             Logger.LogDebug($"Config [Other Secret Code] is set to a value of {dateCaseCode.Value}");
         }
@@ -299,7 +299,7 @@ public class Configs
 
     public static bool CheckValidSelectedLevels(string selection)
     {
-        if (Plugin.suspectedLevelListLength == 12)
+        if (GoldScrapPlugin.suspectedLevelListLength == 12)
         {
             if (!selection.Contains("all") &&
             !selection.Contains("none") &&
@@ -318,7 +318,7 @@ public class Configs
                 return false;
             }
         }
-        else if (Plugin.suspectedLevelListLength == 8)
+        else if (GoldScrapPlugin.suspectedLevelListLength == 8)
         {
             if (!selection.Contains("all") &&
             !selection.Contains("none") &&
@@ -351,18 +351,18 @@ public class Configs
 
     private static float GetDateCaseMultiplierValue(ItemData item)
     {
-        switch (Plugin.specialDateCase)
+        switch (GoldScrapPlugin.specialDateCase)
         {
             default:
                 return 1.0f;
             case 1:
                 return 0.8f;
             case 3:
-                return General.ItemHasMatchingDateCase(item, 5) ? 0.25f : 1.1f;
+                return GoldScrapGeneral.ItemHasMatchingDateCase(item, 5) ? 0.25f : 1.1f;
             case 4:
                 return 1.5f;
             case 5:
-                return General.ItemHasMatchingDateCase(item) ? 1.25f : 1.0f;
+                return GoldScrapGeneral.ItemHasMatchingDateCase(item) ? 1.25f : 1.0f;
         }
     }
 
@@ -398,7 +398,7 @@ public class Configs
 
     private static float GetDateCaseMultiplierPrice()
     {
-        switch (Plugin.specialDateCase)
+        switch (GoldScrapPlugin.specialDateCase)
         {
             default:
                 return 1.0f;

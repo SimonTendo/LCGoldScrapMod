@@ -5,7 +5,7 @@ using BepInEx.Logging;
 
 public class MedalManager : NetworkBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static MedalManager instance;
 
@@ -46,7 +46,7 @@ public class MedalManager : NetworkBehaviour
         ResetAllMedals();
         foreach (InteractTrigger trigger in GetComponentsInChildren<InteractTrigger>())
         {
-            trigger.hoverIcon = AssetsCollection.handIcon;
+            trigger.hoverIcon = GoldScrapAssetsCollection.handIcon;
         }
         defaultBadge.GetComponent<MeshRenderer>().material = StartOfRound.Instance.allPlayerScripts[0].playerBadgeMesh.gameObject.GetComponent<MeshRenderer>().material;
     }

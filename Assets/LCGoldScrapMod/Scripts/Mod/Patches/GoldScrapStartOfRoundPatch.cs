@@ -12,28 +12,28 @@ public class GoldScrapStartOfRoundPatch
         [HarmonyPostfix]
         public static void AwakePostfix(StartOfRound __instance)
         {
-            AssetsCollection.GetGameObjectAssets();
-            AssetsCollection.GetItemAssets(__instance);
-            AssetsCollection.GetUnlockableAssets(__instance);
-            string levelName = Plugin.v50Compatible ? "ArtificeLevel" : "TitanLevel";
+            GoldScrapAssetsCollection.GetGameObjectAssets();
+            GoldScrapAssetsCollection.GetItemAssets(__instance);
+            GoldScrapAssetsCollection.GetUnlockableAssets(__instance);
+            string levelName = GoldScrapPlugin.v50Compatible ? "ArtificeLevel" : "TitanLevel";
             foreach (SelectableLevel level in __instance.levels)
             {
                 if (level.name != null && level.name == levelName)
                 {
-                    AssetsCollection.GetEnemyAssets(level.Enemies.ToArray(), level.OutsideEnemies.ToArray());
-                    AssetsCollection.GetHazardAssets(level.spawnableMapObjects);
+                    GoldScrapAssetsCollection.GetEnemyAssets(level.Enemies.ToArray(), level.OutsideEnemies.ToArray());
+                    GoldScrapAssetsCollection.GetHazardAssets(level.spawnableMapObjects);
                     break;
                 }
             }
             RuntimeChanges.SetAllDefaultNames();
-            General.GetSpecialDateCase();
-            General.AddJacobsLadderToHelmetLights();
-            General.AddAllItemsToAllItemsListAwake();
+            GoldScrapGeneral.GetSpecialDateCase();
+            GoldScrapGeneral.AddJacobsLadderToHelmetLights();
+            GoldScrapGeneral.AddAllItemsToAllItemsListAwake();
             RegisterGoldScrap.SetAllItemsAwake();
 
-            Configs.hostToolRebalance = false;
-            Plugin.specialDateCase = -1;
-            Plugin.appliedHostConfigs = false;
+            GoldScrapConfigs.hostToolRebalance = false;
+            GoldScrapPlugin.specialDateCase = -1;
+            GoldScrapPlugin.appliedHostConfigs = false;
         }
     }
 
@@ -53,7 +53,7 @@ public class GoldScrapStartOfRoundPatch
                 StoreAndTerminal.defaultHelmetMaterial = GameNetworkManager.Instance.localPlayerController.localVisor.GetChild(0).GetComponent<MeshRenderer>().materials[0];
             }
 
-            if (Configs.moddedMoonSpawn.Value && !RegisterGoldScrap.alreadyAddedGoldScrapOnModded)
+            if (GoldScrapConfigs.moddedMoonSpawn.Value && !RegisterGoldScrap.alreadyAddedGoldScrapOnModded)
             {
                 RegisterGoldScrap.RegisterGoldScrapModded();
             }
@@ -64,23 +64,23 @@ public class GoldScrapStartOfRoundPatch
             {
                 TagPlayer.PutTagOnPlayers();
                 DLOGManager.instance.SetTextServerRpc(true, false);
-                General.SetDiscoBallOnJoin();
-                General.SetMedalsOnJoin();
+                GoldScrapGeneral.SetDiscoBallOnJoin();
+                GoldScrapGeneral.SetMedalsOnJoin();
                 if (StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.catOGoldID].hasBeenUnlockedByPlayer)
                 {
-                    Plugin.Logger.LogDebug("cat unlocked upon start, likely from previous save file");
+                    GoldScrapPlugin.Logger.LogDebug("cat unlocked upon start, likely from previous save file");
                     RarityManager.instance.RollForGoldFever();
                 }
                 UnlockableItem safeBox = StartOfRound.Instance.unlockablesList.unlockables[StoreAndTerminal.safeBoxID];
                 if (safeBox.hasBeenUnlockedByPlayer && safeBox.inStorage)
                 {
-                    Plugin.Logger.LogDebug("safe in storage upon start, setting to instantiate");
+                    GoldScrapPlugin.Logger.LogDebug("safe in storage upon start, setting to instantiate");
                     safeBox.spawnPrefab = true;
                 }
             }
             else
             {
-                General.SyncUponJoin((int)StartOfRound.Instance.localPlayerController.playerClientId);
+                GoldScrapGeneral.SyncUponJoin((int)StartOfRound.Instance.localPlayerController.playerClientId);
             }
 
             //LightSwitchRevealer
@@ -90,7 +90,7 @@ public class GoldScrapStartOfRoundPatch
                 Object.Instantiate(LightSwitchRevealer.lightRevealerPrefab, lightSwitch.transform, false);
             }
 
-            Transform logParent = __instance.isHostPlayerObject ? Plugin.SearchForObject("LCGoldScrapMod", StartOfRound.Instance.gameObject.transform.parent).transform : null;
+            Transform logParent = __instance.isHostPlayerObject ? GoldScrapPlugin.SearchForObject("LCGoldScrapMod", StartOfRound.Instance.gameObject.transform.parent).transform : null;
             Object.Instantiate(LogManager.managerPrefab, logParent);
         }
     }
@@ -111,7 +111,7 @@ public class GoldScrapStartOfRoundPatch
 
             if (RarityManager.CurrentlyGoldFever())
             {
-                Plugin.Logger.LogInfo("Starting Gold Fever - Have fun!!");
+                GoldScrapPlugin.Logger.LogInfo("Starting Gold Fever - Have fun!!");
             }
 
             if (__instance.IsServer)
@@ -239,7 +239,7 @@ public class GoldScrapStartOfRoundPatch
             {
                 CreditsCardManager.SetPreviousCredits();
             }
-            General.ToggleDiscoBall(false);
+            GoldScrapGeneral.ToggleDiscoBall(false);
             MedalManager.instance.ResetAllMedals();
         }
     }

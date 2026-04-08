@@ -5,7 +5,7 @@ using Unity.Netcode;
 
 public class GoldenHourglassScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     private bool buttonHeld;
     private float holdTimer;
@@ -231,7 +231,7 @@ public class GoldenHourglassScript : GrabbableObject
             DestroyObjectInHand(playerHeldBy);
             if (isPocketed)
             {
-                General.BreakPocketedItem(this);
+                GoldScrapGeneral.BreakPocketedItem(this);
             }
             StartCoroutine(DelaySettingObjectAway());
             if (!StartOfRound.Instance.shipHasLanded)
@@ -240,7 +240,7 @@ public class GoldenHourglassScript : GrabbableObject
                 RoundManager.Instance.PlayAudibleNoise(transform.position, 20, 0.75f);
                 WalkieTalkie.TransmitOneShotAudio(miscAudioSource, breakClip, 1f);
             }
-            Instantiate(AssetsCollection.poofParticle, transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
+            Instantiate(GoldScrapAssetsCollection.poofParticle, transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
         }
     }
 

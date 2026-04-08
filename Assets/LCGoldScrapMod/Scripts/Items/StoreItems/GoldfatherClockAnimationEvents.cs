@@ -3,7 +3,7 @@ using BepInEx.Logging;
 
 public class GoldfatherClockAnimationEvents : MonoBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public GoldfatherClockScript mainScript;
 

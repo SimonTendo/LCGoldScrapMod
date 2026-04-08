@@ -4,7 +4,7 @@ using BepInEx.Logging;
 
 public class GoldenGlassScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     private Coroutine beginRevealCoroutine;
     private Coroutine endRevealCoroutine;
@@ -153,7 +153,7 @@ public class GoldenGlassScript : GrabbableObject
         {
             if (setTo && !item.isInShipRoom)
             {
-                scanNode.maxRange = Configs.hostToolRebalance ? 128 : 256;
+                scanNode.maxRange = GoldScrapConfigs.hostToolRebalance ? 128 : 256;
                 scanNode.requiresLineOfSight = false;
             }
             else if (!setTo)

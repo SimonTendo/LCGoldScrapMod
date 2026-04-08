@@ -6,7 +6,7 @@ using HarmonyLib;
 
 public class GoldenPickaxeScript : Shovel, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static AudioClip[] hotColdClips;
     private bool performedHitThisFrame = false;
@@ -50,7 +50,7 @@ public class GoldenPickaxeScript : Shovel, IGoldenGlassSecret
 
     private IEnumerator CheckFeverOnDelay()
     {
-        yield return new WaitUntil(() => Plugin.appliedHostConfigs);
+        yield return new WaitUntil(() => GoldScrapPlugin.appliedHostConfigs);
         yield return null;
         bool useFeverMats = false;
         if (RarityManager.CurrentlyGoldFever())
@@ -249,7 +249,7 @@ public class GoldenPickaxeScript : Shovel, IGoldenGlassSecret
     [ClientRpc]
     private void SpawnGoldClientRpc(NetworkObjectReference itemNOR, Vector3 positionToSpawn)
     {
-        Instantiate(AssetsCollection.poofParticle, positionToSpawn, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
+        Instantiate(GoldScrapAssetsCollection.poofParticle, positionToSpawn, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
         shovelAudio.PlayOneShot(spawnClip);
         WalkieTalkie.TransmitOneShotAudio(shovelAudio, spawnClip);
         RoundManager.Instance.PlayAudibleNoise(positionToSpawn, 25, 0.1f);
@@ -306,7 +306,7 @@ public class GoldenPickaxeScript : Shovel, IGoldenGlassSecret
     {
         shovelAudio.PlayOneShot(critClip);
         WalkieTalkie.TransmitOneShotAudio(shovelAudio, critClip);
-        if (Configs.hostToolRebalance)
+        if (GoldScrapConfigs.hostToolRebalance)
         {
             BreakPickaxe();
         }
@@ -320,7 +320,7 @@ public class GoldenPickaxeScript : Shovel, IGoldenGlassSecret
         DestroyObjectInHand(playerHeldBy);
         if (isPocketed)
         {
-            General.BreakPocketedItem(this);
+            GoldScrapGeneral.BreakPocketedItem(this);
         }
         DelaySettingObjectAway();
         Logger.LogDebug($"Golden Pickaxe #{NetworkObjectId} broke!!!");

@@ -7,7 +7,7 @@ using HarmonyLib;
 
 public class GoldBirdScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Space(3f)]
     [Header("Alarm")]
@@ -174,7 +174,7 @@ public class GoldBirdScript : GrabbableObject
                     scanNode.headerText = scanNode.headerText.Replace("Dormant", "Dead");
                 }
                 spotlightAudio.PlayOneShot(dieClip);
-                Instantiate(AssetsCollection.poofParticle, headlight.transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
+                Instantiate(GoldScrapAssetsCollection.poofParticle, headlight.transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
             }
         }
     }

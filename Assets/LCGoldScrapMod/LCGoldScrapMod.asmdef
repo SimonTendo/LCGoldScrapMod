@@ -14,7 +14,9 @@
         "0Harmony.dll",
         "Assembly-CSharp.dll",
         "BepInEx.dll",
+        "DunGen.dll",
         "STSharedAudioLib.dll",
+        "LCCrashBandicootCratesMod.dll",
         "LethalConfig.dll"
     ],
     "autoReferenced": true,

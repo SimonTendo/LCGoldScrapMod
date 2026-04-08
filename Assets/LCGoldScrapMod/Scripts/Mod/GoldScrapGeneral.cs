@@ -5,11 +5,11 @@ using UnityEngine;
 using GameNetcodeStuff;
 using BepInEx.Logging;
 using STSharedAudioLib;
-using static AssetsCollection;
+using static GoldScrapAssetsCollection;
 
-public class General
+public class GoldScrapGeneral
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     private static bool alreadyAddedItems = false;
 
@@ -17,7 +17,7 @@ public class General
     {
         if (!alreadyAddedItems)
         {
-            foreach (ItemData item in Plugin.allGoldGrabbableObjects)
+            foreach (ItemData item in GoldScrapPlugin.allGoldGrabbableObjects)
             {
                 item.itemProperties.spawnPrefab.AddComponent<GoldScrapObject>().data = item;
                 if (item.isStoreItem)
@@ -41,7 +41,7 @@ public class General
                 continue;
             }
             GameObject foundHelmetLight = FindHelmetLights(player.gameObject);
-            GameObject jacobsLadderPrefab = Plugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapAssets/JacobsLadder/JacobsLadderHelmetLight.prefab");
+            GameObject jacobsLadderPrefab = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<GameObject>("Assets/LCGoldScrapMod/GoldScrapAssets/JacobsLadder/JacobsLadderHelmetLight.prefab");
             if (foundHelmetLight == null || jacobsLadderPrefab == null)
             {
                 Logger.LogError($"failed to AddJacobsLadderToHelmetLights for player {player} (foundHelmetLight? {foundHelmetLight != null})");
@@ -167,7 +167,7 @@ public class General
             StormyWeather stormyWeatherInstance = UnityEngine.Object.FindAnyObjectByType<StormyWeather>();
             if (stormyWeatherInstance != null)
             {
-                GoldScrapPrivateAccesser.GetPrivateField<List<GrabbableObject>>(stormyWeatherInstance, "metalObjects").Add(item);
+                stormyWeatherInstance.metalObjects.Add(item);
                 Logger.LogDebug($"added {item.gameObject.name} to currentLevel's currentWeather {StartOfRound.Instance.currentLevel.currentWeather.ToString()}.metalObjects");
             }
         }
@@ -294,7 +294,7 @@ public class General
         }
         if (!MedalManager.instance.IsServer)
         {
-            Plugin.Logger.LogDebug("Client calling SetMedalsOnJoin()");
+            GoldScrapPlugin.Logger.LogDebug("Client calling SetMedalsOnJoin()");
             MedalManager.instance.SyncUponJoinServerRpc((int)StartOfRound.Instance.localPlayerController.playerClientId);
         }
     }
@@ -318,7 +318,7 @@ public class General
 
     public static void ToggleDiscoBall(bool unlock, string fileName = null)
     {
-        if (Plugin.playlistsModCompatible)
+        if (GoldScrapPlugin.playlistsModCompatible)
         {
             SetDiscoBallSharedAudioLib(unlock, fileName);
         }
@@ -354,7 +354,7 @@ public class General
         AudioList discoBallPlaylist = SharedAudioMethods.AudioListGetByName("LCSimonTendoPlaylistsMod", discoBallStaticPrefab);
         if (!unlock)
         {
-            AudioClipList allDiscoBallSongs = Plugin.CustomGoldScrapAssets.LoadAsset<AudioClipList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/AllDiscoBallSongs.asset");
+            AudioClipList allDiscoBallSongs = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<AudioClipList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/AllDiscoBallSongs.asset");
             foreach (AudioClip clip in allDiscoBallSongs.allClips)
             {
                 SharedAudioMethods.RemoveAudioClip(clip, discoBallPlaylist, true);
@@ -368,6 +368,26 @@ public class General
                 SharedAudioMethods.AudioClipAddNew(clip, discoBallPlaylist, true);
             }
         }
+    }
+
+    public static void UpdatePlayerWeight(PlayerControllerB player, Item useItemWeight, bool add)
+    {
+        if (player == null || useItemWeight == null || StartOfRound.Instance == null)
+        {
+            return;
+        }
+        UpdatePlayerWeight(player, useItemWeight.weight - 1f, add);
+    }
+
+    public static void UpdatePlayerWeight(PlayerControllerB player, float updateChange, bool add)
+    {
+        if (player == null || StartOfRound.Instance == null)
+        {
+            return;
+        }
+        player.carryWeight = add ? player.carryWeight + updateChange : player.carryWeight - updateChange;
+        player.carryWeight = Mathf.Clamp(player.carryWeight, 1f, 10f);
+        StartOfRound.Instance.SendChangedWeightEvent();
     }
 
     public static void BreakPocketedItem(GrabbableObject item, int itemSlot = -1)
@@ -389,7 +409,7 @@ public class General
         item.heldByPlayerOnServer = false;
         item.isHeld = false;
         item.isPocketed = false;
-        item.playerHeldBy.carryWeight = Mathf.Clamp(item.playerHeldBy.carryWeight - (item.itemProperties.weight - 1), 1f, 10f);
+        UpdatePlayerWeight(item.playerHeldBy, item.itemProperties, false);
         if (itemSlot == -1)
         {
             for (int i = 0; i < item.playerHeldBy.ItemSlots.Length; i++)
@@ -402,28 +422,34 @@ public class General
                 }
             }
         }
-        if (itemSlot == -1)
+        if (itemSlot >= 0 && itemSlot < item.playerHeldBy.ItemSlots.Length)
         {
-            Logger.LogWarning("General failed to find itemSlot for BreakPocketedItem()!");
-            return;
+            item.playerHeldBy.ItemSlots[itemSlot] = null;
+            if (item.playerHeldBy == GameNetworkManager.Instance.localPlayerController)
+            {
+                HUDManager.Instance.itemSlotIcons[itemSlot].enabled = false;
+            }
         }
-        item.playerHeldBy.ItemSlots[itemSlot] = null;
-        if (item.playerHeldBy == GameNetworkManager.Instance.localPlayerController)
+        else if (item.playerHeldBy.ItemOnlySlot == item)
         {
-            HUDManager.Instance.itemSlotIcons[itemSlot].enabled = false;
+            item.playerHeldBy.ItemOnlySlot = null;
+            if (item.playerHeldBy == GameNetworkManager.Instance.localPlayerController)
+            {
+                HUDManager.Instance.itemOnlySlotIcon.enabled = false;
+            }
         }
     }
 
     public static void InstantiateSparklesOnTransform(Transform instantiateOn)
     {
-        if (Plugin.specialDateCase != 6 || instantiateOn == null || sparkleParticle == null)
+        if (GoldScrapPlugin.specialDateCase != 6 || instantiateOn == null || sparkleParticle == null)
         {
             return;
         }
         Transform sparkles = instantiateOn.Find("SparkleGold(Clone)");
         if (sparkles == null)
         {
-            Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} instantiating sparkles on {instantiateOn.name}");
+            GoldScrapPlugin.Logger.LogDebug($"specialDateCase {GoldScrapPlugin.specialDateCase} instantiating sparkles on {instantiateOn.name}");
             UnityEngine.Object.Instantiate(sparkleParticle, instantiateOn, false);
         }
     }
@@ -437,7 +463,7 @@ public class General
         Transform sparkles = destroyFrom.Find("SparkleGold(Clone)");
         if (sparkles != null)
         {
-            Plugin.Logger.LogDebug($"specialDateCase {Plugin.specialDateCase} destroying {sparkles.name} on {destroyFrom.name}");
+            GoldScrapPlugin.Logger.LogDebug($"specialDateCase {GoldScrapPlugin.specialDateCase} destroying {sparkles.name} on {destroyFrom.name}");
             UnityEngine.Object.Destroy(sparkles.gameObject);
         }
     }
@@ -449,7 +475,7 @@ public class General
         int yearDay = DateTime.Now.DayOfYear;
         int weekDay = (int)DateTime.Now.DayOfWeek;
         Logger.LogDebug($"starting GetSpecialDateCase() with: month {month} | day {day} | yearDay {yearDay} | weekDay {weekDay}");
-        int setTo = ConvertSpecialDateCase(Configs.dateCaseCode.Value);
+        int setTo = ConvertSpecialDateCase(GoldScrapConfigs.dateCaseCode.Value);
 
         if (setTo == -1)
         {
@@ -490,8 +516,8 @@ public class General
             }
         }
 
-        Plugin.localDateCase = setTo;
-        Logger.LogDebug($"GetSpecialDateCase() set local to: {Plugin.localDateCase}");
+        GoldScrapPlugin.localDateCase = setTo;
+        Logger.LogDebug($"GetSpecialDateCase() set local to: {GoldScrapPlugin.localDateCase}");
     }
 
     public static int ConvertSpecialDateCase(string code)
@@ -554,7 +580,7 @@ public class General
     {
         if (matchCase == -1)
         {
-            matchCase = Plugin.specialDateCase;
+            matchCase = GoldScrapPlugin.specialDateCase;
         }
         if (item.specialDateCases != null && item.specialDateCases.Length > 0)
         {

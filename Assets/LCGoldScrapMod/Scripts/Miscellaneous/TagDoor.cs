@@ -4,7 +4,7 @@ using HarmonyLib;
 
 public class TagDoor : MonoBehaviour, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static GameObject tagContainer;
 
@@ -18,7 +18,7 @@ public class TagDoor : MonoBehaviour, IGoldenGlassSecret
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Configs.hostToolRebalance)
+        if (!GoldScrapConfigs.hostToolRebalance)
         {
             scanNodeObject.SetActive(true);
         }
@@ -35,7 +35,7 @@ public class TagDoor : MonoBehaviour, IGoldenGlassSecret
         [HarmonyPostfix]
         public static void AwakePostfix(DoorLock __instance)
         {
-            if (GoldScrapPrivateAccesser.GetPrivateField<bool>(__instance, "hauntedDoor"))
+            if (__instance.hauntedDoor)
             {
                 Instantiate(tagContainer, __instance.transform);
             }

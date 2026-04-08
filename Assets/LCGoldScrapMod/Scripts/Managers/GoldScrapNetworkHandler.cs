@@ -16,15 +16,15 @@ public class GoldScrapNetworkHandler : NetworkBehaviour
     [ClientRpc]
     public void LowerRoundManagerScrapCollectedClientRpc(int valueToLower)
     {
-        Plugin.Logger.LogDebug($"Got ClientRpc to lower scrapCollected with {valueToLower}");
+        GoldScrapPlugin.Logger.LogDebug($"Got ClientRpc to lower scrapCollected with {valueToLower}");
         RoundManager.Instance.scrapCollectedInLevel -= valueToLower;
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void SendConfigsToNewPlayerServerRpc(int playerID)
     {
-        Plugin.Logger.LogDebug($"Received server call to send CONFIG to new client at index: [{playerID}]");
-        SetHostConfigsClientRpc(playerID, Configs.weightMultiplier.Value, Configs.toolsRebalance.Value, Configs.priceMultiplier.Value, Plugin.localDateCase);
+        GoldScrapPlugin.Logger.LogDebug($"Received server call to send CONFIG to new client at index: [{playerID}]");
+        SetHostConfigsClientRpc(playerID, GoldScrapConfigs.weightMultiplier.Value, GoldScrapConfigs.toolsRebalance.Value, GoldScrapConfigs.priceMultiplier.Value, GoldScrapPlugin.localDateCase);
     }
 
     [ClientRpc]
@@ -46,14 +46,14 @@ public class GoldScrapNetworkHandler : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SendUnlockablesToNewPlayerServerRpc(int playerID)
     {
-        Plugin.Logger.LogDebug($"Received server call to send UNLOCKABLES to new client at index: [{playerID}]");
+        GoldScrapPlugin.Logger.LogDebug($"Received server call to send UNLOCKABLES to new client at index: [{playerID}]");
         List<int> unlockableIDs = new List<int>();
         List<bool> unlockableStates = new List<bool>();
         foreach (int unlockableID in StoreAndTerminal.allShipUnlockableIDs)
         {
             if (unlockableID < 0 || unlockableID >= StartOfRound.Instance.unlockablesList.unlockables.Count)
             {
-                Plugin.Logger.LogWarning($"StoreAndTerminal.allShipUnlockableIDs contained invalid ID: {unlockableID} | Cannot sync this unlockable!");
+                GoldScrapPlugin.Logger.LogWarning($"StoreAndTerminal.allShipUnlockableIDs contained invalid ID: {unlockableID} | Cannot sync this unlockable!");
                 continue;
             }
             if (StartOfRound.Instance.unlockablesList.unlockables[unlockableID].unlockableType == -1)
@@ -76,10 +76,10 @@ public class GoldScrapNetworkHandler : NetworkBehaviour
                 int unlockableID = hostUnlockableIDs[i];
                 UnlockableItem foundUnlockable = StartOfRound.Instance.unlockablesList.unlockables[unlockableID];
                 foundUnlockable.hasBeenUnlockedByPlayer = hostUnlockableStates[i];
-                Plugin.Logger.LogDebug($"host set unlockable #{unlockableID} '{foundUnlockable.unlockableName}' to {foundUnlockable.hasBeenUnlockedByPlayer}");
+                GoldScrapPlugin.Logger.LogDebug($"host set unlockable #{unlockableID} '{foundUnlockable.unlockableName}' to {foundUnlockable.hasBeenUnlockedByPlayer}");
             }
-            General.SetDiscoBallOnJoin();
-            General.SetMedalsOnJoin();
+            GoldScrapGeneral.SetDiscoBallOnJoin();
+            GoldScrapGeneral.SetMedalsOnJoin();
         }
     }
 }

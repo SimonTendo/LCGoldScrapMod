@@ -8,7 +8,7 @@ using HarmonyLib;
 
 public class CrownScript : GrabbableObject
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Space(3f)]
     [Header("Audiovisual")]
@@ -73,7 +73,7 @@ public class CrownScript : GrabbableObject
         if (IsServer && !isInShipRoom)
         {
             int valueToSend = RarityManager.CurrentlyGoldFever() ? startingValueFever : startingValue;
-            valueToSend = (int)((float)valueToSend * Configs.hostPriceMultiplier);
+            valueToSend = (int)((float)valueToSend * GoldScrapConfigs.hostPriceMultiplier);
             SyncValueClientRpc(valueToSend, 0);
         }
     }
@@ -153,12 +153,12 @@ public class CrownScript : GrabbableObject
         riseTime = 0f;
         fallTime = 0f;
         customGrabTooltip = " ";
-        playerWornBy.carryWeight = Mathf.Clamp(playerWornBy.carryWeight - (itemProperties.weight - 1f), 1f, 10f);
+        GoldScrapGeneral.UpdatePlayerWeight(playerWornBy, itemProperties, false);
         Transform playerParent = playerWornBy.parentedToElevatorLastFrame ? StartOfRound.Instance.elevatorTransform : StartOfRound.Instance.propsContainer;
         transform.SetParent(playerParent, true);
         startFallingPosition = transform.parent.InverseTransformPoint(transform.position);
         targetFloorPosition = new Vector3(3000f, -400f, 3000f);
-        launchHeight = General.GetClosestCollision(transform.position, Vector3.up, maxVertical);
+        launchHeight = GoldScrapGeneral.GetClosestCollision(transform.position, Vector3.up, maxVertical);
         multiplierRiseTime = Mathf.Sqrt(maxVertical / (launchHeight + 1));
         if (!farAudio.isPlaying)
         {
@@ -228,7 +228,7 @@ public class CrownScript : GrabbableObject
         }
         float maxRange = 10f;
         float maxUp = Mathf.Clamp(launchHeight, 0, maxRange);
-        for (int i = (int)General.GetClosestCollision(transform.position, randomDir, maxHorizontal); i >= 0; i--)
+        for (int i = (int)GoldScrapGeneral.GetClosestCollision(transform.position, randomDir, maxHorizontal); i >= 0; i--)
         {
             RaycastHit[] allHits = Physics.RaycastAll(transform.position + Vector3.up * maxUp + randomDir * i, Vector3.down, maxRange * 2, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
             Logger.LogDebug($"checking from {transform.position + Vector3.up * launchHeight + randomDir * i}");
@@ -394,12 +394,22 @@ public class CrownScript : GrabbableObject
                 break;
             }
         }
-        if (itemSlot != -1)
+        if (itemSlot >= 0 && itemSlot < playerWornBy.ItemSlots.Length)
         {
             playerWornBy.ItemSlots[itemSlot] = null;
             if (wearerLocal)
             {
                 HUDManager.Instance.itemSlotIcons[itemSlot].enabled = false;
+                HUDManager.Instance.holdingTwoHandedItem.enabled = false;
+                HUDManager.Instance.ClearControlTips();
+            }
+        }
+        else if (playerWornBy.ItemOnlySlot == this)
+        {
+            playerWornBy.ItemOnlySlot = null;
+            if (wearerLocal)
+            {
+                HUDManager.Instance.itemOnlySlotIcon.enabled = false;
                 HUDManager.Instance.holdingTwoHandedItem.enabled = false;
                 HUDManager.Instance.ClearControlTips();
             }
@@ -478,8 +488,8 @@ public class CrownScript : GrabbableObject
             previousAddedAmount += amountToAdd;
         }
         int newValue = scrapValue + amountToAdd;
-        newValue = (int)((float)newValue * Configs.hostPriceMultiplier);
-        Logger.LogDebug($"totalProfit: {wearingPlayerTotalProfit} | streak: {samePlayerStreak} | percentage: {newPercentage} | previous: {previousAddedAmount} | add: {amountToAdd} | new: {newValue} | config: {Configs.hostPriceMultiplier}");
+        newValue = (int)((float)newValue * GoldScrapConfigs.hostPriceMultiplier);
+        Logger.LogDebug($"totalProfit: {wearingPlayerTotalProfit} | streak: {samePlayerStreak} | percentage: {newPercentage} | previous: {previousAddedAmount} | add: {amountToAdd} | new: {newValue} | config: {GoldScrapConfigs.hostPriceMultiplier}");
         SyncValueClientRpc(newValue, samePlayerStreak);
     }
 

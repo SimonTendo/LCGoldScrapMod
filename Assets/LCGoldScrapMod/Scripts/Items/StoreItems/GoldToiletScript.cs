@@ -5,7 +5,7 @@ using BepInEx.Logging;
 
 public class GoldToiletScript : NetworkBehaviour
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     [Header("Audio")]
     public AudioSource chargeAudio;

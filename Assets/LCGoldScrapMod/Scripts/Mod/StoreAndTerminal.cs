@@ -5,7 +5,7 @@ using BepInEx.Logging;
 
 public class StoreAndTerminal
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     public static TerminalNodesList allGoldScrapKeywords;
     public static ItemData[] allGoldStoreItemData;
@@ -34,12 +34,12 @@ public class StoreAndTerminal
 
     public static void LoadEditorAssets()
     {
-        allGoldScrapKeywords = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNodesList>("Assets/LCGoldScrapMod/GoldScrapTerminal/allGoldScrapKeywords.asset");
-        allGoldStoreItemData = Plugin.CustomGoldScrapAssets.LoadAsset<ItemDataList>("Assets/LCGoldScrapMod/GoldScrapShop/AllGoldStoreItemData.asset").allItemData;
-        runtimeDiscoBallSongs = Plugin.CustomGoldScrapAssets.LoadAsset<AudioClipList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/RuntimeDiscoBallSongs.asset");
-        catOGoldInfoStrings = Plugin.CustomGoldScrapAssets.LoadAsset<StringList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/CatOGold/CatOGoldInfo.asset");
-        goldCrownBuyNode = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrown.asset");
-        goldCrownSingleplayerInfo = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrownWarning.asset");
+        allGoldScrapKeywords = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalNodesList>("Assets/LCGoldScrapMod/GoldScrapTerminal/allGoldScrapKeywords.asset");
+        allGoldStoreItemData = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<ItemDataList>("Assets/LCGoldScrapMod/GoldScrapShop/AllGoldStoreItemData.asset").allItemData;
+        runtimeDiscoBallSongs = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<AudioClipList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/DiscoBallMusic/RuntimeDiscoBallSongs.asset");
+        catOGoldInfoStrings = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<StringList>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/CatOGold/CatOGoldInfo.asset");
+        goldCrownBuyNode = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrown.asset");
+        goldCrownSingleplayerInfo = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/GoldCrown/GoldScrapShopGoldCrownWarning.asset");
     }
 
     public static void GetConfirmAndDenyTerminal(StartOfRound __instance)
@@ -118,31 +118,22 @@ public class StoreAndTerminal
 
     public static CompatibleNoun GoldScrapShopCompatibleNoun(string itemName)
     {
-        CompatibleNoun newCompatibleNoun = new CompatibleNoun();
-        newCompatibleNoun.noun = GoldScrapShopKeyword(itemName);
-        newCompatibleNoun.result = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}.asset");
-        return newCompatibleNoun;
+        return new CompatibleNoun(GoldScrapShopKeyword(itemName), GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}.asset"));
     }
 
     public static CompatibleNoun GoldScrapSpecialCompatibleNoun(string itemName, string nodeAddition)
     {
-        CompatibleNoun newCompatibleNoun = new CompatibleNoun();
-        newCompatibleNoun.noun = GoldScrapShopKeyword(itemName);
-        newCompatibleNoun.result = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}{nodeAddition}.asset");
-        return newCompatibleNoun;
+        return new CompatibleNoun(GoldScrapShopKeyword(itemName), GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}{nodeAddition}.asset"));
     }
 
     public static CompatibleNoun GoldScrapInfoCompatibleNoun(string itemName)
     {
-        CompatibleNoun newCompatibleNoun = new CompatibleNoun();
-        newCompatibleNoun.noun = GoldScrapShopKeyword(itemName);
-        newCompatibleNoun.result = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}Info.asset");
-        return newCompatibleNoun;
+        return new CompatibleNoun(GoldScrapShopKeyword(itemName), GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>($"Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/{itemName}/GoldScrapShop{itemName}Info.asset"));
     }
 
     public static TerminalKeyword GoldScrapShopKeyword(string itemName)
     {
-        TerminalKeyword newKeyword = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalKeyword>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/" + itemName + "/GoldScrapShop" + itemName + "Keyword.asset");
+        TerminalKeyword newKeyword = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalKeyword>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/" + itemName + "/GoldScrapShop" + itemName + "Keyword.asset");
         newKeyword.defaultVerb = keywordBuy;
         return newKeyword;
     }
@@ -241,9 +232,12 @@ public class StoreAndTerminal
         SetSpecialStoreNodes();
     }
 
-    public static void AddGoldItemsToShop()
+    public static void AddGoldItemsToShop(Terminal __instance = null)
     {
-        Terminal __instance = Object.FindAnyObjectByType<Terminal>();
+        if (__instance == null)
+        {
+            __instance = Object.FindAnyObjectByType<Terminal>();
+        }
         if (__instance == null)
         {
             Logger.LogWarning("Failed to find Terminal! Not adding LCGoldScrapMod items to store.");
@@ -259,7 +253,7 @@ public class StoreAndTerminal
             }
             Item item = itemData.itemProperties;
             string itemName = itemData.folderName;
-            TerminalNode goldShopItemNode = Plugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/" + itemName + "/GoldScrapShop" + itemName + ".asset");
+            TerminalNode goldShopItemNode = GoldScrapPlugin.CustomGoldScrapAssets.LoadAsset<TerminalNode>("Assets/LCGoldScrapMod/GoldScrapShop/GoldScrapShopData/" + itemName + "/GoldScrapShop" + itemName + ".asset");
             goldShopItemNode.terminalOptions[0].noun = keywordConfirm;
             goldShopItemNode.terminalOptions[1] = compatibleNounDeny;
             originalBuyableItems.Add(item);
@@ -289,7 +283,7 @@ public class StoreAndTerminal
                 string[] allJumpAudioItems = { "BronzeSuit", "SilverSuit", "GoldSuit" };
                 if (allJumpAudioItems.Contains(itemName))
                 {
-                    unlockable.jumpAudio = AssetsCollection.LoadReplaceSFX(itemName);
+                    unlockable.jumpAudio = GoldScrapAssetsCollection.LoadReplaceSFX(itemName);
                 }
             }
         }

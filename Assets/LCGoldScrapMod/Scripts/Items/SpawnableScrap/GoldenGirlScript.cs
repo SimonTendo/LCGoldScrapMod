@@ -5,7 +5,7 @@ using System.Collections;
 
 public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
 {
-    private static ManualLogSource Logger = Plugin.Logger;
+    private static ManualLogSource Logger = GoldScrapPlugin.Logger;
 
     private Mesh loadedMesh;
     private bool broughtToShip = false;
@@ -44,7 +44,7 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
         yield return new WaitForSeconds(1f);
         if (isInFactory && !isInShipRoom)
         {
-            ChoosePlayerClientRpc((int)General.GetRandomPlayer().playerClientId);
+            ChoosePlayerClientRpc((int)GoldScrapGeneral.GetRandomPlayer().playerClientId);
         }
     }
 
@@ -93,10 +93,10 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
             if (!StartOfRound.Instance.inShipPhase)
             {
                 reappearSource.PlayOneShot(reappearClip);
-                Instantiate(AssetsCollection.poofParticle, transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
+                Instantiate(GoldScrapAssetsCollection.poofParticle, transform.position, new Quaternion(0, 0, 0, 0)).GetComponent<ParticleSystem>().Play();
             }
             materialToToggle.material = appearMat;
-            General.InstantiateSparklesOnTransform(transform);
+            GoldScrapGeneral.InstantiateSparklesOnTransform(transform);
         }
         else
         {
@@ -104,7 +104,7 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
             {
                 Destroy(radarIcon.gameObject);
             }
-            General.DestroySparklesOnTransform(transform);
+            GoldScrapGeneral.DestroySparklesOnTransform(transform);
         }
     }
 
@@ -141,7 +141,7 @@ public class GoldenGirlScript : GrabbableObject, IGoldenGlassSecret
 
     void IGoldenGlassSecret.BeginReveal()
     {
-        if (!Configs.hostToolRebalance && !broughtToShip && !choseLocalPlayer)
+        if (!GoldScrapConfigs.hostToolRebalance && !broughtToShip && !choseLocalPlayer)
         {
             meshToToggle.mesh = loadedMesh;
             materialToToggle.material = invisibleMat;
